@@ -4,6 +4,10 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-## [~] Track: 构建核心本地归档器 (V1.0)
-*Link: [./conductor/tracks/core_archiver_20260108/](./conductor/tracks/core_archiver_20260108/)*
-- 目标：实现微信公众号文章的抓取、元数据提取、WebP 图片本地化及 Markdown 生成。
+## [x] Track: 修复正文提取缺失问题
+*Link: [./conductor/tracks/bugfix_content_extraction/](./conductor/tracks/bugfix_content_extraction/)*
+- 目标：分析并修复正文内容在转换过程中丢失的问题，确保完整保留文章文字和图片。
+
+---
+
+## [x] Track: 构建核心本地归档器 (V1.0)
