@@ -2,8 +2,8 @@
 
 ## Phase 1: 环境初始化
 - [x] Task: 初始化 Next.js 项目并配置 TypeScript
-- [ ] Task: 设置 Prisma 并初始化 SQLite 数据库
-- [ ] Task: 安装核心依赖 (Playwright, Turndown, Cheerio, Lucide-React)
+- [x] Task: 设置 Prisma 并初始化 SQLite 数据库
+- [x] Task: 安装核心依赖 (Playwright, Turndown, Cheerio, Lucide-React)
 - [ ] Task: Conductor - User Manual Verification '环境初始化' (Protocol in workflow.md)
 
 ## Phase 2: 抓取与解析核心逻辑
