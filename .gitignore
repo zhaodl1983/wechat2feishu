@@ -3,3 +3,14 @@ node_modules
 .env
 
 /app/generated/prisma
+
+# Conductor output
+output/
+debug_*.html
+*.db
+*.db-journal
+.DS_Store
+.next/
+out/
+build/
+dist/
