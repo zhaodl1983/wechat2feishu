@@ -1,0 +1,3 @@
+module.exports=[14029,a=>{a.n(a.i(78421))},65286,a=>{a.n(a.i(28526))},61616,a=>{a.n(a.i(44975))},60034,a=>{a.n(a.i(6550))},12506,a=>{"use strict";var b=a.i(36856);function c(){return(0,b.jsx)("main",{className:"flex min-h-screen flex-col items-center justify-between p-24",children:(0,b.jsx)("h1",{className:"text-4xl font-bold",children:"WeChat Archiver"})})}a.s(["default",()=>c])}];
+
+//# sourceMappingURL=Documents_gemini_conductor_07902880._.js.map
