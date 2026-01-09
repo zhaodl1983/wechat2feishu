@@ -19,6 +19,11 @@ async function main() {
        console.warn(`⚠️ Token caching might not be working (took ${duration}ms)`);
     }
 
+    // Test Root Folder
+    console.log('Testing Root Folder Access...');
+    const rootToken = await client.getRootFolderToken();
+    console.log('✅ Root Folder Token:', rootToken);
+    
   } catch (error: any) {
     console.error('❌ Test failed:', error.message);
     process.exit(1);
