@@ -31,7 +31,7 @@ export async function downloadImageAsWebP(
 
     // Return the relative path for use in Markdown
     return path.join('.', assetsSubDir, filename);
-  } catch (error) {
+  } catch (error: any) {
     console.error(`\x1b[33m[Asset Warning]\x1b[0m Failed to download image ${url}:`, error.message);
     return null; // Return null to allow caller to handle placeholder
   }

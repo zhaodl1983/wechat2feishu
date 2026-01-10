@@ -1,5 +1,5 @@
-import { scrapeWeChatArticle } from './lib/scraper.ts';
-import { extractMetadata, extractContent } from './lib/parser.ts';
+import { scrapeWeChatArticle } from './lib/scraper';
+import { extractMetadata, extractContent } from './lib/parser';
 import fs from 'fs/promises';
 
 async function test() {

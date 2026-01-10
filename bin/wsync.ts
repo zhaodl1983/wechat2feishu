@@ -3,7 +3,7 @@ import { Command } from 'commander';
 import chalk from 'picocolors';
 import path from 'path';
 import fs from 'fs';
-import { FeishuClient } from '../lib/feishu.ts';
+import { FeishuClient } from '../lib/feishu';
 
 const program = new Command();
 

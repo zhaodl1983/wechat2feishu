@@ -1,4 +1,4 @@
-import { FeishuClient } from './lib/feishu.ts';
+import { FeishuClient } from './lib/feishu';
 
 async function main() {
   console.log('Testing FeishuClient Auth...');

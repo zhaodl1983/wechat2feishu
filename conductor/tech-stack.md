@@ -15,8 +15,9 @@
 
 ## UI 与交互 (Web 端)
 - **样式:** Tailwind CSS - 快速构建响应式界面。
-- **组件库:** shadcn/ui - 提供现代、美观且易于定制的 UI 组件。
-- **进度展示:** 基于 React 状态或 Server-Sent Events (SSE) 展示实时抓取进度。
+- **组件库:** Custom Components (Simulating shadcn/ui) - 遵循 Apple 极简设计风格。
+- **进度展示:** 基于 React 状态轮询 (`/api/jobs`) 展示实时抓取进度。
+- **状态管理:** React Hooks (`useState`, `useEffect`) 处理前端数据流。
 
 ## 外部集成
-- **飞书 API:** 使用飞书开放平台文档 API 进行 V2.0 的云端同步。
+- **飞书 API:** 使用飞书开放平台文档 API (Drive/Docs) 进行 V1.1 的云端同步。

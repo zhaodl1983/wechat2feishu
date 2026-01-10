@@ -1,3 +1,136 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --mesh-bg: radial-gradient(at 0% 0%, hsla(0,0%,100%,1) 0, transparent 50%), 
+             radial-gradient(at 50% 0%, hsla(210,20%,98%,1) 0, transparent 50%), 
+             radial-gradient(at 100% 0%, hsla(0,0%,100%,1) 0, transparent 50%),
+             radial-gradient(at 50% 50%, hsla(210,10%,96%,1) 0, transparent 100%);
+}
+
+body {
+  background-color: #FAFAFA;
+  background-image: var(--mesh-bg);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.015em;
+  color: #1d1d1f;
+}
+
+/* Material Symbols Font */
+@font-face {
+  font-family: 'Material Symbols Outlined';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/materialsymbolsoutlined/v167/kJF1BvYX7BgnkSrUwT8OhrdQw4oELdPIeeII9v6oDMzByHX9rA6RzaxHMPdY43zj-jCxv3fzvRNU22ZXGJpEpjC_1n-q_4MrImHCIJIZrDCvHOej.woff2) format('woff2');
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+}
+
+.headline-gradient {
+  background: linear-gradient(180deg, #1d1d1f 0%, #434343 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.03em;
+}
+
+.recessed-input {
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(20px);
+  box-shadow: 
+      inset 0 2px 4px 0 rgba(0, 0, 0, 0.05),
+      inset 0 1px 10px 0 rgba(0, 0, 0, 0.02),
+      0 0 0 1px rgba(0, 0, 0, 0.03);
+}
+
+.tactile-button {
+  background: linear-gradient(180deg, #2c2c2e 0%, #000000 100%);
+  box-shadow: 
+      0 10px 20px -5px rgba(0, 0, 0, 0.3),
+      0 4px 6px -2px rgba(0, 0, 0, 0.05),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tactile-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 5px 10px -3px rgba(0, 0, 0, 0.3);
+}
+
+.tactile-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.laser-icon {
+  filter: drop-shadow(0 0 0.5px rgba(0,0,0,0.5));
+  opacity: 0.6;
+}
+
+.status-glow-green {
+  filter: drop-shadow(0 0 8px rgba(40, 205, 65, 0.4));
+}
+
+.status-glow-amber {
+  filter: drop-shadow(0 0 8px rgba(255, 184, 0, 0.4));
+}
+
+.status-glow-red {
+  filter: drop-shadow(0 0 8px rgba(255, 59, 48, 0.4));
+}
+
+.glass-icon-shade {
+  background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%);
+}
+
+.sub-pixel-divider {
+  height: 0.5px;
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.glass-nav {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: saturate(180%) blur(20px);
+}
+
+.glass-finish-icon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.glass-finish-icon::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 50%);
+  border-radius: 6px;
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 2s linear infinite;
+}

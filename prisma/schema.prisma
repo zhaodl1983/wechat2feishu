@@ -7,6 +7,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
 model Article {
@@ -18,6 +19,7 @@ model Article {
   originalUrl   String   @unique
   localPath     String?
   thumbnailPath String?
+  feishuUrl     String?
   status        String   @default("pending") // pending, completed, error
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt

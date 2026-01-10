@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
-import { scrapeWeChatArticle } from '../lib/scraper.ts';
-import { extractMetadata, extractContent } from '../lib/parser.ts';
-import { convertToMarkdown } from '../lib/converter.ts';
-import { localizeAssets } from '../lib/assets.ts';
-import { getUniqueArticleDir, saveMarkdown } from '../lib/storage.ts';
+import { scrapeWeChatArticle } from '../lib/scraper';
+import { extractMetadata, extractContent } from '../lib/parser';
+import { convertToMarkdown } from '../lib/converter';
+import { localizeAssets } from '../lib/assets';
+import { getUniqueArticleDir, saveMarkdown } from '../lib/storage';
 import chalk from 'picocolors';
 
 const program = new Command();
