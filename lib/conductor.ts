@@ -69,6 +69,10 @@ export async function conductorProcess(url: string, userId?: number) {
     // 1. Get Root Folder
     const rootToken = await client.getRootFolderToken(token);
     console.log(`[Sync] Root Folder Token: ${rootToken}`);
+    
+    // 1.1 Ensure Assets Folder
+    const assetsFolderToken = await client.ensureAssetsFolder(rootToken, token);
+    console.log(`[Sync] Assets Folder Token: ${assetsFolderToken}`);
 
     // 2. Upload Images & Replace Links
     let content = fs.readFileSync(filePath, 'utf-8');
@@ -76,15 +80,24 @@ export async function conductorProcess(url: string, userId?: number) {
     let match;
     const replacements: {original: string, newUrl: string}[] = [];
     
+    // Check if we should use Image Proxy (Production Mode)
+    const useProxy = process.env.NODE_ENV === 'production' && process.env.NEXT_PUBLIC_BASE_URL;
+
     while ((match = imageRegex.exec(content)) !== null) {
         const [fullMatch, alt, imgPath] = match;
-        if (imgPath.startsWith('http')) continue;
+        if (imgPath.startsWith('http')) {
+             if (useProxy) {
+                 const proxyUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/image-proxy?url=${encodeURIComponent(imgPath)}`;
+                 replacements.push({ original: imgPath, newUrl: proxyUrl });
+             }
+             continue;
+        }
         
         const absImgPath = path.resolve(articleDir, imgPath);
         if (fs.existsSync(absImgPath)) {
              try {
-                 // userToken is the 4th parameter
-                 const fileToken = await client.uploadFile(absImgPath, rootToken, 'explorer', token);
+                 // Upload to Assets Folder
+                 const fileToken = await client.uploadFile(absImgPath, assetsFolderToken, 'explorer', token);
                  replacements.push({ original: imgPath, newUrl: fileToken }); 
              } catch (e: any) {
                  console.error(`[Sync] Failed to upload image ${imgPath}: ${e.message}`);
@@ -95,12 +108,18 @@ export async function conductorProcess(url: string, userId?: number) {
     for (const r of replacements) {
         content = content.replace(r.original, r.newUrl);
     }
+
+    // 2.5 Clean Redundant Frontmatter for Feishu
+    // Remove the --- ... --- block at the start of the file
+    content = content.replace(/^---\n([\s\S]*?)\n---\n/, '');
     
-    // 3. Upload MD
-    const tempMdPath = path.join(articleDir, `feishu_sync_${Date.now()}.md`);
+    // 3. Upload MD with Correct Title
+    // Sanitize title for filename
+    const safeTitle = metadata.title.replace(/[\\/:*?"<>|]/g, '_').substring(0, 100);
+    const tempMdPath = path.join(articleDir, `${safeTitle}.md`);
     fs.writeFileSync(tempMdPath, content);
     
-    console.log(`[Sync] Uploading processed Markdown...`);
+    console.log(`[Sync] Uploading processed Markdown: ${safeTitle}.md`);
     const mdToken = await client.uploadFile(tempMdPath, rootToken, 'explorer', token);
     
     // 4. Create Import Task

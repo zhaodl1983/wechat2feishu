@@ -53,7 +53,8 @@ export async function GET(request: Request) {
     await createSession(user.id);
 
     // 6. Redirect to Home
-    return NextResponse.redirect(new URL('/', request.url));
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || new URL('/', request.url).origin;
+    return NextResponse.redirect(new URL('/', baseUrl));
 
   } catch (error: any) {
     console.error('Callback Error:', error);

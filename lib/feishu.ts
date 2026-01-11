@@ -90,6 +90,44 @@ export class FeishuClient {
   }
 
 
+  async ensureAssetsFolder(parentToken: string, userToken?: string): Promise<string> {
+      const token = userToken || await this.getTenantAccessToken();
+      const folderName = 'Wechat2feishu Assets';
+      
+      // 1. Search for existing folder
+      // Note: Feishu search API is complex. For simplicity, we might just create one or list children.
+      // List children of root
+      try {
+          const response = await this.axiosInstance.get(`/drive/v1/files?page_size=50&folder_token=${parentToken}`, {
+              headers: { Authorization: `Bearer ${token}` }
+          });
+          
+          if (response.data.code === 0 && response.data.data.files) {
+              const existing = response.data.data.files.find((f: any) => f.name === folderName && f.type === 'folder');
+              if (existing) return existing.token;
+          }
+      } catch (e) {
+          console.warn('Failed to list folder, trying to create...');
+      }
+
+      // 2. Create if not found
+      try {
+          const response = await this.axiosInstance.post('/drive/v1/files/create_folder', {
+              name: folderName,
+              folder_token: parentToken
+          }, {
+              headers: { Authorization: `Bearer ${token}` }
+          });
+          
+          if (response.data.code !== 0) throw new Error(response.data.msg);
+          return response.data.data.token;
+      } catch (error: any) {
+          // If creation fails, fallback to root
+          console.error('Failed to create assets folder:', error.message);
+          return parentToken;
+      }
+  }
+
   async uploadFile(filePath: string, parentNode: string, parentType: string = 'explorer', userToken?: string): Promise<string> {
     const token = userToken || await this.getTenantAccessToken();
     const stats = await fs.promises.stat(filePath);
