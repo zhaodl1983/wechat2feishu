@@ -5,26 +5,34 @@ import { localizeAssets } from './assets';
 import { getUniqueArticleDir, saveMarkdown } from './storage';
 import { FeishuClient } from './feishu';
 import { prisma } from './db';
+import { getValidUserAccessToken } from './user-token';
 import path from 'path';
 import fs from 'fs';
 
-export async function conductorProcess(url: string) {
-  // 1. Create DB Record
-  let article = await prisma.article.create({
-    data: {
+export async function conductorProcess(url: string, userId?: number) {
+  // 1. Create or Update DB Record
+  let article = await prisma.article.upsert({
+    where: { originalUrl: url },
+    update: {
+        status: 'pending',
+        userId: userId || null, 
+        updatedAt: new Date(),
+    },
+    create: {
       title: 'Processing...',
       originalUrl: url,
       status: 'pending',
+      userId: userId || null,
     },
   });
 
   try {
     // --- STEP A: SCRAPE ---
+    console.log(`[Scrape] Starting: ${url}`);
     const { html } = await scrapeWeChatArticle(url);
     const metadata = extractMetadata(html);
     const contentHtml = extractContent(html);
 
-    // Update DB with title
     article = await prisma.article.update({
       where: { id: article.id },
       data: { 
@@ -40,7 +48,6 @@ export async function conductorProcess(url: string) {
     const finalMarkdown = await localizeAssets(initialMarkdown, articleDir);
     const filePath = await saveMarkdown(finalMarkdown, articleDir);
 
-    // Update DB with local path
     article = await prisma.article.update({
       where: { id: article.id },
       data: { localPath: filePath },
@@ -48,15 +55,27 @@ export async function conductorProcess(url: string) {
 
     // --- STEP B: SYNC TO FEISHU ---
     const client = new FeishuClient();
-    const rootToken = await client.getRootFolderToken();
+    
+    // Determine Token
+    let token: string;
+    if (userId) {
+        token = await getValidUserAccessToken(userId);
+        console.log(`[Sync] Using User Access Token (ID: ${userId})`);
+    } else {
+        token = await client.getTenantAccessToken();
+        console.log(`[Sync] Using Tenant Token (Anonymous mode)`);
+    }
+    
+    // 1. Get Root Folder
+    const rootToken = await client.getRootFolderToken(token);
+    console.log(`[Sync] Root Folder Token: ${rootToken}`);
 
-    // Upload Images & Replace Links (Simple Regex Approach)
+    // 2. Upload Images & Replace Links
     let content = fs.readFileSync(filePath, 'utf-8');
     const imageRegex = /!\[(.*?)\]\((.*?)\)/g;
     let match;
     const replacements: {original: string, newUrl: string}[] = [];
     
-    // Scan for images to upload
     while ((match = imageRegex.exec(content)) !== null) {
         const [fullMatch, alt, imgPath] = match;
         if (imgPath.startsWith('http')) continue;
@@ -64,10 +83,11 @@ export async function conductorProcess(url: string) {
         const absImgPath = path.resolve(articleDir, imgPath);
         if (fs.existsSync(absImgPath)) {
              try {
-                 const fileToken = await client.uploadFile(absImgPath, rootToken, 'explorer');
+                 // userToken is the 4th parameter
+                 const fileToken = await client.uploadFile(absImgPath, rootToken, 'explorer', token);
                  replacements.push({ original: imgPath, newUrl: fileToken }); 
-             } catch (e) {
-                 console.error(`Failed to upload image: ${imgPath}`);
+             } catch (e: any) {
+                 console.error(`[Sync] Failed to upload image ${imgPath}: ${e.message}`);
              }
         }
     }
@@ -76,31 +96,35 @@ export async function conductorProcess(url: string) {
         content = content.replace(r.original, r.newUrl);
     }
     
+    // 3. Upload MD
     const tempMdPath = path.join(articleDir, `feishu_sync_${Date.now()}.md`);
     fs.writeFileSync(tempMdPath, content);
     
-    const mdToken = await client.uploadFile(tempMdPath, rootToken, 'explorer');
-    const ticket = await client.createImportTask(mdToken, 'md', rootToken);
+    console.log(`[Sync] Uploading processed Markdown...`);
+    const mdToken = await client.uploadFile(tempMdPath, rootToken, 'explorer', token);
     
-    // Poll for result
+    // 4. Create Import Task
+    console.log(`[Sync] Creating import task...`);
+    const ticket = await client.createImportTask(mdToken, 'md', rootToken, token);
+    
+    // 5. Poll for result
     let feishuUrl = '';
     for (let i = 0; i < 30; i++) {
         await new Promise(r => setTimeout(r, 2000));
-        const status = await client.getImportResult(ticket);
+        const status = await client.getImportResult(ticket, token);
+        console.log(`[Sync] Polling status: ${status.job_status}`);
         if (status.job_status === 0) {
             feishuUrl = status.url;
             break;
         } else if (status.job_status > 2) {
-             throw new Error(`Feishu Import Failed: Status ${status.job_status}`);
+             throw new Error(`Feishu Import Failed: Status ${status.job_status} - ${status.job_error_msg}`);
         }
     }
 
-    // Cleanup
     if (fs.existsSync(tempMdPath)) fs.unlinkSync(tempMdPath);
-
     if (!feishuUrl) throw new Error('Feishu Import Timed Out');
 
-    // Update DB Success
+    // 6. Update DB Success
     await prisma.article.update({
       where: { id: article.id },
       data: { 
@@ -109,10 +133,11 @@ export async function conductorProcess(url: string) {
       },
     });
 
+    console.log(`[Sync] Success! URL: ${feishuUrl}`);
     return { success: true, articleId: article.id, feishuUrl };
 
   } catch (error: any) {
-    console.error('Conductor Process Error:', error);
+    console.error('[Conductor] Process Error:', error);
     await prisma.article.update({
       where: { id: article.id },
       data: { status: 'error' },

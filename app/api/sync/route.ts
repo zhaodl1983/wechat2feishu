@@ -1,17 +1,18 @@
 import { NextResponse } from 'next/server';
 import { conductorProcess } from '@/lib/conductor';
+import { getSession } from '@/lib/session';
 
 export async function POST(request: Request) {
   try {
     const { url } = await request.json();
+    const session = await getSession();
 
     if (!url) {
       return NextResponse.json({ error: 'URL is required' }, { status: 400 });
     }
 
-    // Trigger the process
-    // In V1.2 MVP, we await it. In V1.3, this should be a background job.
-    const result = await conductorProcess(url);
+    // Pass userId if logged in
+    const result = await conductorProcess(url, session?.userId);
 
     return NextResponse.json(result);
   } catch (error: any) {

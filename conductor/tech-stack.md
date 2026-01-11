@@ -19,5 +19,12 @@
 - **进度展示:** 基于 React 状态轮询 (`/api/jobs`) 展示实时抓取进度。
 - **状态管理:** React Hooks (`useState`, `useEffect`) 处理前端数据流。
 
+## 安全与认证
+- **身份认证:** Feishu OAuth 2.0 - 扫码登录。
+- **会话管理:** JWT (via `jose`) - HTTPOnly Cookie。
+- **数据安全:** AES-256-GCM 加密 - 用于存储敏感 Token。
+
 ## 外部集成
-- **飞书 API:** 使用飞书开放平台文档 API (Drive/Docs) 进行 V1.1 的云端同步。
+- **飞书 API:** 
+    - 认证: `/authen/v1/index`, `/authen/v1/access_token`
+    - 云文档: Drive/Docs API (V1.1)

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface Article {
   id: number;
@@ -59,7 +59,7 @@ export function HistoryList({ refreshTrigger }: HistoryListProps) {
           </thead>
           <tbody>
             {articles.map((article, index) => (
-                <div key={article.id} style={{ display: 'contents' }}>
+                <React.Fragment key={article.id}>
                     <tr className="group hover:bg-black/[0.02] transition-colors">
                     <td className="px-8 py-6">
                         <div className="flex flex-col gap-1">
@@ -102,7 +102,7 @@ export function HistoryList({ refreshTrigger }: HistoryListProps) {
                     {index < articles.length - 1 && (
                         <tr><td colSpan={3}><div className="sub-pixel-divider mx-8"></div></td></tr>
                     )}
-                </div>
+                </React.Fragment>
             ))}
           </tbody>
         </table>

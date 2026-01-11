@@ -52,8 +52,46 @@ export class FeishuClient {
     }
   }
 
-  async uploadFile(filePath: string, parentNode: string, parentType: string = 'explorer'): Promise<string> {
-    const token = await this.getTenantAccessToken();
+  async getUserAccessToken(code: string): Promise<any> {
+    try {
+      const appToken = await this.getTenantAccessToken();
+      const response = await this.axiosInstance.post('/authen/v1/access_token', {
+        grant_type: 'authorization_code',
+        code: code,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${appToken}`,
+          'Content-Type': 'application/json; charset=utf-8'
+        }
+      });
+
+      if (response.data.code !== 0) {
+        throw new Error(`Failed to get user token: ${response.data.msg}`);
+      }
+      return response.data.data; // { access_token, refresh_token, expires_in, etc. }
+    } catch (error: any) {
+       const msg = error.response?.data?.msg || error.message;
+       throw new Error(`Feishu User Auth Error: ${msg}`);
+    }
+  }
+
+  async getUserInfo(userAccessToken: string): Promise<any> {
+      try {
+          const response = await this.axiosInstance.get('/authen/v1/user_info', {
+              headers: { Authorization: `Bearer ${userAccessToken}` }
+          });
+          if (response.data.code !== 0) {
+            throw new Error(`Failed to get user info: ${response.data.msg}`);
+          }
+          return response.data.data; // { name, avatar_url, open_id, union_id, etc. }
+      } catch (error: any) {
+          throw new Error(`Feishu User Info Error: ${error.message}`);
+      }
+  }
+
+
+  async uploadFile(filePath: string, parentNode: string, parentType: string = 'explorer', userToken?: string): Promise<string> {
+    const token = userToken || await this.getTenantAccessToken();
     const stats = await fs.promises.stat(filePath);
     const stream = fs.createReadStream(filePath);
     const fileName = path.basename(filePath);
@@ -84,8 +122,8 @@ export class FeishuClient {
     }
   }
 
-  async createImportTask(fileToken: string, fileExtension: string, folderToken: string): Promise<string> {
-      const token = await this.getTenantAccessToken();
+  async createImportTask(fileToken: string, fileExtension: string, folderToken: string, userToken?: string): Promise<string> {
+      const token = userToken || await this.getTenantAccessToken();
       try {
           const response = await this.axiosInstance.post('/drive/v1/import_tasks', {
               file_extension: fileExtension,
@@ -112,8 +150,8 @@ export class FeishuClient {
       }
   }
 
-  async getImportResult(ticket: string): Promise<any> {
-      const token = await this.getTenantAccessToken();
+  async getImportResult(ticket: string, userToken?: string): Promise<any> {
+      const token = userToken || await this.getTenantAccessToken();
       try {
           const response = await this.axiosInstance.get(`/drive/v1/import_tasks/${ticket}`, {
               headers: {
@@ -132,8 +170,8 @@ export class FeishuClient {
       }
   }
 
-  async getRootFolderToken(): Promise<string> {
-       const token = await this.getTenantAccessToken();
+  async getRootFolderToken(userToken?: string): Promise<string> {
+       const token = userToken || await this.getTenantAccessToken();
        try {
          const response = await this.axiosInstance.get('/drive/explorer/v2/root_folder/meta', {
              headers: { Authorization: `Bearer ${token}` }
@@ -144,5 +182,27 @@ export class FeishuClient {
          const msg = error.response?.data?.msg || error.message;
          throw new Error(`Get Root Folder Error: ${msg}`);
        }
+  }
+  async refreshUserAccessToken(refreshToken: string): Promise<any> {
+      try {
+          const appToken = await this.getTenantAccessToken();
+          const response = await this.axiosInstance.post('/authen/v1/refresh_access_token', {
+              grant_type: 'refresh_token',
+              refresh_token: refreshToken,
+          }, {
+              headers: {
+                  'Authorization': `Bearer ${appToken}`,
+                  'Content-Type': 'application/json; charset=utf-8'
+              }
+          });
+
+          if (response.data.code !== 0) {
+            throw new Error(`Failed to refresh user token: ${response.data.msg}`);
+          }
+          return response.data.data;
+      } catch (error: any) {
+          const msg = error.response?.data?.msg || error.message;
+          throw new Error(`Feishu Refresh Error: ${msg}`);
+      }
   }
 }

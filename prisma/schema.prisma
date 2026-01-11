@@ -10,6 +10,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id                    Int       @id @default(autoincrement())
+  feishuUserId          String    @unique
+  name                  String?
+  avatarUrl             String?
+  encryptedAccessToken  String?
+  encryptedRefreshToken String?
+  tokenExpiry           DateTime?
+  lastLoginAt           DateTime  @default(now())
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  articles              Article[]
+}
+
 model Article {
   id            Int      @id @default(autoincrement())
   title         String
@@ -23,4 +37,7 @@ model Article {
   status        String   @default("pending") // pending, completed, error
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  
+  userId        Int?
+  user          User?    @relation(fields: [userId], references: [id])
 }
