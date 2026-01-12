@@ -13,7 +13,7 @@ export function ClientWrapper({ user }: { user: any }) {
 
   return (
     <>
-      <Hero onSyncSuccess={handleSyncSuccess} />
+      <Hero isLoggedIn={!!user} onSyncSuccess={handleSyncSuccess} />
       <HistoryList refreshTrigger={refreshTrigger} />
     </>
   );

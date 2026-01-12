@@ -33,7 +33,7 @@ export default async function Changelog() {
       version: "V0.3",
       status: "done",
       title: "Web 界面化",
-      desc: "构建了 Apple 极简风格的 Web 仪表盘，支持可视化操作与转存历史管理。",
+      desc: "构建了 Apple 极简风格的 Web 仪表盘，支持个性化欢迎语、可视化操作与转存历史管理。",
       date: "已上线"
     },
     {

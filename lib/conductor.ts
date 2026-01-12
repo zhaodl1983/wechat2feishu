@@ -45,8 +45,21 @@ export async function conductorProcess(url: string, userId?: number) {
 
     const articleDir = await getUniqueArticleDir(metadata.title, 'output');
     const initialMarkdown = convertToMarkdown(contentHtml, { ...metadata, url });
-    const finalMarkdown = await localizeAssets(initialMarkdown, articleDir);
-    const filePath = await saveMarkdown(finalMarkdown, articleDir);
+    
+    // Check if we should use Image Proxy (Production Mode)
+    const useProxy = process.env.NODE_ENV === 'production' && process.env.NEXT_PUBLIC_BASE_URL;
+    
+    let finalMarkdown = initialMarkdown;
+    let filePath = '';
+
+    if (useProxy) {
+        console.log(`[Sync] Production mode detected. Using Image Proxy, skipping local asset download.`);
+        // Just save the markdown with original links for now
+        filePath = await saveMarkdown(initialMarkdown, articleDir);
+    } else {
+        finalMarkdown = await localizeAssets(initialMarkdown, articleDir);
+        filePath = await saveMarkdown(finalMarkdown, articleDir);
+    }
 
     article = await prisma.article.update({
       where: { id: article.id },
@@ -70,9 +83,12 @@ export async function conductorProcess(url: string, userId?: number) {
     const rootToken = await client.getRootFolderToken(token);
     console.log(`[Sync] Root Folder Token: ${rootToken}`);
     
-    // 1.1 Ensure Assets Folder
-    const assetsFolderToken = await client.ensureAssetsFolder(rootToken, token);
-    console.log(`[Sync] Assets Folder Token: ${assetsFolderToken}`);
+    // 1.1 Ensure Assets Folder (Only needed if NOT using proxy)
+    let assetsFolderToken = '';
+    if (!useProxy) {
+        assetsFolderToken = await client.ensureAssetsFolder(rootToken, token);
+        console.log(`[Sync] Assets Folder Token: ${assetsFolderToken}`);
+    }
 
     // 2. Upload Images & Replace Links
     let content = fs.readFileSync(filePath, 'utf-8');
@@ -80,11 +96,10 @@ export async function conductorProcess(url: string, userId?: number) {
     let match;
     const replacements: {original: string, newUrl: string}[] = [];
     
-    // Check if we should use Image Proxy (Production Mode)
-    const useProxy = process.env.NODE_ENV === 'production' && process.env.NEXT_PUBLIC_BASE_URL;
-
     while ((match = imageRegex.exec(content)) !== null) {
         const [fullMatch, alt, imgPath] = match;
+        
+        // Case A: Remote URL (Proxy Mode)
         if (imgPath.startsWith('http')) {
              if (useProxy) {
                  const proxyUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/image-proxy?url=${encodeURIComponent(imgPath)}`;
@@ -93,15 +108,17 @@ export async function conductorProcess(url: string, userId?: number) {
              continue;
         }
         
-        const absImgPath = path.resolve(articleDir, imgPath);
-        if (fs.existsSync(absImgPath)) {
-             try {
-                 // Upload to Assets Folder
-                 const fileToken = await client.uploadFile(absImgPath, assetsFolderToken, 'explorer', token);
-                 replacements.push({ original: imgPath, newUrl: fileToken }); 
-             } catch (e: any) {
-                 console.error(`[Sync] Failed to upload image ${imgPath}: ${e.message}`);
-             }
+        // Case B: Local File (Upload Mode)
+        if (!useProxy) {
+            const absImgPath = path.resolve(articleDir, imgPath);
+            if (fs.existsSync(absImgPath)) {
+                 try {
+                     const fileToken = await client.uploadFile(absImgPath, assetsFolderToken, 'explorer', token);
+                     replacements.push({ original: imgPath, newUrl: fileToken }); 
+                 } catch (e: any) {
+                     console.error(`[Sync] Failed to upload image ${imgPath}: ${e.message}`);
+                 }
+            }
         }
     }
     

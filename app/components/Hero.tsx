@@ -4,9 +4,10 @@ import { useState } from 'react';
 
 interface HeroProps {
   onSyncSuccess: () => void;
+  isLoggedIn?: boolean;
 }
 
-export function Hero({ onSyncSuccess }: HeroProps) {
+export function Hero({ onSyncSuccess, isLoggedIn }: HeroProps) {
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -41,7 +42,11 @@ export function Hero({ onSyncSuccess }: HeroProps) {
   return (
     <section className="max-w-[1200px] mx-auto px-golden-sm text-center mb-golden-xl pt-32">
       <h1 className="headline-gradient text-[56px] md:text-[72px] font-bold leading-[1.05] mb-golden-sm mx-auto max-w-[900px]">
-        极致打磨，<br/>让微信灵感瞬时归档。
+        {isLoggedIn ? (
+          <>欢迎回来，<br/>今天想保存什么？</>
+        ) : (
+          <>极致打磨，<br/>让微信灵感瞬时归档。</>
+        )}
       </h1>
       <p className="text-[21px] md:text-[24px] text-black/45 font-medium max-w-[640px] mx-auto mb-golden-lg leading-relaxed">
         以最优雅的方式，将深度好文保存至你的飞书知识库。
