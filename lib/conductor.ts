@@ -47,7 +47,9 @@ export async function conductorProcess(url: string, userId?: number) {
     const initialMarkdown = convertToMarkdown(contentHtml, { ...metadata, url });
     
     // Check if we should use Image Proxy (Production Mode)
-    const useProxy = process.env.NODE_ENV === 'production' && process.env.NEXT_PUBLIC_BASE_URL;
+    // Relaxed check: Just verify if BASE_URL is present
+    const useProxy = !!process.env.NEXT_PUBLIC_BASE_URL;
+    console.log(`[Sync] Proxy Check: BASE_URL=${process.env.NEXT_PUBLIC_BASE_URL}, useProxy=${useProxy}`);
     
     let finalMarkdown = initialMarkdown;
     let filePath = '';
@@ -102,7 +104,9 @@ export async function conductorProcess(url: string, userId?: number) {
         // Case A: Remote URL (Proxy Mode)
         if (imgPath.startsWith('http')) {
              if (useProxy) {
-                 const proxyUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/image-proxy?url=${encodeURIComponent(imgPath)}`;
+                 // Use pseudo-static URL to trick Feishu importer
+                 // Format: /api/image-proxy/<ENCODED_URL>/image.jpg
+                 const proxyUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/image-proxy/${encodeURIComponent(imgPath)}/image.jpg`;
                  replacements.push({ original: imgPath, newUrl: proxyUrl });
              }
              continue;

@@ -22,10 +22,14 @@
 - [x] **Task 4.2**: Verify ownership: Check if the user can delete the created document in Feishu.
 
 ### Phase 5: Content Quality & Bug Fixes
-- [ ] **Task 5.1**: **标题修复**：解决转存后飞书文档标题错误的问题（可能与 HTML 提取或飞书导入参数有关）。
-- [ ] **Task 5.2**: **图片还原**：排查并修复飞书文档中图片不显示的问题（检查图片 Token 替换逻辑和上传状态）。
-- [ ] **Task 5.3**: **冗余清洗**：剔除文档头部的多余 head 信息（如元数据 JSON 或原始 HTML 残留），保持文档整洁。
-- [ ] **Task 5.4**: **回归测试**：确保多用户模式下，不同类型的文章都能高保真还原。
+- [x] **Task 5.1**: **标题修复**：解决转存后飞书文档标题错误的问题。
+- [x] **Task 5.2**: **图片还原**：通过 Image Proxy 彻底解决图片裂图问题，实现高保真内嵌。
+- [x] **Task 5.3**: **冗余清洗**：剔除文档头部的多余 YAML Frontmatter。
+- [ ] **Task 5.4**: **动图与视频支持**：
+    -   **GIF**: 目前 Proxy 可能对 GIF 的 Content-Type 处理有误，或飞书导入对大体积 GIF 有限制，需排查。
+    -   **Video**: 微信视频号/腾讯视频卡片目前可能被过滤或仅显示封面，需评估是否解析为视频链接或内嵌播放器。
+
+### Phase 6: Final Polish & Community (V0.5)
 
 ## Notes
 -   Encryption key should be stored in `.env` as `ENCRYPTION_KEY`.

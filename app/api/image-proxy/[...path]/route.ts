@@ -1,19 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
 
-export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const targetUrl = searchParams.get('url');
-
-  if (!targetUrl) {
-    return new NextResponse('Missing url parameter', { status: 400 });
+export async function GET(
+  request: NextRequest,
+  props: { params: Promise<{ path: string[] }> }
+) {
+  const params = await props.params;
+  // Format: /api/image-proxy/<ENCODED_URL>/image.jpg
+  // params.path[0] is the encoded URL
+  const encodedUrl = params.path[0];
+  
+  if (!encodedUrl) {
+    return new NextResponse('Missing url', { status: 400 });
   }
 
   try {
+    const targetUrl = decodeURIComponent(encodedUrl);
+    
     const response = await axios.get(targetUrl, {
       responseType: 'arraybuffer',
       headers: {
-        // 关键：伪造 Referer 以绕过微信防盗链
         'Referer': 'https://mp.weixin.qq.com/',
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
       }

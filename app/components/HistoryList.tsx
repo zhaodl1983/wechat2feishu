@@ -42,7 +42,7 @@ export function HistoryList({ refreshTrigger }: HistoryListProps) {
   };
 
   return (
-    <section className="max-w-[980px] mx-auto px-golden-sm pb-golden-xl">
+    <section className="max-w-[1024px] mx-auto px-golden-sm pb-golden-xl">
       <div className="flex items-center justify-between mb-8 px-2">
         <h3 className="text-[14px] font-semibold text-black/30 tracking-[0.1em] uppercase">转存历史</h3>
         <button className="text-[13px] font-medium text-black/40 hover:text-black transition-colors">清除全部</button>

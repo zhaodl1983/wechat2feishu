@@ -53,7 +53,17 @@ export async function GET(request: Request) {
     await createSession(user.id);
 
     // 6. Redirect to Home
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || new URL('/', request.url).origin;
+    // Derive base URL from FEISHU_REDIRECT_URI to ensure correct production redirect
+    let baseUrl = new URL('/', request.url).origin;
+    if (process.env.FEISHU_REDIRECT_URI) {
+        try {
+            const redirectUrl = new URL(process.env.FEISHU_REDIRECT_URI);
+            baseUrl = redirectUrl.origin;
+        } catch (e) {
+            console.error('Invalid FEISHU_REDIRECT_URI', e);
+        }
+    }
+    
     return NextResponse.redirect(new URL('/', baseUrl));
 
   } catch (error: any) {
