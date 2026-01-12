@@ -33,7 +33,7 @@ export function Header({ user }: HeaderProps) {
         <nav className="hidden md:flex items-center gap-8 text-[14px] font-medium text-black/60">
           <a className="hover:text-black transition-colors" href="#">功能</a>
           <a className="hover:text-black transition-colors" href="#">工作流</a>
-          <a className="hover:text-black transition-colors" href="#">定价</a>
+          <a className="hover:text-black transition-colors" href="/changelog">迭代记录</a>
         </nav>
         
         {user ? (
