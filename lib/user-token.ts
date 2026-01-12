@@ -2,7 +2,7 @@ import { prisma } from './db';
 import { decrypt, encrypt } from './encryption';
 import { FeishuClient } from './feishu';
 
-export async function getValidUserAccessToken(userId: number): Promise<string> {
+export async function getValidUserAccessToken(userId: string): Promise<string> {
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user || !user.encryptedAccessToken || !user.encryptedRefreshToken) {
     throw new Error('User not found or tokens missing');

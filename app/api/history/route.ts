@@ -34,7 +34,7 @@ export async function DELETE(request: Request) {
 
     // Verify ownership
     const article = await prisma.article.findUnique({
-        where: { id: parseInt(id) }
+        where: { id: id }
     });
 
     if (!article || article.userId !== session.userId) {
@@ -42,7 +42,7 @@ export async function DELETE(request: Request) {
     }
 
     await prisma.article.delete({
-        where: { id: parseInt(id) }
+        where: { id: id }
     });
 
     return NextResponse.json({ success: true });

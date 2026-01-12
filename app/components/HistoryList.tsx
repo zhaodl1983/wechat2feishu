@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 
 interface Article {
-  id: number;
+  id: string;
   title: string;
   publishDate: string;
   status: string;
@@ -28,7 +28,7 @@ export function HistoryList({ refreshTrigger, isLoggedIn }: HistoryListProps) {
       .catch(console.error);
   }, [refreshTrigger, isLoggedIn]);
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
       if (!confirm('确定删除这条记录吗？')) return;
       try {
           await fetch(`/api/history?id=${id}`, { method: 'DELETE' });

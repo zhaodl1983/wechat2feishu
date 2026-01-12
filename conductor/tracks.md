@@ -9,4 +9,7 @@ This file tracks all major tracks for the project. Each track has its own detail
 ## [~] Track: SaaS 服务化 (V0.4)
 [Link](./tracks/saas_v1.3)
 
-## [ ] Track: 社区与探索 (V0.5)
+## [~] Track: 架构升级 (V0.5)
+[Link](./tracks/arch_v0.5)
+
+## [ ] Track: 社区与探索 (V0.6)

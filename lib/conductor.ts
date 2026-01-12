@@ -9,7 +9,7 @@ import { getValidUserAccessToken } from './user-token';
 import path from 'path';
 import fs from 'fs';
 
-export async function conductorProcess(url: string, userId?: number) {
+export async function conductorProcess(url: string, userId?: string) {
   // 1. Create or Update DB Record
   let article = await prisma.article.upsert({
     where: { originalUrl: url },

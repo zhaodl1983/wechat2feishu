@@ -30,7 +30,7 @@ export async function getSession() {
   return await decryptSession(session);
 }
 
-export async function createSession(userId: number) {
+export async function createSession(userId: string) {
   const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
   const session = await encryptSession({ userId, expires });
   const cookieStore = await cookies();
