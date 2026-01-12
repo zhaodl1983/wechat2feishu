@@ -104,10 +104,27 @@ export async function conductorProcess(url: string, userId?: string) {
         // Case A: Remote URL (Proxy Mode)
         if (imgPath.startsWith('http')) {
              if (useProxy) {
-                 // Use pseudo-static URL to trick Feishu importer
-                 // Format: /api/image-proxy/<ENCODED_URL>/image.jpg
-                 const proxyUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/image-proxy/${encodeURIComponent(imgPath)}/image.jpg`;
-                 replacements.push({ original: imgPath, newUrl: proxyUrl });
+                 // Smart Extension: Detect format from wx_fmt to support GIFs
+                 let extension = 'jpg';
+                 try {
+                    const urlObj = new URL(imgPath);
+                    const fmt = urlObj.searchParams.get('wx_fmt');
+                    if (fmt === 'gif') extension = 'gif';
+                    else if (fmt === 'png') extension = 'png';
+                    
+                    // CRITICAL: Remove 'tp' parameter (e.g., tp=webp) to force WeChat to return original format
+                    urlObj.searchParams.delete('tp');
+                    const cleanedUrl = urlObj.toString();
+
+                    // Use pseudo-static URL to trick Feishu importer
+                    // Format: /api/image-proxy/<ENCODED_URL>/image.<ext>
+                    const proxyUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/image-proxy/${encodeURIComponent(cleanedUrl)}/image.${extension}`;
+                    replacements.push({ original: imgPath, newUrl: proxyUrl });
+                 } catch (e) {
+                    // Ignore URL parsing errors, fallback to original imgPath with jpg extension
+                    const proxyUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/image-proxy/${encodeURIComponent(imgPath)}/image.jpg`;
+                    replacements.push({ original: imgPath, newUrl: proxyUrl });
+                 }
              }
              continue;
         }
