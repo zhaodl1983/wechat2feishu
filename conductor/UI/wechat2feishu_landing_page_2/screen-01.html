@@ -1,0 +1,206 @@
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Wechat2feishu - 我的转存 (空状态)</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#000000",
+                        "apple-gray": "#F5F5F7",
+                        "vibrant-green": "#28CD41",
+                        "vibrant-amber": "#FFB800",
+                        "vibrant-red": "#FF3B30",
+                    },
+                    spacing: {
+                        'golden-sm': '1.618rem',
+                        'golden-md': '2.618rem',
+                        'golden-lg': '4.236rem',
+                        'golden-xl': '6.854rem',
+                    },
+                    borderRadius: {
+                        'apple': '12px',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+<style type="text/tailwindcss">
+        :root {
+            --mesh-bg: radial-gradient(at 0% 0%, hsla(0,0%,100%,1) 0, transparent 50%), 
+                       radial-gradient(at 50% 0%, hsla(210,20%,98%,1) 0, transparent 50%), 
+                       radial-gradient(at 100% 0%, hsla(0,0%,100%,1) 0, transparent 50%),
+                       radial-gradient(at 50% 50%, hsla(210,10%,96%,1) 0, transparent 100%);
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", "PingFang SC", sans-serif;
+            background-color: #FAFAFA;
+            background-image: var(--mesh-bg);
+            -webkit-font-smoothing: antialiased;
+            letter-spacing: -0.015em;
+        }
+        .headline-gradient {
+            background: linear-gradient(180deg, #1d1d1f 0%, #434343 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.03em;
+        }
+        .recessed-input {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(20px);
+            box-shadow: 
+                inset 0 2px 4px 0 rgba(0, 0, 0, 0.05),
+                inset 0 1px 10px 0 rgba(0, 0, 0, 0.02),
+                0 0 0 1px rgba(0, 0, 0, 0.03);
+        }
+        .tactile-button {
+            background: linear-gradient(180deg, #2c2c2e 0%, #000000 100%);
+            box-shadow: 
+                0 10px 20px -5px rgba(0, 0, 0, 0.3),
+                0 4px 6px -2px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .tactile-button:active {
+            transform: translateY(1px);
+            box-shadow: 0 5px 10px -3px rgba(0, 0, 0, 0.3);
+        }
+        .frosted-glass-button {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .frosted-glass-button:hover {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(0, 0, 0, 0.15);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.05);
+        }
+        .laser-icon {
+            filter: drop-shadow(0 0 0.5px rgba(0,0,0,0.5));
+            opacity: 0.6;
+        }
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: saturate(180%) blur(20px);
+        }
+    </style>
+</head><body class="text-[#1d1d1f] selection:bg-black/5">
+<header class="fixed top-0 w-full z-50 glass-nav border-b border-black/[0.03]">
+<div class="max-w-[1200px] mx-auto flex items-center justify-between px-golden-sm h-16">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-black rounded-[7px] flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-[18px]">bolt</span>
+</div>
+<span class="font-semibold text-[19px] tracking-tight">Wechat2feishu</span>
+</div>
+<nav class="hidden md:flex items-center gap-8 text-[14px] font-medium text-black/60">
+<a class="hover:text-black transition-colors" href="#">首页</a>
+<div class="relative group">
+<a class="text-black font-semibold" href="#">我的转存</a>
+<span class="absolute -bottom-2.5 left-1/2 w-1 h-1 -translate-x-1/2 rounded-full bg-black"></span>
+</div>
+<a class="hover:text-black transition-colors" href="#">迭代记录</a>
+</nav>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-3 px-3 py-1.5 rounded-full bg-black/5 border border-black/[0.03]">
+<div class="w-6 h-6 rounded-full bg-gradient-to-tr from-gray-400 to-gray-200 overflow-hidden flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-white">person</span>
+</div>
+<span class="text-[13px] font-medium text-black/70">Designer Pro</span>
+</div>
+<button class="text-[13px] font-medium text-black/40 hover:text-vibrant-red transition-colors">
+                退出登录
+            </button>
+</div>
+</div>
+</header>
+<main class="pt-32">
+<section class="max-w-[1200px] mx-auto px-golden-sm text-center mb-golden-xl">
+<h1 class="headline-gradient text-[48px] md:text-[64px] font-bold leading-[1.05] mb-golden-sm mx-auto max-w-[800px]">
+            欢迎回来，<br/>今天想保存什么？
+        </h1>
+<div class="max-w-[680px] mx-auto">
+<div class="recessed-input p-2 rounded-[22px] flex items-center gap-2 group transition-all focus-within:ring-4 focus-within:ring-black/5">
+<div class="pl-4 flex items-center justify-center">
+<span class="material-symbols-outlined laser-icon text-[20px]">link</span>
+</div>
+<input class="flex-1 bg-transparent border-none focus:ring-0 text-[17px] font-medium placeholder:text-black/25 py-3" placeholder="粘贴微信文章链接..." type="text"/>
+<button class="tactile-button h-12 px-8 rounded-[14px] text-white text-[15px] font-semibold tracking-wide flex items-center justify-center">
+                    一键转存
+                </button>
+</div>
+<div class="mt-8 flex flex-wrap items-center justify-center gap-8">
+<div class="flex items-center gap-2.5 text-[12px] text-black/35 font-medium">
+<span class="material-symbols-outlined text-[16px]">verified_user</span>
+<span>已连接至飞书知识库</span>
+</div>
+<div class="flex items-center gap-2.5 text-[12px] text-black/35 font-medium">
+<span class="material-symbols-outlined text-[16px]">cloud_done</span>
+<span>存储空间已同步</span>
+</div>
+</div>
+</div>
+</section>
+<section class="max-w-[980px] mx-auto px-golden-sm pb-golden-xl">
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-8 px-2 gap-4">
+<div class="flex items-center gap-2">
+<h3 class="text-[14px] font-semibold text-black/30 tracking-[0.1em] uppercase">我的转存历史</h3>
+<span class="px-2 py-0.5 rounded-full bg-black/5 text-[11px] font-bold text-black/30">0</span>
+</div>
+</div>
+<div class="bg-white/40 backdrop-blur-md rounded-[24px] border border-black/[0.04] overflow-hidden min-h-[520px] flex flex-col items-center justify-center text-center relative p-8">
+<div class="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent pointer-events-none"></div>
+<div class="relative z-10 animate-float">
+<div class="w-32 h-32 rounded-full bg-gradient-to-b from-white to-[#F5F5F7] shadow-[0_12px_36px_rgba(0,0,0,0.06),0_2px_8px_rgba(0,0,0,0.02)] border border-white flex items-center justify-center relative mb-8 mx-auto">
+<span class="material-symbols-outlined text-[56px] text-black/10" style="font-variation-settings: 'wght' 200, 'FILL' 0;">
+                        draft
+                    </span>
+<div class="absolute -right-1 -bottom-1 w-10 h-10 rounded-full bg-white shadow-md border border-black/[0.03] flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px] text-black/20" style="font-variation-settings: 'wght' 300;">
+                            add
+                        </span>
+</div>
+</div>
+</div>
+<div class="relative z-10 max-w-[400px]">
+<h4 class="text-[18px] font-semibold text-black/70 mb-3 tracking-tight">暂无转存记录</h4>
+<p class="text-[14px] text-black/40 leading-relaxed font-normal">
+                    粘贴文章链接并点击“一键转存”，开启你的飞书知识库。
+                </p>
+</div>
+</div>
+</section>
+</main>
+<footer class="py-golden-lg border-t border-black/[0.03] mt-golden-xl">
+<div class="max-w-[1200px] mx-auto px-golden-sm flex flex-col items-center">
+<div class="flex flex-wrap justify-center gap-x-12 gap-y-4 text-[14px] font-medium text-black/40 mb-10">
+<a class="hover:text-black transition-colors" href="#">隐私条款</a>
+<a class="hover:text-black transition-colors" href="#">使用协议</a>
+<a class="hover:text-black transition-colors" href="#">开发文档</a>
+<a class="hover:text-black transition-colors" href="#">联系我们</a>
+</div>
+<div class="flex items-center gap-3 text-black/25">
+<span class="text-[12px] font-semibold tracking-widest uppercase">Wechat2feishu</span>
+<span class="w-1 h-1 rounded-full bg-black/10"></span>
+<span class="text-[13px]">Designed for perfection.</span>
+</div>
+</div>
+</footer>
+</body></html>

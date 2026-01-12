@@ -14,7 +14,7 @@ export function ClientWrapper({ user }: { user: any }) {
   return (
     <>
       <Hero isLoggedIn={!!user} onSyncSuccess={handleSyncSuccess} />
-      <HistoryList refreshTrigger={refreshTrigger} />
+      <HistoryList refreshTrigger={refreshTrigger} isLoggedIn={!!user} />
     </>
   );
 }

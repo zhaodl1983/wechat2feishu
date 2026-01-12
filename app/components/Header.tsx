@@ -31,8 +31,13 @@ export function Header({ user }: HeaderProps) {
           <span className="font-semibold text-[19px] tracking-tight text-[#1d1d1f]">Wechat2feishu</span>
         </div>
         <nav className="hidden md:flex items-center gap-8 text-[14px] font-medium text-black/60">
-          <a className="hover:text-black transition-colors" href="#">功能</a>
-          <a className="hover:text-black transition-colors" href="#">工作流</a>
+          <a className="hover:text-black transition-colors" href="/">首页</a>
+          {user && (
+             <div className="relative group">
+                <a className="text-black font-semibold" href="/">我的转存</a>
+                <span className="absolute -bottom-2.5 left-1/2 w-1 h-1 -translate-x-1/2 rounded-full bg-black"></span>
+             </div>
+          )}
           <a className="hover:text-black transition-colors" href="/changelog">迭代记录</a>
         </nav>
         
@@ -40,10 +45,10 @@ export function Header({ user }: HeaderProps) {
           <div className="relative">
             <button 
               onClick={() => setShowMenu(!showMenu)}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-gray-100 transition-colors"
+              className="flex items-center gap-3 px-3 py-1.5 rounded-full bg-black/5 border border-black/[0.03] hover:bg-black/10 transition-colors"
             >
               <img src={user.avatarUrl || ''} alt="Avatar" className="w-6 h-6 rounded-full" />
-              <span className="text-[13px] font-semibold text-[#1d1d1f]">{user.name}</span>
+              <span className="text-[13px] font-medium text-black/70">{user.name}</span>
             </button>
             
             {showMenu && (
@@ -60,7 +65,7 @@ export function Header({ user }: HeaderProps) {
         ) : (
           <button 
             onClick={handleLogin}
-            className="px-5 py-1.5 rounded-full border border-black/10 text-[13px] font-semibold hover:bg-black hover:text-white transition-all text-[#1d1d1f]"
+            className="px-5 py-1.5 rounded-full border border-black/10 text-[13px] font-semibold hover:bg-black hover:text-white transition-all text-[#1d1d1f] bg-white shadow-sm"
           >
             登录飞书
           </button>

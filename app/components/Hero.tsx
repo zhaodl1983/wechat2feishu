@@ -13,6 +13,13 @@ export function Hero({ onSyncSuccess, isLoggedIn }: HeroProps) {
   const [error, setError] = useState('');
 
   const handleSync = async () => {
+    // Intercept if not logged in
+    if (!isLoggedIn) {
+        // Option A: Just redirect
+        window.location.href = '/api/auth/login';
+        return;
+    }
+
     if (!url) return;
     setLoading(true);
     setError('');
@@ -50,7 +57,11 @@ export function Hero({ onSyncSuccess, isLoggedIn }: HeroProps) {
       </h1>
       <p className="text-[21px] md:text-[24px] text-black/45 font-medium max-w-[640px] mx-auto mb-golden-lg leading-relaxed">
         以最优雅的方式，将深度好文保存至你的飞书知识库。
-        <span className="block">保留每一处细节，成就高效创作。</span>
+        {isLoggedIn ? (
+            <span className="block">保留每一处细节，成就高效创作。</span>
+        ) : (
+            <span className="block text-black/30">登录即刻开启高效转存之旅。</span>
+        )}
       </p>
 
       <div className="max-w-[680px] mx-auto">
@@ -85,26 +96,39 @@ export function Hero({ onSyncSuccess, isLoggedIn }: HeroProps) {
             </div>
         )}
 
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-8">
-          <div className="flex items-center gap-2.5 text-[13px] text-black/45 font-medium group cursor-default">
-            <div className="glass-finish-icon">
-              <span className="material-symbols-outlined text-[19px] opacity-50">auto_fix_high</span>
+        {isLoggedIn ? (
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-8">
+                <div className="flex items-center gap-2.5 text-[12px] text-black/35 font-medium">
+                    <span className="material-symbols-outlined text-[16px]">verified_user</span>
+                    <span>已连接至飞书知识库</span>
+                </div>
+                <div className="flex items-center gap-2.5 text-[12px] text-black/35 font-medium">
+                    <span className="material-symbols-outlined text-[16px]">cloud_done</span>
+                    <span>存储空间已同步</span>
+                </div>
             </div>
-            <span className="tracking-tight group-hover:text-black/70 transition-colors">智能去噪正文提取</span>
-          </div>
-          <div className="flex items-center gap-2.5 text-[13px] text-black/45 font-medium group cursor-default">
+        ) : (
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-8">
+              <div className="flex items-center gap-2.5 text-[13px] text-black/45 font-medium group cursor-default">
+                <div className="glass-finish-icon">
+                  <span className="material-symbols-outlined feature-tag-icon text-[19px]">auto_fix_high</span>
+                </div>
+                <span className="tracking-tight group-hover:text-black/70 transition-colors">智能去噪正文提取</span>
+              </div>
+              <div className="flex items-center gap-2.5 text-[13px] text-black/45 font-medium group cursor-default">
+                <div className="glass-finish-icon">
+                  <span className="material-symbols-outlined feature-tag-icon text-[19px]">grid_view</span>
+                </div>
+                <span className="tracking-tight group-hover:text-black/70 transition-colors">像素级高保真渲染</span>
+              </div>
+              <div className="flex items-center gap-2.5 text-[13px] text-black/45 font-medium group cursor-default">
             <div className="glass-finish-icon">
-              <span className="material-symbols-outlined text-[19px] opacity-50">grid_view</span>
+              <span className="material-symbols-outlined feature-tag-icon text-[19px]" style={{ fontVariationSettings: "'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24" }}>lock</span>
             </div>
-            <span className="tracking-tight group-hover:text-black/70 transition-colors">像素级高保真渲染</span>
-          </div>
-          <div className="flex items-center gap-2.5 text-[13px] text-black/45 font-medium group cursor-default">
-            <div className="glass-finish-icon">
-              <span className="material-symbols-outlined text-[19px] opacity-50">lock</span>
+                <span className="tracking-tight group-hover:text-black/70 transition-colors">全链路隐私加密保护</span>
+              </div>
             </div>
-            <span className="tracking-tight group-hover:text-black/70 transition-colors">全链路隐私加密保护</span>
-          </div>
-        </div>
+        )}
       </div>
     </section>
   );
