@@ -2,8 +2,37 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getSession } from '@/lib/session';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const mode = searchParams.get('mode');
+
+    // Case 1: Trending (Open Access)
+    if (mode === 'trending') {
+        const trending = await prisma.article.groupBy({
+            by: ['originalUrl', 'title'],
+            where: { status: 'completed' },
+            _count: { originalUrl: true },
+            orderBy: {
+                _count: { originalUrl: 'desc' }
+            },
+            take: 10
+        });
+        
+        const articles = trending.map((item, index) => ({
+            id: `rank-${index}`,
+            originalUrl: item.originalUrl,
+            title: item.title,
+            count: item._count.originalUrl,
+            publishDate: new Date().toISOString(),
+            status: 'completed',
+            isTrending: true
+        }));
+        
+        return NextResponse.json({ data: articles });
+    }
+
+    // Case 2: Personal History
     const session = await getSession();
     const where = session ? { userId: session.userId } : { userId: null };
 
@@ -14,6 +43,7 @@ export async function GET() {
     });
     return NextResponse.json({ data: articles });
   } catch (error) {
+    console.error('History API Error:', error);
     return NextResponse.json({ error: 'Failed to fetch history' }, { status: 500 });
   }
 }

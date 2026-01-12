@@ -1,7 +1,7 @@
 <html lang="zh-CN"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Wechat2feishu - 我的转存 (单条管理优化)</title>
+<title>Wechat2feishu - 我的转存 (空状态)</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
@@ -25,6 +25,15 @@
                     },
                     borderRadius: {
                         'apple': '12px',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
                     }
                 }
             }
@@ -87,43 +96,9 @@
             filter: drop-shadow(0 0 0.5px rgba(0,0,0,0.5));
             opacity: 0.6;
         }
-        .status-glow-green {
-            filter: drop-shadow(0 0 8px rgba(40, 205, 65, 0.4));
-        }
-        .status-glow-amber {
-            filter: drop-shadow(0 0 8px rgba(255, 184, 0, 0.4));
-        }
-        .status-glow-red {
-            filter: drop-shadow(0 0 8px rgba(255, 59, 48, 0.4));
-        }
-        .glass-icon-shade {
-            background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%);
-        }
-        .sub-pixel-divider {
-            height: 0.5px;
-            background-color: rgba(0, 0, 0, 0.06);
-        }
         .glass-nav {
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: saturate(180%) blur(20px);
-        }
-        @keyframes spin-slow {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        .animate-spin-slow {
-            animation: spin-slow 2s linear infinite;
-        }
-        .action-icon {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            color: rgba(0, 0, 0, 0.25);
-        }
-        .action-icon:hover {
-            color: rgba(0, 0, 0, 0.8);
-            transform: scale(1.1);
-        }
-        .action-icon.delete:hover {
-            color: #FF3B30;
         }
     </style>
 </head><body class="text-[#1d1d1f] selection:bg-black/5">
@@ -187,153 +162,29 @@
 <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 px-2 gap-4">
 <div class="flex items-center gap-2">
 <h3 class="text-[14px] font-semibold text-black/30 tracking-[0.1em] uppercase">我的转存历史</h3>
-<span class="px-2 py-0.5 rounded-full bg-black/5 text-[11px] font-bold text-black/30">12</span>
-</div>
-<div class="flex items-center gap-4">
-<button class="text-[13px] font-medium text-black/30 hover:text-vibrant-red transition-colors flex items-center gap-1.5 px-2">
-<span class="material-symbols-outlined text-[16px]">delete_sweep</span>
-                    清除记录
-                </button>
+<span class="px-2 py-0.5 rounded-full bg-black/5 text-[11px] font-bold text-black/30">0</span>
 </div>
 </div>
-<div class="bg-white/40 backdrop-blur-md rounded-[24px] border border-black/[0.04] overflow-hidden min-h-[400px] flex flex-col">
-<table class="w-full text-left border-collapse">
-<thead>
-<tr class="text-[12px] font-bold text-black/30 uppercase tracking-wider">
-<th class="px-8 py-6">文章标题</th>
-<th class="px-8 py-6 hidden md:table-cell">转存时间</th>
-<th class="px-8 py-6 text-right pr-12">状态与操作</th>
-</tr>
-</thead>
-<tbody>
-<tr class="group hover:bg-black/[0.02] transition-colors">
-<td class="px-8 py-6">
-<div class="flex flex-col gap-1">
-<span class="text-[16px] font-semibold text-black/85 leading-tight line-clamp-1">乔布斯的极简美学：如何在软件设计中应用？</span>
-<span class="md:hidden text-[13px] text-black/40">10分钟前</span>
-</div>
-</td>
-<td class="px-8 py-6 hidden md:table-cell">
-<span class="text-[14px] text-black/40 font-medium">10分钟前</span>
-</td>
-<td class="px-8 py-6 text-right pr-12">
-<div class="flex items-center justify-end gap-5">
-<div class="flex items-center gap-4 opacity-0 translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out">
-<a class="action-icon" href="#" title="在飞书中查看">
-<span class="material-symbols-outlined text-[22px]">open_in_new</span>
-</a>
-<button class="action-icon delete" title="删除记录">
-<span class="material-symbols-outlined text-[22px]">delete</span>
-</button>
-</div>
-<div class="w-8 h-8 rounded-full flex items-center justify-center status-glow-green text-vibrant-green relative overflow-hidden glass-icon-shade shrink-0 group-hover:opacity-30 transition-opacity duration-300">
-<span class="material-symbols-outlined text-[20px] fill-1">check_circle</span>
+<div class="bg-white/40 backdrop-blur-md rounded-[24px] border border-black/[0.04] overflow-hidden min-h-[520px] flex flex-col items-center justify-center text-center relative p-8">
+<div class="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent pointer-events-none"></div>
+<div class="relative z-10 animate-float">
+<div class="w-32 h-32 rounded-full bg-gradient-to-b from-white to-[#F5F5F7] shadow-[0_12px_36px_rgba(0,0,0,0.06),0_2px_8px_rgba(0,0,0,0.02)] border border-white flex items-center justify-center relative mb-8 mx-auto">
+<span class="material-symbols-outlined text-[56px] text-black/10" style="font-variation-settings: 'wght' 200, 'FILL' 0;">
+                        draft
+                    </span>
+<div class="absolute -right-1 -bottom-1 w-10 h-10 rounded-full bg-white shadow-md border border-black/[0.03] flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px] text-black/20" style="font-variation-settings: 'wght' 300;">
+                            add
+                        </span>
 </div>
 </div>
-</td>
-</tr>
-<tr><td colspan="3"><div class="sub-pixel-divider mx-8"></div></td></tr>
-<tr class="group hover:bg-black/[0.02] transition-colors">
-<td class="px-8 py-6">
-<div class="flex flex-col gap-1">
-<span class="text-[16px] font-semibold text-black/85 leading-tight line-clamp-1">2024年全球设计趋势报告：触感与深度的回归</span>
-<span class="md:hidden text-[13px] text-vibrant-amber/80">正在解析并渲染...</span>
 </div>
-</td>
-<td class="px-8 py-6 hidden md:table-cell">
-<span class="text-[14px] text-black/40 font-medium">刚刚</span>
-</td>
-<td class="px-8 py-6 text-right pr-12">
-<div class="flex items-center justify-end gap-5">
-<div class="flex items-center gap-4 opacity-0 translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out">
-<button class="action-icon delete" title="删除记录">
-<span class="material-symbols-outlined text-[22px]">delete</span>
-</button>
-</div>
-<div class="w-8 h-8 rounded-full flex items-center justify-center status-glow-amber text-vibrant-amber relative overflow-hidden glass-icon-shade shrink-0 group-hover:opacity-30 transition-opacity duration-300">
-<span class="material-symbols-outlined text-[20px] animate-spin-slow">progress_activity</span>
-</div>
-</div>
-</td>
-</tr>
-<tr><td colspan="3"><div class="sub-pixel-divider mx-8"></div></td></tr>
-<tr class="group hover:bg-black/[0.02] transition-colors">
-<td class="px-8 py-6">
-<div class="flex flex-col gap-1">
-<span class="text-[16px] font-semibold text-black/85 leading-tight line-clamp-1">飞书文档的高级排版技巧指南</span>
-<span class="md:hidden text-[13px] text-vibrant-red/80">网络连接异常</span>
-</div>
-</td>
-<td class="px-8 py-6 hidden md:table-cell">
-<span class="text-[14px] text-black/40 font-medium">昨天 14:20</span>
-</td>
-<td class="px-8 py-6 text-right pr-12">
-<div class="flex items-center justify-end gap-5">
-<div class="flex items-center gap-4 opacity-0 translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out">
-<button class="action-icon" title="重试转存">
-<span class="material-symbols-outlined text-[22px]">refresh</span>
-</button>
-<button class="action-icon delete" title="删除记录">
-<span class="material-symbols-outlined text-[22px]">delete</span>
-</button>
-</div>
-<div class="w-8 h-8 rounded-full flex items-center justify-center status-glow-red text-vibrant-red relative overflow-hidden glass-icon-shade shrink-0 group-hover:opacity-30 transition-opacity duration-300">
-<span class="material-symbols-outlined text-[20px] fill-1">error</span>
-</div>
-</div>
-</td>
-</tr>
-<tr><td colspan="3"><div class="sub-pixel-divider mx-8"></div></td></tr>
-<tr class="group hover:bg-black/[0.02] transition-colors">
-<td class="px-8 py-6">
-<div class="flex flex-col gap-1">
-<span class="text-[16px] font-semibold text-black/85 leading-tight line-clamp-1">深度解读：苹果Vision Pro的空间交互逻辑</span>
-<span class="md:hidden text-[13px] text-black/40">2天前</span>
-</div>
-</td>
-<td class="px-8 py-6 hidden md:table-cell">
-<span class="text-[14px] text-black/40 font-medium">2天前</span>
-</td>
-<td class="px-8 py-6 text-right pr-12">
-<div class="flex items-center justify-end gap-5">
-<div class="flex items-center gap-4 opacity-0 translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out">
-<a class="action-icon" href="#" title="在飞书中查看">
-<span class="material-symbols-outlined text-[22px]">open_in_new</span>
-</a>
-<button class="action-icon delete" title="删除记录">
-<span class="material-symbols-outlined text-[22px]">delete</span>
-</button>
-</div>
-<div class="w-8 h-8 rounded-full flex items-center justify-center status-glow-green text-vibrant-green relative overflow-hidden glass-icon-shade shrink-0 group-hover:opacity-30 transition-opacity duration-300">
-<span class="material-symbols-outlined text-[20px] fill-1">check_circle</span>
-</div>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="hidden flex-1 flex-col items-center justify-center py-20 px-8 text-center">
-<div class="w-24 h-24 mb-6 rounded-[28px] bg-black/[0.02] border border-black/[0.04] flex items-center justify-center relative">
-<span class="material-symbols-outlined text-[48px] text-black/[0.08]">history</span>
-<div class="absolute -right-2 -bottom-2 w-10 h-10 rounded-full bg-white shadow-sm border border-black/[0.05] flex items-center justify-center">
-<span class="material-symbols-outlined text-[20px] text-black/20">search</span>
-</div>
-</div>
-<h4 class="text-[19px] font-semibold text-black/60 mb-2">暂无转存记录</h4>
-<p class="text-[14px] text-black/30 max-w-[280px] leading-relaxed">
-                    粘贴微信文章链接，开启你的第一个高保真知识库归档。
+<div class="relative z-10 max-w-[400px]">
+<h4 class="text-[18px] font-semibold text-black/70 mb-3 tracking-tight">暂无转存记录</h4>
+<p class="text-[14px] text-black/40 leading-relaxed font-normal">
+                    粘贴文章链接并点击“一键转存”，开启你的飞书知识库。
                 </p>
-<button class="mt-8 px-6 py-2 rounded-full border border-black/10 text-[13px] font-medium text-black/60 hover:bg-black hover:text-white transition-all">
-                    了解如何使用
-                </button>
 </div>
-</div>
-<div class="mt-8 flex justify-center">
-<nav class="flex items-center gap-2 bg-white/50 p-1 rounded-full border border-black/[0.03]">
-<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-black/5 text-black/40"><span class="material-symbols-outlined text-[18px]">chevron_left</span></button>
-<span class="px-4 text-[13px] font-medium text-black/60">第 1 / 1 页</span>
-<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-black/5 text-black/40"><span class="material-symbols-outlined text-[18px]">chevron_right</span></button>
-</nav>
 </div>
 </section>
 </main>

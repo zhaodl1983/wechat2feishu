@@ -92,10 +92,16 @@ npm run dev
 | **V0.1** | **核心归档器** | ✅ 已完成 | CLI 工具，本地 Markdown 转换与存储 |
 | **V0.2** | **云端同步** | ✅ 已完成 | 对接飞书 API，实现图片上传与文档导入 |
 | **V0.3** | **Web 界面化** | ✅ 已完成 | 现代化 Web UI，任务历史管理 |
-| **V0.4** | **SaaS 服务化** | ✅ 已完成 | 支持飞书扫码登录 (OAuth)，实现多用户隔离 |
-| **V0.5** | **架构升级** | 📅 待启动 | 迁移至 MongoDB，提升数据稳定性与查询性能 |
-| **V0.6** | **社区与探索** | 📅 待启动 | 热门榜单、数据看板与社区化功能 |
+| **V0.4** | **SaaS 服务化** | ✅ 已完成 | 支持飞书扫码登录 (OAuth)，多用户隔离，图片智能代理 |
+| **V0.5** | **架构升级** | ✅ 已完成 | 迁移至 MongoDB 副本集，支持海量数据与聚合查询 |
+| **V0.6** | **社区与探索** | 🚧 进行中 | 热门转存榜单，数据看板 (Open Stats) |
 
-## 📄 许可证
+## 🛠 技术架构 (V0.5)
+
+- **前端**: Next.js (App Router), React, Tailwind CSS
+- **后端**: Next.js API Routes (Serverless/Node.js)
+- **数据库**: **MongoDB 7.0 (Replica Set)** + Prisma ORM
+- **抓取引擎**: Playwright (无头浏览器)
+- **云端集成**: Feishu Open Platform (OAuth 2.0 + Drive + Doc Import)
 
 MIT License

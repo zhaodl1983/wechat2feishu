@@ -1,7 +1,7 @@
 <html lang="zh-CN"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Wechat2feishu - 极致保存体验</title>
+<title>Wechat2feishu - 我的转存 (单条管理优化)</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
@@ -70,6 +70,19 @@
             transform: translateY(1px);
             box-shadow: 0 5px 10px -3px rgba(0, 0, 0, 0.3);
         }
+        .frosted-glass-button {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .frosted-glass-button:hover {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(0, 0, 0, 0.15);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.05);
+        }
         .laser-icon {
             filter: drop-shadow(0 0 0.5px rgba(0,0,0,0.5));
             opacity: 0.6;
@@ -77,48 +90,43 @@
         .status-glow-green {
             filter: drop-shadow(0 0 8px rgba(40, 205, 65, 0.4));
         }
+        .status-glow-amber {
+            filter: drop-shadow(0 0 8px rgba(255, 184, 0, 0.4));
+        }
+        .status-glow-red {
+            filter: drop-shadow(0 0 8px rgba(255, 59, 48, 0.4));
+        }
         .glass-icon-shade {
             background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%);
         }
         .sub-pixel-divider {
             height: 0.5px;
-            background-color: rgba(0, 0, 0, 0.08);
+            background-color: rgba(0, 0, 0, 0.06);
         }
         .glass-nav {
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: saturate(180%) blur(20px);
         }
-        .feature-tag-icon {
-            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
-            color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
-        .glass-finish-icon {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 24px;
-            height: 24px;
+        .animate-spin-slow {
+            animation: spin-slow 2s linear infinite;
         }
-        .glass-finish-icon::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 50%);
-            border-radius: 6px;
-            pointer-events: none;
-            opacity: 0.3;
+        .action-icon {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: rgba(0, 0, 0, 0.25);
         }
-        .rank-badge {
-            font-feature-settings: "tnum";
-            font-variant-numeric: tabular-nums;
+        .action-icon:hover {
+            color: rgba(0, 0, 0, 0.8);
+            transform: scale(1.1);
+        }
+        .action-icon.delete:hover {
+            color: #FF3B30;
         }
     </style>
-</head>
-<body class="text-[#1d1d1f] selection:bg-black/5">
+</head><body class="text-[#1d1d1f] selection:bg-black/5">
 <header class="fixed top-0 w-full z-50 glass-nav border-b border-black/[0.03]">
 <div class="max-w-[1200px] mx-auto flex items-center justify-between px-golden-sm h-16">
 <div class="flex items-center gap-3">
@@ -129,22 +137,30 @@
 </div>
 <nav class="hidden md:flex items-center gap-8 text-[14px] font-medium text-black/60">
 <a class="hover:text-black transition-colors" href="#">首页</a>
+<div class="relative group">
+<a class="text-black font-semibold" href="#">我的转存</a>
+<span class="absolute -bottom-2.5 left-1/2 w-1 h-1 -translate-x-1/2 rounded-full bg-black"></span>
+</div>
 <a class="hover:text-black transition-colors" href="#">迭代记录</a>
 </nav>
-<button class="px-5 py-1.5 rounded-full border border-black/10 text-[13px] font-semibold hover:bg-black hover:text-white transition-all bg-white shadow-sm">
-            登录飞书
-        </button>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-3 px-3 py-1.5 rounded-full bg-black/5 border border-black/[0.03]">
+<div class="w-6 h-6 rounded-full bg-gradient-to-tr from-gray-400 to-gray-200 overflow-hidden flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-white">person</span>
+</div>
+<span class="text-[13px] font-medium text-black/70">Designer Pro</span>
+</div>
+<button class="text-[13px] font-medium text-black/40 hover:text-vibrant-red transition-colors">
+                退出登录
+            </button>
+</div>
 </div>
 </header>
 <main class="pt-32">
 <section class="max-w-[1200px] mx-auto px-golden-sm text-center mb-golden-xl">
-<h1 class="headline-gradient text-[56px] md:text-[72px] font-bold leading-[1.05] mb-golden-sm mx-auto max-w-[900px]">
-            极致打磨，<br/>让微信灵感瞬时归档。
+<h1 class="headline-gradient text-[48px] md:text-[64px] font-bold leading-[1.05] mb-golden-sm mx-auto max-w-[800px]">
+            欢迎回来，<br/>今天想保存什么？
         </h1>
-<p class="text-[21px] md:text-[24px] text-black/45 font-medium max-w-[640px] mx-auto mb-golden-lg leading-relaxed">
-            以最优雅的方式，将深度好文保存至你的飞书知识库。
-            <span class="block text-black/30">登录即刻开启高效转存之旅。</span>
-</p>
 <div class="max-w-[680px] mx-auto">
 <div class="recessed-input p-2 rounded-[22px] flex items-center gap-2 group transition-all focus-within:ring-4 focus-within:ring-black/5">
 <div class="pl-4 flex items-center justify-center">
@@ -156,61 +172,61 @@
                 </button>
 </div>
 <div class="mt-8 flex flex-wrap items-center justify-center gap-8">
-<div class="flex items-center gap-2.5 text-[13px] text-black/45 font-medium group cursor-default">
-<div class="glass-finish-icon">
-<span class="material-symbols-outlined feature-tag-icon text-[19px]">auto_fix_high</span>
+<div class="flex items-center gap-2.5 text-[12px] text-black/35 font-medium">
+<span class="material-symbols-outlined text-[16px]">verified_user</span>
+<span>已连接至飞书知识库</span>
 </div>
-<span class="tracking-tight group-hover:text-black/70 transition-colors">智能去噪正文提取</span>
-</div>
-<div class="flex items-center gap-2.5 text-[13px] text-black/45 font-medium group cursor-default">
-<div class="glass-finish-icon">
-<span class="material-symbols-outlined feature-tag-icon text-[19px]">grid_view</span>
-</div>
-<span class="tracking-tight group-hover:text-black/70 transition-colors">像素级高保真渲染</span>
-</div>
-<div class="flex items-center gap-2.5 text-[13px] text-black/45 font-medium group cursor-default">
-<div class="glass-finish-icon">
-<span class="material-symbols-outlined feature-tag-icon text-[19px]" style="font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;">lock</span>
-</div>
-<span class="tracking-tight group-hover:text-black/70 transition-colors">全链路隐私加密保护</span>
+<div class="flex items-center gap-2.5 text-[12px] text-black/35 font-medium">
+<span class="material-symbols-outlined text-[16px]">cloud_done</span>
+<span>存储空间已同步</span>
 </div>
 </div>
 </div>
 </section>
 <section class="max-w-[980px] mx-auto px-golden-sm pb-golden-xl">
-<div class="flex items-center justify-between mb-8 px-2">
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-8 px-2 gap-4">
 <div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-[18px] text-vibrant-amber">trending_up</span>
-<h3 class="text-[14px] font-semibold text-black/30 tracking-[0.1em] uppercase">热门转存</h3>
+<h3 class="text-[14px] font-semibold text-black/30 tracking-[0.1em] uppercase">我的转存历史</h3>
+<span class="px-2 py-0.5 rounded-full bg-black/5 text-[11px] font-bold text-black/30">12</span>
 </div>
-<span class="text-[12px] font-medium text-black/25">实时更新</span>
+<div class="flex items-center gap-4">
+<button class="text-[13px] font-medium text-black/30 hover:text-vibrant-red transition-colors flex items-center gap-1.5 px-2">
+<span class="material-symbols-outlined text-[16px]">delete_sweep</span>
+                    清除记录
+                </button>
 </div>
-<div class="bg-white/40 backdrop-blur-md rounded-[24px] border border-black/[0.04] overflow-hidden shadow-[0_4px_24px_-4px_rgba(0,0,0,0.02)]">
+</div>
+<div class="bg-white/40 backdrop-blur-md rounded-[24px] border border-black/[0.04] overflow-hidden min-h-[400px] flex flex-col">
 <table class="w-full text-left border-collapse">
 <thead>
 <tr class="text-[12px] font-bold text-black/30 uppercase tracking-wider">
-<th class="px-8 py-5">文章标题</th>
-<th class="px-8 py-5 hidden md:table-cell text-right">转存次数</th>
-<th class="px-8 py-5 text-center">状态</th>
+<th class="px-8 py-6">文章标题</th>
+<th class="px-8 py-6 hidden md:table-cell">转存时间</th>
+<th class="px-8 py-6 text-right pr-12">状态与操作</th>
 </tr>
 </thead>
 <tbody>
 <tr class="group hover:bg-black/[0.02] transition-colors">
 <td class="px-8 py-6">
-<div class="flex items-center gap-4">
-<span class="rank-badge text-[13px] font-bold text-black/20 w-4">01</span>
 <div class="flex flex-col gap-1">
-<span class="text-[16px] font-semibold text-black/85 leading-tight group-hover:text-black transition-colors">乔布斯的极简美学：如何在软件设计中应用？</span>
-<span class="md:hidden text-[13px] text-black/40">12,482 次转存</span>
-</div>
+<span class="text-[16px] font-semibold text-black/85 leading-tight line-clamp-1">乔布斯的极简美学：如何在软件设计中应用？</span>
+<span class="md:hidden text-[13px] text-black/40">10分钟前</span>
 </div>
 </td>
-<td class="px-8 py-6 hidden md:table-cell text-right">
-<span class="text-[14px] text-black/40 font-semibold rank-badge">12,482</span>
+<td class="px-8 py-6 hidden md:table-cell">
+<span class="text-[14px] text-black/40 font-medium">10分钟前</span>
 </td>
-<td class="px-8 py-6">
-<div class="flex items-center justify-center">
-<div class="w-8 h-8 rounded-full flex items-center justify-center status-glow-green text-vibrant-green relative overflow-hidden glass-icon-shade">
+<td class="px-8 py-6 text-right pr-12">
+<div class="flex items-center justify-end gap-5">
+<div class="flex items-center gap-4 opacity-0 translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out">
+<a class="action-icon" href="#" title="在飞书中查看">
+<span class="material-symbols-outlined text-[22px]">open_in_new</span>
+</a>
+<button class="action-icon delete" title="删除记录">
+<span class="material-symbols-outlined text-[22px]">delete</span>
+</button>
+</div>
+<div class="w-8 h-8 rounded-full flex items-center justify-center status-glow-green text-vibrant-green relative overflow-hidden glass-icon-shade shrink-0 group-hover:opacity-30 transition-opacity duration-300">
 <span class="material-symbols-outlined text-[20px] fill-1">check_circle</span>
 </div>
 </div>
@@ -219,21 +235,23 @@
 <tr><td colspan="3"><div class="sub-pixel-divider mx-8"></div></td></tr>
 <tr class="group hover:bg-black/[0.02] transition-colors">
 <td class="px-8 py-6">
-<div class="flex items-center gap-4">
-<span class="rank-badge text-[13px] font-bold text-black/20 w-4">02</span>
 <div class="flex flex-col gap-1">
-<span class="text-[16px] font-semibold text-black/85 leading-tight group-hover:text-black transition-colors">2024年全球设计趋势报告：触感与深度的回归</span>
-<span class="md:hidden text-[13px] text-black/40">8,931 次转存</span>
-</div>
+<span class="text-[16px] font-semibold text-black/85 leading-tight line-clamp-1">2024年全球设计趋势报告：触感与深度的回归</span>
+<span class="md:hidden text-[13px] text-vibrant-amber/80">正在解析并渲染...</span>
 </div>
 </td>
-<td class="px-8 py-6 hidden md:table-cell text-right">
-<span class="text-[14px] text-black/40 font-semibold rank-badge">8,931</span>
+<td class="px-8 py-6 hidden md:table-cell">
+<span class="text-[14px] text-black/40 font-medium">刚刚</span>
 </td>
-<td class="px-8 py-6">
-<div class="flex items-center justify-center">
-<div class="w-8 h-8 rounded-full flex items-center justify-center status-glow-green text-vibrant-green relative overflow-hidden glass-icon-shade">
-<span class="material-symbols-outlined text-[20px] fill-1">check_circle</span>
+<td class="px-8 py-6 text-right pr-12">
+<div class="flex items-center justify-end gap-5">
+<div class="flex items-center gap-4 opacity-0 translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out">
+<button class="action-icon delete" title="删除记录">
+<span class="material-symbols-outlined text-[22px]">delete</span>
+</button>
+</div>
+<div class="w-8 h-8 rounded-full flex items-center justify-center status-glow-amber text-vibrant-amber relative overflow-hidden glass-icon-shade shrink-0 group-hover:opacity-30 transition-opacity duration-300">
+<span class="material-symbols-outlined text-[20px] animate-spin-slow">progress_activity</span>
 </div>
 </div>
 </td>
@@ -241,21 +259,26 @@
 <tr><td colspan="3"><div class="sub-pixel-divider mx-8"></div></td></tr>
 <tr class="group hover:bg-black/[0.02] transition-colors">
 <td class="px-8 py-6">
-<div class="flex items-center gap-4">
-<span class="rank-badge text-[13px] font-bold text-black/20 w-4">03</span>
 <div class="flex flex-col gap-1">
-<span class="text-[16px] font-semibold text-black/85 leading-tight group-hover:text-black transition-colors">飞书文档的高级排版技巧指南</span>
-<span class="md:hidden text-[13px] text-black/40">5,204 次转存</span>
-</div>
+<span class="text-[16px] font-semibold text-black/85 leading-tight line-clamp-1">飞书文档的高级排版技巧指南</span>
+<span class="md:hidden text-[13px] text-vibrant-red/80">网络连接异常</span>
 </div>
 </td>
-<td class="px-8 py-6 hidden md:table-cell text-right">
-<span class="text-[14px] text-black/40 font-semibold rank-badge">5,204</span>
+<td class="px-8 py-6 hidden md:table-cell">
+<span class="text-[14px] text-black/40 font-medium">昨天 14:20</span>
 </td>
-<td class="px-8 py-6">
-<div class="flex items-center justify-center">
-<div class="w-8 h-8 rounded-full flex items-center justify-center status-glow-green text-vibrant-green relative overflow-hidden glass-icon-shade">
-<span class="material-symbols-outlined text-[20px] fill-1">check_circle</span>
+<td class="px-8 py-6 text-right pr-12">
+<div class="flex items-center justify-end gap-5">
+<div class="flex items-center gap-4 opacity-0 translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out">
+<button class="action-icon" title="重试转存">
+<span class="material-symbols-outlined text-[22px]">refresh</span>
+</button>
+<button class="action-icon delete" title="删除记录">
+<span class="material-symbols-outlined text-[22px]">delete</span>
+</button>
+</div>
+<div class="w-8 h-8 rounded-full flex items-center justify-center status-glow-red text-vibrant-red relative overflow-hidden glass-icon-shade shrink-0 group-hover:opacity-30 transition-opacity duration-300">
+<span class="material-symbols-outlined text-[20px] fill-1">error</span>
 </div>
 </div>
 </td>
@@ -263,20 +286,25 @@
 <tr><td colspan="3"><div class="sub-pixel-divider mx-8"></div></td></tr>
 <tr class="group hover:bg-black/[0.02] transition-colors">
 <td class="px-8 py-6">
-<div class="flex items-center gap-4">
-<span class="rank-badge text-[13px] font-bold text-black/10 w-4 text-[11px]">04</span>
 <div class="flex flex-col gap-1">
-<span class="text-[16px] font-semibold text-black/85 leading-tight group-hover:text-black transition-colors">如何构建可持续的个人知识管理系统？</span>
-<span class="md:hidden text-[13px] text-black/40">3,122 次转存</span>
-</div>
+<span class="text-[16px] font-semibold text-black/85 leading-tight line-clamp-1">深度解读：苹果Vision Pro的空间交互逻辑</span>
+<span class="md:hidden text-[13px] text-black/40">2天前</span>
 </div>
 </td>
-<td class="px-8 py-6 hidden md:table-cell text-right">
-<span class="text-[14px] text-black/40 font-semibold rank-badge">3,122</span>
+<td class="px-8 py-6 hidden md:table-cell">
+<span class="text-[14px] text-black/40 font-medium">2天前</span>
 </td>
-<td class="px-8 py-6">
-<div class="flex items-center justify-center">
-<div class="w-8 h-8 rounded-full flex items-center justify-center status-glow-green text-vibrant-green relative overflow-hidden glass-icon-shade">
+<td class="px-8 py-6 text-right pr-12">
+<div class="flex items-center justify-end gap-5">
+<div class="flex items-center gap-4 opacity-0 translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out">
+<a class="action-icon" href="#" title="在飞书中查看">
+<span class="material-symbols-outlined text-[22px]">open_in_new</span>
+</a>
+<button class="action-icon delete" title="删除记录">
+<span class="material-symbols-outlined text-[22px]">delete</span>
+</button>
+</div>
+<div class="w-8 h-8 rounded-full flex items-center justify-center status-glow-green text-vibrant-green relative overflow-hidden glass-icon-shade shrink-0 group-hover:opacity-30 transition-opacity duration-300">
 <span class="material-symbols-outlined text-[20px] fill-1">check_circle</span>
 </div>
 </div>
@@ -284,12 +312,34 @@
 </tr>
 </tbody>
 </table>
+<div class="hidden flex-1 flex-col items-center justify-center py-20 px-8 text-center">
+<div class="w-24 h-24 mb-6 rounded-[28px] bg-black/[0.02] border border-black/[0.04] flex items-center justify-center relative">
+<span class="material-symbols-outlined text-[48px] text-black/[0.08]">history</span>
+<div class="absolute -right-2 -bottom-2 w-10 h-10 rounded-full bg-white shadow-sm border border-black/[0.05] flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px] text-black/20">search</span>
+</div>
+</div>
+<h4 class="text-[19px] font-semibold text-black/60 mb-2">暂无转存记录</h4>
+<p class="text-[14px] text-black/30 max-w-[280px] leading-relaxed">
+                    粘贴微信文章链接，开启你的第一个高保真知识库归档。
+                </p>
+<button class="mt-8 px-6 py-2 rounded-full border border-black/10 text-[13px] font-medium text-black/60 hover:bg-black hover:text-white transition-all">
+                    了解如何使用
+                </button>
+</div>
+</div>
+<div class="mt-8 flex justify-center">
+<nav class="flex items-center gap-2 bg-white/50 p-1 rounded-full border border-black/[0.03]">
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-black/5 text-black/40"><span class="material-symbols-outlined text-[18px]">chevron_left</span></button>
+<span class="px-4 text-[13px] font-medium text-black/60">第 1 / 1 页</span>
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-black/5 text-black/40"><span class="material-symbols-outlined text-[18px]">chevron_right</span></button>
+</nav>
 </div>
 </section>
 </main>
 <footer class="py-golden-lg border-t border-black/[0.03] mt-golden-xl">
 <div class="max-w-[1200px] mx-auto px-golden-sm flex flex-col items-center">
-<div class="flex gap-12 text-[14px] font-medium text-black/40 mb-10">
+<div class="flex flex-wrap justify-center gap-x-12 gap-y-4 text-[14px] font-medium text-black/40 mb-10">
 <a class="hover:text-black transition-colors" href="#">隐私条款</a>
 <a class="hover:text-black transition-colors" href="#">使用协议</a>
 <a class="hover:text-black transition-colors" href="#">开发文档</a>

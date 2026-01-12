@@ -5,10 +5,12 @@ import React, { useEffect, useState } from 'react';
 interface Article {
   id: string;
   title: string;
+  originalUrl?: string;
   publishDate: string;
   status: string;
   feishuUrl?: string;
-  createdAt: string;
+  createdAt?: string;
+  count?: number; // For trending
 }
 
 interface HistoryListProps {
@@ -18,15 +20,24 @@ interface HistoryListProps {
 
 export function HistoryList({ refreshTrigger, isLoggedIn }: HistoryListProps) {
   const [articles, setArticles] = useState<Article[]>([]);
+  // If not logged in, force trending mode. If logged in, default to 'personal'.
+  const [viewMode, setViewMode] = useState<'personal' | 'trending'>(isLoggedIn ? 'personal' : 'trending');
+
+  // Sync viewMode when login status changes
+  useEffect(() => {
+      if (!isLoggedIn) setViewMode('trending');
+      else setViewMode('personal');
+  }, [isLoggedIn]);
 
   useEffect(() => {
-    fetch('/api/history')
+    const url = viewMode === 'trending' ? '/api/history?mode=trending' : '/api/history';
+    fetch(url)
       .then((res) => res.json())
       .then((data) => {
           if (data.data) setArticles(data.data);
       })
       .catch(console.error);
-  }, [refreshTrigger, isLoggedIn]);
+  }, [refreshTrigger, isLoggedIn, viewMode]);
 
   const handleDelete = async (id: string) => {
       if (!confirm('确定删除这条记录吗？')) return;
@@ -38,7 +49,8 @@ export function HistoryList({ refreshTrigger, isLoggedIn }: HistoryListProps) {
       }
   };
 
-  const formatTime = (dateStr: string) => {
+  const formatTime = (dateStr?: string) => {
+      if (!dateStr) return '';
       const date = new Date(dateStr);
       const now = new Date();
       const diffMs = now.getTime() - date.getTime();
@@ -50,7 +62,8 @@ export function HistoryList({ refreshTrigger, isLoggedIn }: HistoryListProps) {
       return date.toLocaleDateString();
   };
 
-  if (articles.length === 0) {
+  // Empty State
+  if (articles.length === 0 && viewMode === 'personal') {
       return (
         <section className="max-w-[1024px] mx-auto px-golden-sm pb-golden-xl">
             <div className="bg-white/40 backdrop-blur-md rounded-[24px] border border-black/[0.04] overflow-hidden min-h-[400px] flex flex-col items-center justify-center py-20 px-8 text-center shadow-sm">
@@ -73,37 +86,63 @@ export function HistoryList({ refreshTrigger, isLoggedIn }: HistoryListProps) {
   }
 
   return (
-    <section className="max-w-[1024px] mx-auto px-golden-sm pb-golden-xl">
+    <section className="max-w-[980px] mx-auto px-golden-sm pb-golden-xl">
+      {/* Header / Tabs */}
       <div className="flex items-center justify-between mb-8 px-2">
-        {isLoggedIn ? (
-            <div className="flex items-center gap-2">
-                <h3 className="text-[14px] font-semibold text-black/30 tracking-[0.1em] uppercase">我的转存历史</h3>
-                <span className="px-2 py-0.5 rounded-full bg-black/5 text-[11px] font-bold text-black/30">{articles.length}</span>
-            </div>
-        ) : (
-            <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[18px] text-vibrant-amber">trending_up</span>
-                <h3 className="text-[14px] font-semibold text-black/30 tracking-[0.1em] uppercase">热门转存</h3>
-            </div>
-        )}
+        <div className="flex items-center gap-6">
+            {isLoggedIn ? (
+                <>
+                    <button 
+                        onClick={() => setViewMode('personal')}
+                        className={`flex items-center gap-2 transition-all ${viewMode === 'personal' ? 'opacity-100' : 'opacity-40 hover:opacity-70'}`}
+                    >
+                        <h3 className="text-[14px] font-semibold text-black/80 tracking-[0.1em] uppercase">我的转存</h3>
+                        {viewMode === 'personal' && <span className="px-2 py-0.5 rounded-full bg-black/5 text-[11px] font-bold text-black/50">{articles.length}</span>}
+                    </button>
+                    
+                    <div className="w-[1px] h-4 bg-black/10"></div>
+
+                    <button 
+                        onClick={() => setViewMode('trending')}
+                        className={`flex items-center gap-2 transition-all ${viewMode === 'trending' ? 'opacity-100' : 'opacity-40 hover:opacity-70'}`}
+                    >
+                        <span className="material-symbols-outlined text-[18px] text-vibrant-amber">trending_up</span>
+                        <h3 className="text-[14px] font-semibold text-black/80 tracking-[0.1em] uppercase">热门榜单</h3>
+                    </button>
+                </>
+            ) : (
+                <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[18px] text-vibrant-amber">trending_up</span>
+                    <h3 className="text-[14px] font-semibold text-black/30 tracking-[0.1em] uppercase">热门转存</h3>
+                </div>
+            )}
+        </div>
         
-        {isLoggedIn ? (
+        {viewMode === 'personal' ? (
             <button className="text-[13px] font-medium text-black/30 hover:text-vibrant-red transition-colors flex items-center gap-1.5 px-2">
                 <span className="material-symbols-outlined text-[16px]">delete_sweep</span>
                 清除记录
             </button>
         ) : (
-            <span className="text-[12px] font-medium text-black/25">实时更新</span>
+            <span className="text-[12px] font-medium text-black/25 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-vibrant-green animate-pulse"></span>
+                实时更新
+            </span>
         )}
       </div>
       
-      <div className="bg-white/40 backdrop-blur-md rounded-[24px] border border-black/[0.04] overflow-hidden shadow-sm">
+      {/* List */}
+      <div className="bg-white/40 backdrop-blur-md rounded-[24px] border border-black/[0.04] overflow-hidden shadow-[0_4px_24px_-4px_rgba(0,0,0,0.02)]">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="text-[12px] font-bold text-black/30 uppercase tracking-wider">
               <th className="px-8 py-5">文章标题</th>
-              <th className="px-8 py-5 hidden md:table-cell">{isLoggedIn ? '转存时间' : '转存时间'}</th>
-              <th className={`px-8 py-5 ${isLoggedIn ? 'text-right pr-12' : 'text-center'}`}>{isLoggedIn ? '状态与操作' : '状态'}</th>
+              <th className={`px-8 py-5 hidden md:table-cell ${viewMode === 'trending' ? 'text-right' : ''}`}>
+                  {viewMode === 'trending' ? '转存次数' : '转存时间'}
+              </th>
+              <th className={`px-8 py-5 ${viewMode === 'personal' ? 'text-right pr-12' : 'text-center'}`}>
+                  {viewMode === 'personal' ? '状态与操作' : '来源'}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -112,32 +151,42 @@ export function HistoryList({ refreshTrigger, isLoggedIn }: HistoryListProps) {
                     <tr className="group hover:bg-black/[0.02] transition-colors">
                     <td className="px-8 py-6">
                         <div className="flex items-center gap-4">
-                            {!isLoggedIn && (
-                                <span className="rank-badge text-[13px] font-bold text-black/20 w-4">{String(index + 1).padStart(2, '0')}</span>
+                            {/* Rank Badge for Trending */}
+                            {viewMode === 'trending' && (
+                                <span className={`text-[13px] font-bold w-4 tabular-nums ${
+                                    index < 3 ? 'text-black/20' : 'text-black/10 text-[11px]'
+                                }`}>
+                                    {String(index + 1).padStart(2, '0')}
+                                </span>
                             )}
+                            
                             <div className="flex flex-col gap-1">
                                 <a 
-                                    href={article.feishuUrl || '#'} 
+                                    href={viewMode === 'personal' ? article.feishuUrl : article.originalUrl} 
                                     target="_blank" 
                                     rel="noreferrer"
-                                    className="text-[16px] font-semibold text-black/85 leading-tight hover:text-black transition-colors line-clamp-1"
+                                    className="text-[16px] font-semibold text-black/85 leading-tight hover:text-black transition-colors line-clamp-1 cursor-pointer"
                                 >
                                     {article.title || '正在处理...'}
                                 </a>
                                 <span className="md:hidden text-[13px] text-black/40">
-                                    {formatTime(article.createdAt)}
+                                    {viewMode === 'trending' ? `${article.count} 次转存` : formatTime(article.createdAt)}
                                 </span>
                             </div>
                         </div>
                     </td>
-                    <td className="px-8 py-6 hidden md:table-cell">
-                        <span className="text-[14px] text-black/40 font-medium">
-                            {formatTime(article.createdAt)}
-                        </span>
+                    <td className={`px-8 py-6 hidden md:table-cell ${viewMode === 'trending' ? 'text-right' : ''}`}>
+                        {viewMode === 'trending' ? (
+                            <span className="text-[14px] text-black/40 font-semibold tabular-nums">{article.count?.toLocaleString()}</span>
+                        ) : (
+                            <span className="text-[14px] text-black/40 font-medium">
+                                {formatTime(article.createdAt)}
+                            </span>
+                        )}
                     </td>
-                    <td className={`px-8 py-6 ${isLoggedIn ? 'text-right pr-12' : ''}`}>
-                        <div className={`flex items-center gap-5 ${isLoggedIn ? 'justify-end' : 'justify-center'}`}>
-                            {isLoggedIn && (
+                    <td className={`px-8 py-6 ${viewMode === 'personal' ? 'text-right pr-12' : 'text-center'}`}>
+                        {viewMode === 'personal' ? (
+                            <div className="flex items-center gap-5 justify-end">
                                 <div className="flex items-center gap-4 opacity-0 translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out">
                                     {article.feishuUrl && (
                                         <a className="action-icon" href={article.feishuUrl} target="_blank" rel="noreferrer" title="在飞书中查看">
@@ -148,22 +197,26 @@ export function HistoryList({ refreshTrigger, isLoggedIn }: HistoryListProps) {
                                         <span className="material-symbols-outlined text-[22px]">delete</span>
                                     </button>
                                 </div>
-                            )}
-                            
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center relative overflow-hidden glass-icon-shade shrink-0 ${isLoggedIn ? 'group-hover:opacity-30 transition-opacity duration-300' : ''}`}>
-                                {article.status === 'completed' ? (
-                                    <span className="material-symbols-outlined text-[20px] text-vibrant-green status-glow-green">check_circle</span>
-                                ) : article.status === 'error' ? (
-                                    <span className="material-symbols-outlined text-[20px] text-vibrant-red status-glow-red">error</span>
-                                ) : (
-                                    <span className="material-symbols-outlined text-[20px] text-vibrant-amber status-glow-amber animate-spin-slow">progress_activity</span>
-                                )}
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center relative overflow-hidden glass-icon-shade shrink-0 group-hover:opacity-30 transition-opacity duration-300`}>
+                                    {article.status === 'completed' ? (
+                                        <span className="material-symbols-outlined text-[20px] text-vibrant-green status-glow-green">check_circle</span>
+                                    ) : article.status === 'error' ? (
+                                        <span className="material-symbols-outlined text-[20px] text-vibrant-red status-glow-red">error</span>
+                                    ) : (
+                                        <span className="material-symbols-outlined text-[20px] text-vibrant-amber status-glow-amber animate-spin-slow">progress_activity</span>
+                                    )}
+                                </div>
                             </div>
-                        </div>
+                        ) : (
+                            // Trending Mode: Source Icon
+                            <div className="flex justify-center opacity-40">
+                                <span className="material-symbols-outlined text-[20px]">public</span>
+                            </div>
+                        )}
                     </td>
                     </tr>
                     {index < articles.length - 1 && (
-                        <tr><td colSpan={3}><div className="sub-pixel-divider mx-8"></div></td></tr>
+                        <tr><td colSpan={3}><div className="h-[0.5px] bg-black/[0.08] mx-8"></div></td></tr>
                     )}
                 </React.Fragment>
             ))}
