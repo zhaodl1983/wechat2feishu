@@ -4,10 +4,9 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-## [x] Track: Web 界面化改造 (V1.2)
+## [x] Track: Web 界面化改造 (V0.3)
 
-## [~] Track: SaaS 服务化 (V1.3)
-[Link](./tracks/saas_v1.3)
+## [~] Track: SaaS 服务化 (V0.4)
 [Link](./tracks/saas_v1.3)
 
-## [ ] Track: 社区与探索 (V1.4)
+## [ ] Track: 社区与探索 (V0.5)
