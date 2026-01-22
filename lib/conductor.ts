@@ -59,13 +59,17 @@ export async function conductorProcess(url: string, userId?: string) {
         // Just save the markdown with original links for now
         filePath = await saveMarkdown(initialMarkdown, articleDir);
     } else {
-        finalMarkdown = await localizeAssets(initialMarkdown, articleDir);
+        // userId might be undefined for anonymous users, use 'anonymous' as directory
+        finalMarkdown = await localizeAssets(initialMarkdown, userId || 'anonymous', article.id);
         filePath = await saveMarkdown(finalMarkdown, articleDir);
     }
 
     article = await prisma.article.update({
       where: { id: article.id },
-      data: { localPath: filePath },
+      data: { 
+        localPath: filePath,
+        content: finalMarkdown,
+      },
     });
 
     // --- STEP B: SYNC TO FEISHU ---

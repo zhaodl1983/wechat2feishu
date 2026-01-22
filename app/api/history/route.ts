@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
-import { getSession } from '@/lib/session';
+import { auth } from '@/auth';
 
 export async function GET(request: Request) {
   try {
@@ -33,8 +33,9 @@ export async function GET(request: Request) {
     }
 
     // Case 2: Personal History
-    const session = await getSession();
-    const where = session ? { userId: session.userId } : { userId: null };
+    const session = await auth();
+    const userId = session?.user?.id;
+    const where = userId ? { userId: userId } : { userId: null };
 
     const articles = await prisma.article.findMany({
       where,
@@ -50,8 +51,8 @@ export async function GET(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
-    const session = await getSession();
-    if (!session) {
+    const session = await auth();
+    if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -67,7 +68,7 @@ export async function DELETE(request: Request) {
         where: { id: id }
     });
 
-    if (!article || article.userId !== session.userId) {
+    if (!article || article.userId !== session.user.id) {
         return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 

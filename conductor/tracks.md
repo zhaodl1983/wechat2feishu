@@ -12,7 +12,7 @@ This file tracks all major tracks for the project. Each track has its own detail
 ## [x] Track: 架构升级 (V0.5)
 [Link](./tracks/arch_v0.5)
 
-## [ ] Track: SaaS 基础建设 (V0.6)
+## [x] Track: SaaS 基础建设 (V0.6)
 **Focus**: Email Auth, Local Storage Opt, Backup.
 [Link](./tracks/saas_foundation_v0.6)
 

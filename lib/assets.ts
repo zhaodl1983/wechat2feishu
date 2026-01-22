@@ -5,35 +5,49 @@ import sharp from 'sharp';
 import { v4 as uuidv4 } from 'uuid';
 
 /**
- * Downloads an image from a URL and saves it as WebP
- * @returns The local relative path to the saved image
+ * Downloads an image from a URL, compresses it, and saves it to the user's upload directory
+ * @returns The public URL path to the saved image
  */
-export async function downloadImageAsWebP(
+export async function downloadImageOptimized(
   url: string, 
-  articleDir: string, 
-  assetsSubDir: string = 'assets'
+  userId: string,
+  articleId: string
 ): Promise<string | null> {
   try {
-    const assetsPath = path.join(articleDir, assetsSubDir);
-    await fs.mkdir(assetsPath, { recursive: true });
+    const publicBase = 'public';
+    const uploadBase = 'uploads';
+    const relativePath = path.join(uploadBase, userId, articleId);
+    const fullUploadPath = path.join(process.cwd(), publicBase, relativePath);
+    
+    await fs.mkdir(fullUploadPath, { recursive: true });
 
-    const response = await axios.get(url, { responseType: 'arraybuffer' });
+    const response = await axios.get(url, { 
+        responseType: 'arraybuffer',
+        timeout: 10000,
+        headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        }
+    });
     const buffer = Buffer.from(response.data);
 
-    // Generate a unique filename
+    // Generate a unique filename with .webp extension
     const filename = `${uuidv4()}.webp`;
-    const fullPath = path.join(assetsPath, filename);
+    const fullPath = path.join(fullUploadPath, filename);
 
-    // Convert to WebP using sharp
+    // Convert to WebP using sharp with optimization
     await sharp(buffer)
-      .webp({ quality: 80 })
+      .resize(1200, undefined, { // Max width 1200px, height proportional
+          withoutEnlargement: true,
+          fit: 'inside'
+      })
+      .webp({ quality: 80, effort: 6 }) // High compression effort to save space
       .toFile(fullPath);
 
-    // Return the relative path for use in Markdown
-    return path.join('.', assetsSubDir, filename);
+    // Return the URL path starting from /uploads
+    return `/${uploadBase}/${userId}/${articleId}/${filename}`;
   } catch (error: any) {
     console.error(`\x1b[33m[Asset Warning]\x1b[0m Failed to download image ${url}:`, error.message);
-    return null; // Return null to allow caller to handle placeholder
+    return null;
   }
 }
 
@@ -42,7 +56,8 @@ export async function downloadImageAsWebP(
  */
 export async function localizeAssets(
   markdown: string, 
-  articleDir: string
+  userId: string,
+  articleId: string
 ): Promise<string> {
   const imgRegex = /!\[(.*?)\]\((.*?)\)/g;
   let match;
@@ -54,7 +69,7 @@ export async function localizeAssets(
     const originalUrl = match[2];
     if (originalUrl.startsWith('http')) {
       downloadPromises.push(
-        downloadImageAsWebP(originalUrl, articleDir).then(localPath => ({
+        downloadImageOptimized(originalUrl, userId, articleId).then(localPath => ({
           original: originalUrl,
           local: localPath
         }))
@@ -69,9 +84,6 @@ export async function localizeAssets(
   for (const res of results) {
     if (res.local) {
       localizedMarkdown = localizedMarkdown.split(res.original).join(res.local);
-    } else {
-      // If download failed, add a warning placeholder
-      localizedMarkdown = localizedMarkdown.split(res.original).join('REPLACE_WITH_PLACEHOLDER_FAILED_DOWNLOAD');
     }
   }
 

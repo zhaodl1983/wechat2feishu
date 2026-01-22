@@ -188,6 +188,31 @@ export function HistoryList({ refreshTrigger, isLoggedIn }: HistoryListProps) {
                         {viewMode === 'personal' ? (
                             <div className="flex items-center gap-5 justify-end">
                                 <div className="flex items-center gap-4 opacity-0 translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out">
+                                    {article.status === 'completed' && (
+                                        <button 
+                                            className="action-icon" 
+                                            title="下载 Markdown"
+                                            onClick={async () => {
+                                                try {
+                                                    const res = await fetch(`/api/articles/${article.id}/content`);
+                                                    const data = await res.json();
+                                                    if (data.content) {
+                                                        const blob = new Blob([data.content], { type: 'text/markdown' });
+                                                        const url = window.URL.createObjectURL(blob);
+                                                        const a = document.createElement('a');
+                                                        a.href = url;
+                                                        a.download = `${data.title || 'article'}.md`;
+                                                        a.click();
+                                                        window.URL.revokeObjectURL(url);
+                                                    }
+                                                } catch (e) {
+                                                    console.error('Download failed', e);
+                                                }
+                                            }}
+                                        >
+                                            <span className="material-symbols-outlined text-[22px]">download</span>
+                                        </button>
+                                    )}
                                     {article.feishuUrl && (
                                         <a className="action-icon" href={article.feishuUrl} target="_blank" rel="noreferrer" title="在飞书中查看">
                                             <span className="material-symbols-outlined text-[22px]">open_in_new</span>
