@@ -12,16 +12,34 @@ datasource db {
 
 model User {
   id                    String    @id @default(auto()) @map("_id") @db.ObjectId
-  feishuUserId          String    @unique
+  email                 String?   @unique
+  password              String?
+  phoneNumber           String?   @unique
+  wechatUnionId         String?   @unique
+  wechatOpenId          String?
+  feishuUserId          String?   @unique
   name                  String?
   avatarUrl             String?
   encryptedAccessToken  String?
   encryptedRefreshToken String?
   tokenExpiry           DateTime?
+  emailVerified         DateTime?
   lastLoginAt           DateTime  @default(now())
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
   articles              Article[]
+}
+
+model VerificationToken {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  identifier String
+  token      String
+  expires    DateTime
+  type       String   
+  attempts   Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  @@unique([identifier, token])
 }
 
 model Article {
