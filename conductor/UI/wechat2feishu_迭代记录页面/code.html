@@ -6,39 +6,40 @@
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script>
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            colors: {
-              primary: "#007AFF", // Apple Blue
-              "background-light": "#ffffff",
-              "background-dark": "#000000",
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#007AFF", // Apple Blue
+                        "background-light": "#ffffff",
+                        "background-dark": "#000000",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "8px",
+                        'full': "9999px",
+                    },
+                },
             },
-            fontFamily: {
-              display: ["Inter", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "sans-serif"],
-            },
-            borderRadius: {
-              DEFAULT: "8px",
-              'full': "9999px",
-            },
-          },
-        },
-      };
+        };
     </script>
-<style>
+<style type="text/tailwindcss">
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
             -webkit-font-smoothing: antialiased;
         }
         .timeline-line {
             width: 1px;
-            background: #E5E7EB;
+            @apply bg-gray-200 dark:bg-gray-800;
         }
-        .dark .timeline-line {
-            background: #374151;
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
     </style>
 </head>
@@ -46,10 +47,8 @@
 <header class="fixed top-0 w-full z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800">
 <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
 <div class="flex items-center gap-3 group">
-<div class="bg-black dark:bg-white p-1.5 rounded-lg">
-<svg class="w-5 h-5 text-white dark:text-black" fill="currentColor" viewBox="0 0 24 24">
-<path d="M13 10V3L4 14H11V21L20 10H13Z"></path>
-</svg>
+<div class="bg-black dark:bg-white p-1.5 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-white dark:text-black text-xl">description</span>
 </div>
 <span class="font-semibold text-lg tracking-tight">Wechat2doc</span>
 </div>
@@ -59,8 +58,8 @@
 <a class="text-black dark:text-white" href="#">迭代记录</a>
 </nav>
 <button class="px-5 py-1.5 border border-slate-300 dark:border-slate-700 rounded-full text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-900 transition-all">
-                登录飞书
-            </button>
+            登录 / 注册
+        </button>
 </div>
 </header>
 <main class="pt-40 pb-20 px-6">
@@ -79,8 +78,8 @@
 <div>
 <h3 class="text-xl font-semibold mb-2">社区与探索</h3>
 <p class="text-slate-500 dark:text-slate-400 leading-relaxed">
-                        上线透明数据看板、社区榜单系统与多用户探索模式。
-                    </p>
+                    上线透明数据看板、社区榜单系统与多用户探索模式，打造更开放的 Wechat2doc 社区。
+                </p>
 </div>
 </div>
 <div class="relative pl-12 pb-16">
@@ -93,10 +92,10 @@
 <span class="px-2 py-0.5 bg-blue-50 dark:bg-blue-900/30 text-primary text-xs rounded-md">进行中</span>
 </div>
 <div>
-<h3 class="text-xl font-semibold mb-2 text-slate-900 dark:text-white">SaaS 服务化</h3>
+<h3 class="text-xl font-semibold mb-2 text-slate-900 dark:text-white">SaaS 服务化与品牌升级</h3>
 <p class="text-slate-500 dark:text-slate-400 leading-relaxed">
-                        完善 SaaS 闭环，打磨内容还原质量。
-                    </p>
+                    正式更名为 Wechat2doc，完善 SaaS 闭环，打磨内容还原质量。
+                </p>
 </div>
 </div>
 <div class="relative pl-12 pb-16">
@@ -109,8 +108,8 @@
 <div>
 <h3 class="text-xl font-semibold mb-2">Web 界面化</h3>
 <p class="text-slate-500 dark:text-slate-400 leading-relaxed">
-                        构建了 Apple 极简风格的 Web 仪表盘，支持可视化操作与转存历史管理。
-                    </p>
+                    构建了 Apple 极简风格的 Web 仪表盘，支持可视化操作与转存历史管理。
+                </p>
 </div>
 </div>
 <div class="relative pl-12 pb-16">
@@ -121,10 +120,10 @@
 <span class="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-xs rounded-md">已上线</span>
 </div>
 <div>
-<h3 class="text-xl font-semibold mb-2">飞书深度集成</h3>
+<h3 class="text-xl font-semibold mb-2">多文档集成</h3>
 <p class="text-slate-500 dark:text-slate-400 leading-relaxed">
-                        打通了飞书 API 集成，实现了图片自动上传与云文档的一键生成。
-                    </p>
+                    打通了多种主流云文档 API 集成，实现了图片自动上传与云文档的一键生成。
+                </p>
 </div>
 </div>
 <div class="relative pl-12">
@@ -136,16 +135,20 @@
 <div>
 <h3 class="text-xl font-semibold mb-2">核心归档器</h3>
 <p class="text-slate-500 dark:text-slate-400 leading-relaxed">
-                        实现了核心抓取引擎与 HTML 转 Markdown 的本地归档逻辑。
-                    </p>
+                    实现了核心抓取引擎与 HTML 转 Markdown 的本地归档逻辑。
+                </p>
 </div>
 </div>
 </div>
 </main>
 <div class="fixed bottom-8 right-8">
 <button class="p-3 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 shadow-lg hover:scale-110 transition-transform" onclick="document.documentElement.classList.toggle('dark')">
-<svg class="w-6 h-6 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-<svg class="w-6 h-6 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 9h-1m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<svg class="w-6 h-6 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<svg class="w-6 h-6 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M12 3v1m0 16v1m9-9h-1M4 9h-1m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
 </button>
 </div>
 

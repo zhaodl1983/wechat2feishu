@@ -1,30 +1,31 @@
+
 'use client';
 
 import { useState } from 'react';
+import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
-interface HeaderProps {
-  user: {
-    name: string | null;
-    avatarUrl: string | null;
-  } | null;
-}
-
-export function Header({ user }: HeaderProps) {
+export function Header() {
+  const { data: session, status } = useSession();
   const [showMenu, setShowMenu] = useState(false);
+  const router = useRouter();
 
   const handleLogin = () => {
-    window.location.href = '/api/auth/login';
+    router.push('/login');
   };
 
   const handleLogout = async () => {
-    await fetch('/api/auth/logout', { method: 'POST' });
-    window.location.reload();
+    await signOut({ redirect: false });
+    router.push('/');
+    router.refresh();
   };
+
+  const user = session?.user;
 
   return (
     <header className="fixed top-0 w-full z-50 glass-nav border-b border-black/[0.03]">
       <div className="max-w-[1200px] mx-auto flex items-center justify-between px-golden-sm h-16">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 cursor-pointer" onClick={() => router.push('/')}>
           <div className="w-8 h-8 bg-black rounded-[7px] flex items-center justify-center">
             <span className="material-symbols-outlined text-white text-[18px]">bolt</span>
           </div>
@@ -41,25 +42,39 @@ export function Header({ user }: HeaderProps) {
           <a className="hover:text-black transition-colors" href="/changelog">迭代记录</a>
         </nav>
         
-        {user ? (
+        {status === "authenticated" && user ? (
           <div className="relative">
             <button 
               onClick={() => setShowMenu(!showMenu)}
               className="flex items-center gap-3 px-3 py-1.5 rounded-full bg-black/5 border border-black/[0.03] hover:bg-black/10 transition-colors"
             >
-              <img src={user.avatarUrl || ''} alt="Avatar" className="w-6 h-6 rounded-full" />
-              <span className="text-[13px] font-medium text-black/70">{user.name}</span>
+              <div className="w-6 h-6 rounded-full bg-black/10 flex items-center justify-center overflow-hidden">
+                {user.image ? (
+                  <img src={user.image} alt="Avatar" className="w-full h-full object-cover" />
+                ) : (
+                  <span className="material-symbols-outlined text-[16px] text-black/40">person</span>
+                )}
+              </div>
+              <span className="text-[13px] font-medium text-black/70">{user.name || user.email?.split('@')[0]}</span>
             </button>
             
             {showMenu && (
-              <div className="absolute right-0 top-full mt-2 w-32 bg-white rounded-xl shadow-lg border border-gray-100 py-1 flex flex-col">
+              <div className="absolute right-0 top-full mt-2 w-32 bg-white rounded-xl shadow-lg border border-gray-100 py-1 flex flex-col z-[60]">
                 <button 
                   onClick={handleLogout}
-                  className="w-full text-left px-4 py-2 text-[13px] text-red-500 hover:bg-gray-50"
+                  className="w-full text-left px-4 py-2 text-[13px] text-red-500 hover:bg-gray-50 transition-colors"
                 >
                   退出登录
                 </button>
               </div>
+            )}
+            
+            {/* Overlay for closing menu */}
+            {showMenu && (
+              <div 
+                className="fixed inset-0 z-[-1]" 
+                onClick={() => setShowMenu(false)}
+              ></div>
             )}
           </div>
         ) : (
@@ -67,7 +82,7 @@ export function Header({ user }: HeaderProps) {
             onClick={handleLogin}
             className="px-5 py-1.5 rounded-full border border-black/10 text-[13px] font-semibold hover:bg-black hover:text-white transition-all text-[#1d1d1f] bg-white shadow-sm"
           >
-            登录飞书
+            登录 / 注册
           </button>
         )}
       </div>

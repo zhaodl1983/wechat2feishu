@@ -9,14 +9,23 @@ export const metadata: Metadata = {
   description: "Save WeChat articles to your personal knowledge base instantly.",
 };
 
+import { AuthProvider } from "./components/AuthProvider";
+
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="zh-CN">
+      <head>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&icon_names=bolt,article,history,settings,grid_view,chevron_right,search,add,share,more_horiz" />
+      </head>
+      <body className={inter.className}>
+        <AuthProvider>
+          {children}
+        </AuthProvider>
+      </body>
     </html>
   );
 }

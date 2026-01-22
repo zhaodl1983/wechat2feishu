@@ -1,7 +1,7 @@
 <html lang="zh-CN"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Wechat2doc - 我的转存 (空状态)</title>
+<title>Wechat2doc - 极致保存体验</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
@@ -25,15 +25,6 @@
                     },
                     borderRadius: {
                         'apple': '12px',
-                    },
-                    animation: {
-                        'float': 'float 6s ease-in-out infinite',
-                    },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-10px)' },
-                        }
                     }
                 }
             }
@@ -79,29 +70,52 @@
             transform: translateY(1px);
             box-shadow: 0 5px 10px -3px rgba(0, 0, 0, 0.3);
         }
-        .frosted-glass-button {
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .frosted-glass-button:hover {
-            background: rgba(255, 255, 255, 0.9);
-            border-color: rgba(0, 0, 0, 0.15);
-            transform: translateY(-1px);
-            box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.05);
-        }
         .laser-icon {
             filter: drop-shadow(0 0 0.5px rgba(0,0,0,0.5));
             opacity: 0.6;
+        }
+        .glass-icon-shade {
+            background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%);
+        }
+        .sub-pixel-divider {
+            height: 0.5px;
+            background-color: rgba(0, 0, 0, 0.08);
         }
         .glass-nav {
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: saturate(180%) blur(20px);
         }
+        .feature-tag-icon {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
+            color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .glass-finish-icon {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+        }
+        .glass-finish-icon::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 50%);
+            border-radius: 6px;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+        .rank-badge {
+            font-feature-settings: "tnum";
+            font-variant-numeric: tabular-nums;
+        }
     </style>
-</head><body class="text-[#1d1d1f] selection:bg-black/5">
+</head>
+<body class="text-[#1d1d1f] selection:bg-black/5">
 <header class="fixed top-0 w-full z-50 glass-nav border-b border-black/[0.03]">
 <div class="max-w-[1200px] mx-auto flex items-center justify-between px-golden-sm h-16">
 <div class="flex items-center gap-3">
@@ -112,30 +126,22 @@
 </div>
 <nav class="hidden md:flex items-center gap-8 text-[14px] font-medium text-black/60">
 <a class="hover:text-black transition-colors" href="#">首页</a>
-<div class="relative group">
-<a class="text-black font-semibold" href="#">我的转存</a>
-<span class="absolute -bottom-2.5 left-1/2 w-1 h-1 -translate-x-1/2 rounded-full bg-black"></span>
-</div>
 <a class="hover:text-black transition-colors" href="#">迭代记录</a>
 </nav>
-<div class="flex items-center gap-4">
-<div class="flex items-center gap-3 px-3 py-1.5 rounded-full bg-black/5 border border-black/[0.03]">
-<div class="w-6 h-6 rounded-full bg-gradient-to-tr from-gray-400 to-gray-200 overflow-hidden flex items-center justify-center">
-<span class="material-symbols-outlined text-[14px] text-white">person</span>
-</div>
-<span class="text-[13px] font-medium text-black/70">Designer Pro</span>
-</div>
-<button class="text-[13px] font-medium text-black/40 hover:text-vibrant-red transition-colors">
-                退出登录
-            </button>
-</div>
+<button class="px-5 py-1.5 rounded-full border border-black/10 text-[13px] font-semibold hover:bg-black hover:text-white transition-all bg-white shadow-sm">
+            登录 / 注册
+        </button>
 </div>
 </header>
 <main class="pt-32">
 <section class="max-w-[1200px] mx-auto px-golden-sm text-center mb-golden-xl">
-<h1 class="headline-gradient text-[48px] md:text-[64px] font-bold leading-[1.05] mb-golden-sm mx-auto max-w-[800px]">
-            欢迎回来，<br/>今天想保存什么？
+<h1 class="headline-gradient text-[56px] md:text-[72px] font-bold leading-[1.05] mb-golden-sm mx-auto max-w-[900px]">
+            极致打磨，<br/>让微信灵感瞬时归档。
         </h1>
+<p class="text-[21px] md:text-[24px] text-black/45 font-medium max-w-[640px] mx-auto mb-golden-lg leading-relaxed">
+            以最优雅的方式，将深度好文保存至你的知识库。
+            <span class="block text-black/30">登录即刻开启高效转存之旅。</span>
+</p>
 <div class="max-w-[680px] mx-auto">
 <div class="recessed-input p-2 rounded-[22px] flex items-center gap-2 group transition-all focus-within:ring-4 focus-within:ring-black/5">
 <div class="pl-4 flex items-center justify-center">
@@ -147,50 +153,99 @@
                 </button>
 </div>
 <div class="mt-8 flex flex-wrap items-center justify-center gap-8">
-<div class="flex items-center gap-2.5 text-[12px] text-black/35 font-medium">
-<span class="material-symbols-outlined text-[16px]">verified_user</span>
-<span>已连接至飞书知识库</span>
+<div class="flex items-center gap-2.5 text-[13px] text-black/45 font-medium group cursor-default">
+<div class="glass-finish-icon">
+<span class="material-symbols-outlined feature-tag-icon text-[19px]">auto_fix_high</span>
 </div>
-<div class="flex items-center gap-2.5 text-[12px] text-black/35 font-medium">
-<span class="material-symbols-outlined text-[16px]">cloud_done</span>
-<span>存储空间已同步</span>
+<span class="tracking-tight group-hover:text-black/70 transition-colors">智能去噪正文提取</span>
+</div>
+<div class="flex items-center gap-2.5 text-[13px] text-black/45 font-medium group cursor-default">
+<div class="glass-finish-icon">
+<span class="material-symbols-outlined feature-tag-icon text-[19px]">grid_view</span>
+</div>
+<span class="tracking-tight group-hover:text-black/70 transition-colors">像素级高保真渲染</span>
+</div>
+<div class="flex items-center gap-2.5 text-[13px] text-black/45 font-medium group cursor-default">
+<div class="glass-finish-icon">
+<span class="material-symbols-outlined feature-tag-icon text-[19px]" style="font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;">lock</span>
+</div>
+<span class="tracking-tight group-hover:text-black/70 transition-colors">全链路隐私加密保护</span>
 </div>
 </div>
 </div>
 </section>
 <section class="max-w-[980px] mx-auto px-golden-sm pb-golden-xl">
-<div class="flex flex-col md:flex-row md:items-end justify-between mb-8 px-2 gap-4">
+<div class="flex items-center justify-between mb-8 px-2">
 <div class="flex items-center gap-2">
-<h3 class="text-[14px] font-semibold text-black/30 tracking-[0.1em] uppercase">我的转存历史</h3>
-<span class="px-2 py-0.5 rounded-full bg-black/5 text-[11px] font-bold text-black/30">0</span>
+<span class="material-symbols-outlined text-[18px] text-vibrant-amber">trending_up</span>
+<h3 class="text-[14px] font-semibold text-black/30 tracking-[0.1em] uppercase">热门转存</h3>
 </div>
+<span class="text-[12px] font-medium text-black/25">实时更新</span>
 </div>
-<div class="bg-white/40 backdrop-blur-md rounded-[24px] border border-black/[0.04] overflow-hidden min-h-[520px] flex flex-col items-center justify-center text-center relative p-8">
-<div class="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent pointer-events-none"></div>
-<div class="relative z-10 animate-float">
-<div class="w-32 h-32 rounded-full bg-gradient-to-b from-white to-[#F5F5F7] shadow-[0_12px_36px_rgba(0,0,0,0.06),0_2px_8px_rgba(0,0,0,0.02)] border border-white flex items-center justify-center relative mb-8 mx-auto">
-<span class="material-symbols-outlined text-[56px] text-black/10" style="font-variation-settings: 'wght' 200, 'FILL' 0;">
-                        draft
-                    </span>
-<div class="absolute -right-1 -bottom-1 w-10 h-10 rounded-full bg-white shadow-md border border-black/[0.03] flex items-center justify-center">
-<span class="material-symbols-outlined text-[20px] text-black/20" style="font-variation-settings: 'wght' 300;">
-                            add
-                        </span>
+<div class="bg-white/40 backdrop-blur-md rounded-[24px] border border-black/[0.04] overflow-hidden shadow-[0_4px_24px_-4px_rgba(0,0,0,0.02)]">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="text-[12px] font-bold text-black/30 uppercase tracking-wider">
+<th class="px-8 py-5">文章标题</th>
+<th class="px-8 py-5 text-right">转存次数</th>
+</tr>
+</thead>
+<tbody>
+<tr class="group hover:bg-black/[0.02] transition-colors">
+<td class="px-8 py-6">
+<div class="flex items-center gap-4">
+<span class="rank-badge text-[13px] font-bold text-black/20 w-4">01</span>
+<span class="text-[16px] font-semibold text-black/85 leading-tight group-hover:text-black transition-colors">乔布斯的极简美学：如何在软件设计中应用？</span>
 </div>
+</td>
+<td class="px-8 py-6 text-right">
+<span class="text-[14px] text-black/40 font-semibold rank-badge">12,482</span>
+</td>
+</tr>
+<tr><td colspan="2"><div class="sub-pixel-divider mx-8"></div></td></tr>
+<tr class="group hover:bg-black/[0.02] transition-colors">
+<td class="px-8 py-6">
+<div class="flex items-center gap-4">
+<span class="rank-badge text-[13px] font-bold text-black/20 w-4">02</span>
+<span class="text-[16px] font-semibold text-black/85 leading-tight group-hover:text-black transition-colors">2024年全球设计趋势报告：触感与深度的回归</span>
 </div>
+</td>
+<td class="px-8 py-6 text-right">
+<span class="text-[14px] text-black/40 font-semibold rank-badge">8,931</span>
+</td>
+</tr>
+<tr><td colspan="2"><div class="sub-pixel-divider mx-8"></div></td></tr>
+<tr class="group hover:bg-black/[0.02] transition-colors">
+<td class="px-8 py-6">
+<div class="flex items-center gap-4">
+<span class="rank-badge text-[13px] font-bold text-black/20 w-4">03</span>
+<span class="text-[16px] font-semibold text-black/85 leading-tight group-hover:text-black transition-colors">高级排版技巧指南</span>
 </div>
-<div class="relative z-10 max-w-[400px]">
-<h4 class="text-[18px] font-semibold text-black/70 mb-3 tracking-tight">暂无转存记录</h4>
-<p class="text-[14px] text-black/40 leading-relaxed font-normal">
-                    粘贴文章链接并点击“一键转存”，开启你的飞书知识库。
-                </p>
+</td>
+<td class="px-8 py-6 text-right">
+<span class="text-[14px] text-black/40 font-semibold rank-badge">5,204</span>
+</td>
+</tr>
+<tr><td colspan="2"><div class="sub-pixel-divider mx-8"></div></td></tr>
+<tr class="group hover:bg-black/[0.02] transition-colors">
+<td class="px-8 py-6">
+<div class="flex items-center gap-4">
+<span class="rank-badge text-[13px] font-bold text-black/10 w-4 text-[11px]">04</span>
+<span class="text-[16px] font-semibold text-black/85 leading-tight group-hover:text-black transition-colors">如何构建可持续的个人知识管理系统？</span>
 </div>
+</td>
+<td class="px-8 py-6 text-right">
+<span class="text-[14px] text-black/40 font-semibold rank-badge">3,122</span>
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 </section>
 </main>
 <footer class="py-golden-lg border-t border-black/[0.03] mt-golden-xl">
 <div class="max-w-[1200px] mx-auto px-golden-sm flex flex-col items-center">
-<div class="flex flex-wrap justify-center gap-x-12 gap-y-4 text-[14px] font-medium text-black/40 mb-10">
+<div class="flex gap-12 text-[14px] font-medium text-black/40 mb-10">
 <a class="hover:text-black transition-colors" href="#">隐私条款</a>
 <a class="hover:text-black transition-colors" href="#">使用协议</a>
 <a class="hover:text-black transition-colors" href="#">开发文档</a>
@@ -203,4 +258,5 @@
 </div>
 </div>
 </footer>
+
 </body></html>

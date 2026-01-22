@@ -1,7 +1,7 @@
 <html lang="zh-CN"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Wechat2doc - 我的转存 (单条管理优化)</title>
+<title>登录 - Wechat2feishu</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
@@ -13,9 +13,6 @@
                     colors: {
                         primary: "#000000",
                         "apple-gray": "#F5F5F7",
-                        "vibrant-green": "#28CD41",
-                        "vibrant-amber": "#FFB800",
-                        "vibrant-red": "#FF3B30",
                     },
                     spacing: {
                         'golden-sm': '1.618rem',
@@ -25,6 +22,7 @@
                     },
                     borderRadius: {
                         'apple': '12px',
+                        'apple-lg': '24px',
                     }
                 }
             }
@@ -44,312 +42,93 @@
             -webkit-font-smoothing: antialiased;
             letter-spacing: -0.015em;
         }
-        .headline-gradient {
-            background: linear-gradient(180deg, #1d1d1f 0%, #434343 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -0.03em;
-        }
         .recessed-input {
-            background: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(20px);
             box-shadow: 
-                inset 0 2px 4px 0 rgba(0, 0, 0, 0.05),
-                inset 0 1px 10px 0 rgba(0, 0, 0, 0.02),
-                0 0 0 1px rgba(0, 0, 0, 0.03);
+                inset 0 1px 2px 0 rgba(0, 0, 0, 0.02),
+                0 0 0 1px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .recessed-input:focus-within {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 
+                0 0 0 3px rgba(0, 0, 0, 0.03),
+                0 0 0 1px rgba(0, 0, 0, 0.1);
         }
         .tactile-button {
             background: linear-gradient(180deg, #2c2c2e 0%, #000000 100%);
             box-shadow: 
-                0 10px 20px -5px rgba(0, 0, 0, 0.3),
-                0 4px 6px -2px rgba(0, 0, 0, 0.05),
+                0 8px 16px -4px rgba(0, 0, 0, 0.15),
                 inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .tactile-button:active {
-            transform: translateY(1px);
-            box-shadow: 0 5px 10px -3px rgba(0, 0, 0, 0.3);
+            transform: scale(0.985);
+            opacity: 0.9;
         }
-        .frosted-glass-button {
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .frosted-glass-button:hover {
-            background: rgba(255, 255, 255, 0.9);
-            border-color: rgba(0, 0, 0, 0.15);
-            transform: translateY(-1px);
-            box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.05);
-        }
-        .laser-icon {
-            filter: drop-shadow(0 0 0.5px rgba(0,0,0,0.5));
-            opacity: 0.6;
-        }
-        .status-glow-green {
-            filter: drop-shadow(0 0 8px rgba(40, 205, 65, 0.4));
-        }
-        .status-glow-amber {
-            filter: drop-shadow(0 0 8px rgba(255, 184, 0, 0.4));
-        }
-        .status-glow-red {
-            filter: drop-shadow(0 0 8px rgba(255, 59, 48, 0.4));
-        }
-        .glass-icon-shade {
-            background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%);
-        }
-        .sub-pixel-divider {
-            height: 0.5px;
-            background-color: rgba(0, 0, 0, 0.06);
-        }
-        .glass-nav {
+        .glass-box {
             background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: saturate(180%) blur(20px);
-        }
-        @keyframes spin-slow {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        .animate-spin-slow {
-            animation: spin-slow 2s linear infinite;
-        }
-        .action-icon {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            color: rgba(0, 0, 0, 0.25);
-        }
-        .action-icon:hover {
-            color: rgba(0, 0, 0, 0.8);
-            transform: scale(1.1);
-        }
-        .action-icon.delete:hover {
-            color: #FF3B30;
+            backdrop-filter: blur(40px) saturate(180%);
+            box-shadow: 
+                0 20px 40px -10px rgba(0, 0, 0, 0.05),
+                0 0 0 1px rgba(0, 0, 0, 0.03);
         }
     </style>
-</head><body class="text-[#1d1d1f] selection:bg-black/5">
-<header class="fixed top-0 w-full z-50 glass-nav border-b border-black/[0.03]">
-<div class="max-w-[1200px] mx-auto flex items-center justify-between px-golden-sm h-16">
-<div class="flex items-center gap-3">
-<div class="w-8 h-8 bg-black rounded-[7px] flex items-center justify-center">
-<span class="material-symbols-outlined text-white text-[18px]">bolt</span>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-6">
+<div class="w-full max-w-[440px]">
+<div class="glass-box rounded-[32px] p-10 md:p-12">
+<div class="flex flex-col items-center mb-10">
+<div class="w-12 h-12 bg-black rounded-[11px] flex items-center justify-center mb-6 shadow-xl">
+<span class="material-symbols-outlined text-white text-[28px]">bolt</span>
 </div>
-<span class="font-semibold text-[19px] tracking-tight">Wechat2doc</span>
+<h1 class="text-[28px] font-bold tracking-tight text-[#1d1d1f]">欢迎回来</h1>
+<p class="text-[15px] text-black/40 mt-2 font-medium">请登录您的 Wechat2feishu 账号</p>
 </div>
-<nav class="hidden md:flex items-center gap-8 text-[14px] font-medium text-black/60">
-<a class="hover:text-black transition-colors" href="#">首页</a>
-<div class="relative group">
-<a class="text-black font-semibold" href="#">我的转存</a>
-<span class="absolute -bottom-2.5 left-1/2 w-1 h-1 -translate-x-1/2 rounded-full bg-black"></span>
-</div>
-<a class="hover:text-black transition-colors" href="#">迭代记录</a>
-</nav>
-<div class="flex items-center gap-4">
-<div class="flex items-center gap-3 px-3 py-1.5 rounded-full bg-black/5 border border-black/[0.03]">
-<div class="w-6 h-6 rounded-full bg-gradient-to-tr from-gray-400 to-gray-200 overflow-hidden flex items-center justify-center">
-<span class="material-symbols-outlined text-[14px] text-white">person</span>
-</div>
-<span class="text-[13px] font-medium text-black/70">Designer Pro</span>
-</div>
-<button class="text-[13px] font-medium text-black/40 hover:text-vibrant-red transition-colors">
-                退出登录
-            </button>
+<form class="space-y-6">
+<div class="space-y-4">
+<div class="space-y-1.5">
+<label class="text-[13px] font-semibold text-black/50 ml-1">邮箱地址</label>
+<div class="recessed-input rounded-xl px-4 py-3.5 flex items-center">
+<span class="material-symbols-outlined text-[18px] text-black/20 mr-3">mail</span>
+<input class="w-full bg-transparent border-none p-0 text-[15px] focus:ring-0 placeholder:text-black/20 font-medium" placeholder="example@email.com" type="email"/>
 </div>
 </div>
-</header>
-<main class="pt-32">
-<section class="max-w-[1200px] mx-auto px-golden-sm text-center mb-golden-xl">
-<h1 class="headline-gradient text-[48px] md:text-[64px] font-bold leading-[1.05] mb-golden-sm mx-auto max-w-[800px]">
-            欢迎回来，<br/>今天想保存什么？
-        </h1>
-<div class="max-w-[680px] mx-auto">
-<div class="recessed-input p-2 rounded-[22px] flex items-center gap-2 group transition-all focus-within:ring-4 focus-within:ring-black/5">
-<div class="pl-4 flex items-center justify-center">
-<span class="material-symbols-outlined laser-icon text-[20px]">link</span>
+<div class="space-y-1.5">
+<div class="flex justify-between items-center ml-1">
+<label class="text-[13px] font-semibold text-black/50">密码</label>
+<a class="text-[12px] font-medium text-black/30 hover:text-black/60 transition-colors" href="#">忘记密码？</a>
 </div>
-<input class="flex-1 bg-transparent border-none focus:ring-0 text-[17px] font-medium placeholder:text-black/25 py-3" placeholder="粘贴微信文章链接..." type="text"/>
-<button class="tactile-button h-12 px-8 rounded-[14px] text-white text-[15px] font-semibold tracking-wide flex items-center justify-center">
-                    一键转存
+<div class="recessed-input rounded-xl px-4 py-3.5 flex items-center">
+<span class="material-symbols-outlined text-[18px] text-black/20 mr-3">lock</span>
+<input class="w-full bg-transparent border-none p-0 text-[15px] focus:ring-0 placeholder:text-black/20 font-medium" placeholder="••••••••" type="password"/>
+</div>
+</div>
+</div>
+<button class="tactile-button w-full h-12 rounded-full text-white text-[15px] font-semibold tracking-wide mt-4" type="submit">
+                    登录
                 </button>
-</div>
-<div class="mt-8 flex flex-wrap items-center justify-center gap-8">
-<div class="flex items-center gap-2.5 text-[12px] text-black/35 font-medium">
-<span class="material-symbols-outlined text-[16px]">verified_user</span>
-<span>已连接至飞书知识库</span>
-</div>
-<div class="flex items-center gap-2.5 text-[12px] text-black/35 font-medium">
-<span class="material-symbols-outlined text-[16px]">cloud_done</span>
-<span>存储空间已同步</span>
+</form>
+<div class="mt-10 text-center">
+<p class="text-[14px] text-black/40 font-medium">
+                    还没有账号？ 
+                    <a class="text-black/80 hover:underline font-semibold ml-1" href="#">立即注册</a>
+</p>
 </div>
 </div>
+<div class="mt-12 flex flex-col items-center gap-6">
+<div class="flex gap-8 text-[13px] font-medium text-black/30">
+<a class="hover:text-black/60 transition-colors" href="#">隐私条款</a>
+<a class="hover:text-black/60 transition-colors" href="#">使用协议</a>
+<a class="hover:text-black/60 transition-colors" href="#">联系我们</a>
 </div>
-</section>
-<section class="max-w-[980px] mx-auto px-golden-sm pb-golden-xl">
-<div class="flex flex-col md:flex-row md:items-end justify-between mb-8 px-2 gap-4">
-<div class="flex items-center gap-2">
-<h3 class="text-[14px] font-semibold text-black/30 tracking-[0.1em] uppercase">我的转存历史</h3>
-<span class="px-2 py-0.5 rounded-full bg-black/5 text-[11px] font-bold text-black/30">12</span>
-</div>
-<div class="flex items-center gap-4">
-<button class="text-[13px] font-medium text-black/30 hover:text-vibrant-red transition-colors flex items-center gap-1.5 px-2">
-<span class="material-symbols-outlined text-[16px]">delete_sweep</span>
-                    清除记录
-                </button>
-</div>
-</div>
-<div class="bg-white/40 backdrop-blur-md rounded-[24px] border border-black/[0.04] overflow-hidden min-h-[400px] flex flex-col">
-<table class="w-full text-left border-collapse">
-<thead>
-<tr class="text-[12px] font-bold text-black/30 uppercase tracking-wider">
-<th class="px-8 py-6">文章标题</th>
-<th class="px-8 py-6 hidden md:table-cell">转存时间</th>
-<th class="px-8 py-6 text-right pr-12">状态与操作</th>
-</tr>
-</thead>
-<tbody>
-<tr class="group hover:bg-black/[0.02] transition-colors">
-<td class="px-8 py-6">
-<div class="flex flex-col gap-1">
-<span class="text-[16px] font-semibold text-black/85 leading-tight line-clamp-1">乔布斯的极简美学：如何在软件设计中应用？</span>
-<span class="md:hidden text-[13px] text-black/40">10分钟前</span>
-</div>
-</td>
-<td class="px-8 py-6 hidden md:table-cell">
-<span class="text-[14px] text-black/40 font-medium">10分钟前</span>
-</td>
-<td class="px-8 py-6 text-right pr-12">
-<div class="flex items-center justify-end gap-5">
-<div class="flex items-center gap-4 opacity-0 translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out">
-<a class="action-icon" href="#" title="在飞书中查看">
-<span class="material-symbols-outlined text-[22px]">open_in_new</span>
-</a>
-<button class="action-icon delete" title="删除记录">
-<span class="material-symbols-outlined text-[22px]">delete</span>
-</button>
-</div>
-<div class="w-8 h-8 rounded-full flex items-center justify-center status-glow-green text-vibrant-green relative overflow-hidden glass-icon-shade shrink-0 group-hover:opacity-30 transition-opacity duration-300">
-<span class="material-symbols-outlined text-[20px] fill-1">check_circle</span>
-</div>
-</div>
-</td>
-</tr>
-<tr><td colspan="3"><div class="sub-pixel-divider mx-8"></div></td></tr>
-<tr class="group hover:bg-black/[0.02] transition-colors">
-<td class="px-8 py-6">
-<div class="flex flex-col gap-1">
-<span class="text-[16px] font-semibold text-black/85 leading-tight line-clamp-1">2024年全球设计趋势报告：触感与深度的回归</span>
-<span class="md:hidden text-[13px] text-vibrant-amber/80">正在解析并渲染...</span>
-</div>
-</td>
-<td class="px-8 py-6 hidden md:table-cell">
-<span class="text-[14px] text-black/40 font-medium">刚刚</span>
-</td>
-<td class="px-8 py-6 text-right pr-12">
-<div class="flex items-center justify-end gap-5">
-<div class="flex items-center gap-4 opacity-0 translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out">
-<button class="action-icon delete" title="删除记录">
-<span class="material-symbols-outlined text-[22px]">delete</span>
-</button>
-</div>
-<div class="w-8 h-8 rounded-full flex items-center justify-center status-glow-amber text-vibrant-amber relative overflow-hidden glass-icon-shade shrink-0 group-hover:opacity-30 transition-opacity duration-300">
-<span class="material-symbols-outlined text-[20px] animate-spin-slow">progress_activity</span>
-</div>
-</div>
-</td>
-</tr>
-<tr><td colspan="3"><div class="sub-pixel-divider mx-8"></div></td></tr>
-<tr class="group hover:bg-black/[0.02] transition-colors">
-<td class="px-8 py-6">
-<div class="flex flex-col gap-1">
-<span class="text-[16px] font-semibold text-black/85 leading-tight line-clamp-1">飞书文档的高级排版技巧指南</span>
-<span class="md:hidden text-[13px] text-vibrant-red/80">网络连接异常</span>
-</div>
-</td>
-<td class="px-8 py-6 hidden md:table-cell">
-<span class="text-[14px] text-black/40 font-medium">昨天 14:20</span>
-</td>
-<td class="px-8 py-6 text-right pr-12">
-<div class="flex items-center justify-end gap-5">
-<div class="flex items-center gap-4 opacity-0 translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out">
-<button class="action-icon" title="重试转存">
-<span class="material-symbols-outlined text-[22px]">refresh</span>
-</button>
-<button class="action-icon delete" title="删除记录">
-<span class="material-symbols-outlined text-[22px]">delete</span>
-</button>
-</div>
-<div class="w-8 h-8 rounded-full flex items-center justify-center status-glow-red text-vibrant-red relative overflow-hidden glass-icon-shade shrink-0 group-hover:opacity-30 transition-opacity duration-300">
-<span class="material-symbols-outlined text-[20px] fill-1">error</span>
-</div>
-</div>
-</td>
-</tr>
-<tr><td colspan="3"><div class="sub-pixel-divider mx-8"></div></td></tr>
-<tr class="group hover:bg-black/[0.02] transition-colors">
-<td class="px-8 py-6">
-<div class="flex flex-col gap-1">
-<span class="text-[16px] font-semibold text-black/85 leading-tight line-clamp-1">深度解读：苹果Vision Pro的空间交互逻辑</span>
-<span class="md:hidden text-[13px] text-black/40">2天前</span>
-</div>
-</td>
-<td class="px-8 py-6 hidden md:table-cell">
-<span class="text-[14px] text-black/40 font-medium">2天前</span>
-</td>
-<td class="px-8 py-6 text-right pr-12">
-<div class="flex items-center justify-end gap-5">
-<div class="flex items-center gap-4 opacity-0 translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out">
-<a class="action-icon" href="#" title="在飞书中查看">
-<span class="material-symbols-outlined text-[22px]">open_in_new</span>
-</a>
-<button class="action-icon delete" title="删除记录">
-<span class="material-symbols-outlined text-[22px]">delete</span>
-</button>
-</div>
-<div class="w-8 h-8 rounded-full flex items-center justify-center status-glow-green text-vibrant-green relative overflow-hidden glass-icon-shade shrink-0 group-hover:opacity-30 transition-opacity duration-300">
-<span class="material-symbols-outlined text-[20px] fill-1">check_circle</span>
-</div>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="hidden flex-1 flex-col items-center justify-center py-20 px-8 text-center">
-<div class="w-24 h-24 mb-6 rounded-[28px] bg-black/[0.02] border border-black/[0.04] flex items-center justify-center relative">
-<span class="material-symbols-outlined text-[48px] text-black/[0.08]">history</span>
-<div class="absolute -right-2 -bottom-2 w-10 h-10 rounded-full bg-white shadow-sm border border-black/[0.05] flex items-center justify-center">
-<span class="material-symbols-outlined text-[20px] text-black/20">search</span>
-</div>
-</div>
-<h4 class="text-[19px] font-semibold text-black/60 mb-2">暂无转存记录</h4>
-<p class="text-[14px] text-black/30 max-w-[280px] leading-relaxed">
-                    粘贴微信文章链接，开启你的第一个高保真知识库归档。
-                </p>
-<button class="mt-8 px-6 py-2 rounded-full border border-black/10 text-[13px] font-medium text-black/60 hover:bg-black hover:text-white transition-all">
-                    了解如何使用
-                </button>
-</div>
-</div>
-<div class="mt-8 flex justify-center">
-<nav class="flex items-center gap-2 bg-white/50 p-1 rounded-full border border-black/[0.03]">
-<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-black/5 text-black/40"><span class="material-symbols-outlined text-[18px]">chevron_left</span></button>
-<span class="px-4 text-[13px] font-medium text-black/60">第 1 / 1 页</span>
-<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-black/5 text-black/40"><span class="material-symbols-outlined text-[18px]">chevron_right</span></button>
-</nav>
-</div>
-</section>
-</main>
-<footer class="py-golden-lg border-t border-black/[0.03] mt-golden-xl">
-<div class="max-w-[1200px] mx-auto px-golden-sm flex flex-col items-center">
-<div class="flex flex-wrap justify-center gap-x-12 gap-y-4 text-[14px] font-medium text-black/40 mb-10">
-<a class="hover:text-black transition-colors" href="#">隐私条款</a>
-<a class="hover:text-black transition-colors" href="#">使用协议</a>
-<a class="hover:text-black transition-colors" href="#">开发文档</a>
-<a class="hover:text-black transition-colors" href="#">联系我们</a>
-</div>
-<div class="flex items-center gap-3 text-black/25">
-<span class="text-[12px] font-semibold tracking-widest uppercase">Wechat2doc</span>
+<div class="flex items-center gap-2 text-black/20">
+<span class="text-[11px] font-bold tracking-[0.2em] uppercase">Wechat2feishu</span>
 <span class="w-1 h-1 rounded-full bg-black/10"></span>
-<span class="text-[13px]">Designed for perfection.</span>
+<span class="text-[12px] font-medium italic">For Minimalists.</span>
 </div>
 </div>
-</footer>
+</div>
+
 </body></html>
