@@ -242,9 +242,9 @@ export default function LoginPage() {
 
         <div className="mt-12 flex flex-col items-center gap-6">
             <div className="flex gap-8 text-[13px] font-medium text-black/30">
-                <a class="hover:text-black/60 transition-colors" href="#">隐私条款</a>
-                <a class="hover:text-black/60 transition-colors" href="#">使用协议</a>
-                <a class="hover:text-black/60 transition-colors" href="#">联系我们</a>
+                <a className="hover:text-black/60 transition-colors" href="#">隐私条款</a>
+                <a className="hover:text-black/60 transition-colors" href="#">使用协议</a>
+                <a className="hover:text-black/60 transition-colors" href="#">联系我们</a>
             </div>
             <div className="flex items-center gap-2 text-black/20">
                 <span className="text-[11px] font-bold tracking-[0.2em] uppercase">Wechat2doc</span>

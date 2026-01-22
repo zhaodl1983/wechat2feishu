@@ -14,8 +14,8 @@ model User {
   id                    String    @id @default(auto()) @map("_id") @db.ObjectId
   email                 String?   @unique
   password              String?
-  phoneNumber           String?   @unique
-  wechatUnionId         String?   @unique
+  phoneNumber           String?
+  wechatUnionId         String?
   wechatOpenId          String?
   feishuUserId          String?   @unique
   name                  String?
