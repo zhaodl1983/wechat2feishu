@@ -52,6 +52,7 @@ model Article {
   localPath     String?
   thumbnailPath String?
   feishuUrl     String?
+  content       String?
   status        String   @default("pending") // pending, completed, error
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
