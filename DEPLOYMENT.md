@@ -1,4 +1,4 @@
-# Wechat2feishu 部署指南
+# Wechat2doc 部署指南
 
 本文档详细记录了项目的服务器部署架构与操作流程。
 
@@ -24,7 +24,7 @@ rsync -avz -e "ssh -i /path/to/key.pem" \
 --exclude '.next' \
 --exclude 'dev.db' \
 --exclude '.env' \
-./ user@server_ip:/var/www/wechat2feishu/
+./ user@server_ip:/var/www/wechat2doc/
 ```
 
 ### 服务器端操作
@@ -57,7 +57,7 @@ rsync -avz -e "ssh -i /path/to/key.pem" \
     ```
 
 4.  **Nginx 配置模板**
-    位置: `/etc/nginx/sites-available/wechat2feishu`
+    位置: `/etc/nginx/sites-available/wechat2doc`
 
     ```nginx
     server {
@@ -89,8 +89,8 @@ sudo certbot --nginx -d your-domain.com
 ## 4. 故障排查
 
 - **检查服务状态**: `pm2 status`
-- **查看日志**: `pm2 logs wechat2feishu`
-- **重启服务**: `pm2 restart wechat2feishu`
+- **查看日志**: `pm2 logs wechat2doc`
+- **重启服务**: `pm2 restart wechat2doc`
 - **数据库重置**:
     ```bash
     # 危险操作：清空数据

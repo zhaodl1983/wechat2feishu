@@ -1,7 +1,7 @@
 # 产品准则
 
 ## 视觉与交互准则 (Web & CLI)
-- **品牌名称：** Wechat2feishu
+- **品牌名称：** Wechat2doc
 - **风格定位：** Apple 极简主义 (Apple Minimalist)。
 - **排版与色彩：**
     - **字体：** 优先使用系统默认字体栈（San Francisco, PingFang SC）。

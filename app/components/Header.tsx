@@ -28,7 +28,7 @@ export function Header({ user }: HeaderProps) {
           <div className="w-8 h-8 bg-black rounded-[7px] flex items-center justify-center">
             <span className="material-symbols-outlined text-white text-[18px]">bolt</span>
           </div>
-          <span className="font-semibold text-[19px] tracking-tight text-[#1d1d1f]">Wechat2feishu</span>
+          <span className="font-semibold text-[19px] tracking-tight text-[#1d1d1f]">Wechat2doc</span>
         </div>
         <nav className="hidden md:flex items-center gap-8 text-[14px] font-medium text-black/60">
           <a className="hover:text-black transition-colors" href="/">首页</a>

@@ -63,7 +63,7 @@ export default async function Changelog() {
               迭代记录
             </h1>
             <p className="text-[19px] text-black/60 font-medium">
-              Wechat2feishu 的进化之路。
+              Wechat2doc 的进化之路。
             </p>
           </div>
 

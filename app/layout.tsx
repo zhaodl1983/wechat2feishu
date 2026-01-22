@@ -5,8 +5,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Wechat2feishu",
-  description: "Save WeChat articles to Feishu instantly.",
+  title: "Wechat2doc",
+  description: "Save WeChat articles to your personal knowledge base instantly.",
 };
 
 export default function RootLayout({

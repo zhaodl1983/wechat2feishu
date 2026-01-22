@@ -1,4 +1,4 @@
-# Wechat2feishu (Conductor)
+# Wechat2doc (Conductor)
 
 <div align="center">
   <img src="https://img.shields.io/badge/Status-V1.2%20Completed-success?style=for-the-badge" alt="Status" />
@@ -6,14 +6,14 @@
   <br/>
   <br/>
   <h3>极致打磨，让微信灵感瞬时归档。</h3>
-  <p>以最优雅的方式，将深度好文保存至你的飞书知识库。保留每一处细节，成就高效创作。</p>
+  <p>以最优雅的方式，将深度好文保存至你的私人知识库。保留每一处细节，成就高效创作。</p>
 </div>
 
 ---
 
 ## ✨ 项目简介
 
-**Wechat2feishu** 是一款高保真的微信公众号文章归档与同步工具。它不仅仅是一个简单的抓取脚本，更是一个追求极致用户体验的生产力工具。
+**Wechat2doc** 是一款高保真的微信公众号文章归档与同步工具。它不仅仅是一个简单的抓取脚本，更是一个追求极致用户体验的生产力工具。
 
 - **极简美学**: 采用 Apple 风格的极简 UI 设计，大留白、毛玻璃质感、微交互动画。
 - **高保真**: 像素级还原微信文章排版，智能去除广告和干扰元素。

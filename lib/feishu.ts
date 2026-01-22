@@ -92,7 +92,7 @@ export class FeishuClient {
 
   async ensureAssetsFolder(parentToken: string, userToken?: string): Promise<string> {
       const token = userToken || await this.getTenantAccessToken();
-      const folderName = 'Wechat2feishu Assets';
+      const folderName = 'Wechat2doc Assets';
       
       // 1. Search for existing folder
       // Note: Feishu search API is complex. For simplicity, we might just create one or list children.

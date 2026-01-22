@@ -1,11 +1,8 @@
 # Track Specification: Web GUI (V1.2)
 
 ## Goal
-Implement the "Wechat2feishu" web interface based on the approved Apple-style minimalist design. This interface serves as the primary entry point for users to grab and sync articles.
-
-## UI Components (Based on Design)
-1.  **Header**:
-    -   Logo: "Wechat2feishu" with a custom icon (as shown in design).
+Implement the "Wechat2doc" web interface based on the approved Apple-style minimalist design. This interface serves as the primary entry point for users to grab and sync articles.
+    -   Logo: "Wechat2doc" with a custom icon (as shown in design).
     -   Action: "登录飞书" (Login with Feishu) button, pill-shaped, outline/light gray.
 2.  **Hero Section**:
     -   Headline: "瞬间将微信文章保存到飞书" (Save WeChat articles to Feishu instantly).
@@ -17,7 +14,7 @@ Implement the "Wechat2feishu" web interface based on the approved Apple-style mi
     -   Action: "清除历史" (Clear History) link in the section header.
 4.  **Footer**:
     -   Links: 隐私政策, 服务条款, 文档, 支持.
-    -   Copyright: "© 2024 Wechat2feishu. 为生产力而生。"
+    -   Copyright: "© 2024 Wechat2doc. 为生产力而生。"
 
 ## Technical Requirements
 -   **Framework**: Next.js (App Router).

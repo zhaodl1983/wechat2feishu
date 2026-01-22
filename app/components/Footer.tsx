@@ -9,7 +9,7 @@ export function Footer() {
             <a className="hover:text-black transition-colors" href="#">联系我们</a>
           </div>
           <div className="flex items-center gap-3 text-black/25">
-            <span className="text-[12px] font-semibold tracking-widest uppercase">Wechat2feishu</span>
+            <span className="text-[12px] font-semibold tracking-widest uppercase">Wechat2doc</span>
             <span className="w-1 h-1 rounded-full bg-black/10"></span>
             <span className="text-[13px]">Designed for perfection.</span>
           </div>
