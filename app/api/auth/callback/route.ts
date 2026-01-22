@@ -28,43 +28,37 @@ export async function GET(request: Request) {
     const encryptedRefreshToken = encrypt(refresh_token);
     const tokenExpiry = new Date(Date.now() + expires_in * 1000);
 
+    /* 
+    // Feishu login temporarily disabled in V0.6 cleanup
     // 4. Upsert User in DB
     const user = await prisma.user.upsert({
       where: { feishuUserId: open_id },
       update: {
         name,
         avatarUrl: avatar_url,
-        encryptedAccessToken,
-        encryptedRefreshToken,
-        tokenExpiry,
+        encryptedAccessToken: encrypt(access_token),
+        encryptedRefreshToken: encrypt(refresh_token),
+        tokenExpiry: new Date(Date.now() + expires_in * 1000),
         lastLoginAt: new Date(),
       },
       create: {
         feishuUserId: open_id,
         name,
         avatarUrl: avatar_url,
-        encryptedAccessToken,
-        encryptedRefreshToken,
-        tokenExpiry,
+        encryptedAccessToken: encrypt(access_token),
+        encryptedRefreshToken: encrypt(refresh_token),
+        tokenExpiry: new Date(Date.now() + expires_in * 1000),
+        lastLoginAt: new Date(),
       },
     });
-
-    // 5. Create Session (Cookie)
-    await createSession(user.id);
-
-    // 6. Redirect to Home
-    // Derive base URL from FEISHU_REDIRECT_URI to ensure correct production redirect
-    let baseUrl = new URL('/', request.url).origin;
-    if (process.env.FEISHU_REDIRECT_URI) {
-        try {
-            const redirectUrl = new URL(process.env.FEISHU_REDIRECT_URI);
-            baseUrl = redirectUrl.origin;
-        } catch (e) {
-            console.error('Invalid FEISHU_REDIRECT_URI', e);
-        }
-    }
     
-    return NextResponse.redirect(new URL('/', baseUrl));
+    // Create session (simple cookie for MVP)
+    // In real world, use NextAuth or similar
+    const response = NextResponse.redirect(new URL("/", req.url));
+    response.cookies.set("userId", user.id, { httpOnly: true }); 
+    */
+
+    return NextResponse.redirect(new URL("/login?error=FeishuLoginDisabled", request.url));
 
   } catch (error: any) {
     console.error('Callback Error:', error);

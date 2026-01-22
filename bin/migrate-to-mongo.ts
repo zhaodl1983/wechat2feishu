@@ -18,7 +18,7 @@ async function migrate() {
     for (const u of users as any[]) {
         try {
             // Check if exists (upsert logic simulation)
-            const existing = await mongo.user.findUnique({ where: { feishuUserId: u.feishuUserId } });
+            const existing = await mongo.user.findFirst({ where: { feishuUserId: u.feishuUserId } });
             if (existing) {
                 userIdMap.set(u.id, existing.id);
                 console.log(`User exists, mapped: ${u.id} -> ${existing.id}`);
@@ -48,7 +48,7 @@ async function migrate() {
     // 2. Articles
     console.log('--- Migrating Articles ---');
     const articles = sqlite.prepare('SELECT * FROM Article').all();
-    
+
     for (const a of articles as any[]) {
         try {
             // Check existence by originalUrl
@@ -89,8 +89,8 @@ async function migrate() {
 }
 
 migrate()
-  .catch(e => console.error(e))
-  .finally(async () => {
-      await mongo.$disconnect();
-      sqlite.close();
-  });
+    .catch(e => console.error(e))
+    .finally(async () => {
+        await mongo.$disconnect();
+        sqlite.close();
+    });
