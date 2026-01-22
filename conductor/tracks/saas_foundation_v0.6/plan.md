@@ -9,7 +9,7 @@
 ## Tasks
 
 ### Phase 1: Authentication System (Email/Password)
-- [ ] **Task 1.1**: Update `prisma/schema.prisma` `User` model and add `VerificationToken` model based on Spec.
+- [x] **Task 1.1**: Update `prisma/schema.prisma` `User` model and add `VerificationToken` model based on Spec.
 - [ ] **Task 1.2**: Implement Registration API (`/api/auth/register`) and Email Verification (`/api/auth/send-code`).
 - [ ] **Task 1.3**: Implement Login API (`/api/auth/login`) with JWT.
 - [ ] **Task 1.4**: Create UI for Login/Register pages (switchable with Feishu login).
