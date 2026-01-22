@@ -165,3 +165,40 @@ body {
 .action-icon.delete:hover {
     color: #FF3B30;
 }
+
+/* UI Update Additions */
+.glass-box {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(40px) saturate(180%);
+  box-shadow: 
+      0 20px 40px -10px rgba(0, 0, 0, 0.05),
+      0 0 0 1px rgba(0, 0, 0, 0.03);
+}
+
+.outline-action-btn {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.outline-action-btn:hover {
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.glass-sidebar {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(20px);
+  border-right: 0.5px solid rgba(0, 0, 0, 0.08);
+}
+
+.modal-backdrop {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+}
+
+.recessed-input:focus-within {
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 
+      0 0 0 3px rgba(0, 0, 0, 0.03),
+      0 0 0 1px rgba(0, 0, 0, 0.1);
+}

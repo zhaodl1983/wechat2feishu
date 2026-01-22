@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -110,8 +109,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-[#FAFAFA]">
-       {/* Background Mesh (Inspired by UI Code) */}
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden">
+       {/* Background Mesh */}
       <div 
         className="absolute inset-0 z-0 pointer-events-none"
         style={{
@@ -124,84 +123,87 @@ export default function LoginPage() {
         }}
       />
 
-      <div className="relative z-10 w-full max-w-[400px] px-6">
-        {/* Logo Area */}
-        <div className="flex flex-col items-center mb-10">
-          <div className="w-12 h-12 bg-black rounded-[14px] flex items-center justify-center mb-4 shadow-xl shadow-black/10">
-            <span className="material-symbols-outlined text-white text-[24px]">bolt</span>
-          </div>
-          <h1 className="text-2xl font-bold tracking-tight text-[#1d1d1f]">Wechat2doc</h1>
-          <p className="text-black/40 font-medium mt-2 text-sm">
-             {isLogin ? "登录你的知识库" : "创建你的私人知识库"}
-          </p>
-        </div>
-
-        {/* Card */}
-        <div className="bg-white/60 backdrop-blur-xl rounded-[24px] shadow-[0_20px_40px_-10px_rgba(0,0,0,0.1)] border border-white/50 p-8">
-            {/* Tabs */}
-            <div className="flex p-1 bg-black/5 rounded-xl mb-6 relative">
-                <div 
-                    className="absolute top-1 bottom-1 w-[calc(50%-4px)] bg-white rounded-lg shadow-sm transition-all duration-300 ease-spring"
-                    style={{ left: isLogin ? '4px' : 'calc(50%)' }}
-                />
-                <button 
-                    onClick={() => setIsLogin(true)}
-                    className={`flex-1 relative z-10 py-1.5 text-[13px] font-semibold transition-colors ${isLogin ? 'text-black' : 'text-black/40'}`}
-                >
-                    登录
-                </button>
-                <button 
-                    onClick={() => setIsLogin(false)}
-                    className={`flex-1 relative z-10 py-1.5 text-[13px] font-semibold transition-colors ${!isLogin ? 'text-black' : 'text-black/40'}`}
-                >
-                    注册
-                </button>
+      <div className="w-full max-w-[440px] relative z-10">
+        <div className="glass-box rounded-[32px] p-10 md:p-12">
+            <div className="flex flex-col items-center mb-10">
+                <div className="w-12 h-12 bg-black rounded-[11px] flex items-center justify-center mb-6 shadow-xl">
+                    <span className="material-symbols-outlined text-white text-[28px]">bolt</span>
+                </div>
+                <h1 className="text-[28px] font-bold tracking-tight text-[#1d1d1f]">
+                    {isLogin ? "欢迎回来" : "创建您的账号"}
+                </h1>
+                <p className="text-[15px] text-black/40 mt-2 font-medium text-center">
+                    {isLogin ? "请登录您的 Wechat2doc 账号" : "请使用您的邮箱完成注册"}
+                </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                    <input
-                        type="email"
-                        placeholder="邮箱地址"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        className="w-full h-10 px-4 rounded-xl bg-black/[0.03] border border-transparent focus:bg-white focus:border-black/10 focus:ring-0 text-[14px] transition-all placeholder:text-black/20"
-                    />
-                </div>
-
-                {!isLogin && (
-                    <div className="flex gap-2">
-                        <input
-                            type="text"
-                            placeholder="验证码 (6位)"
-                            value={code}
-                            onChange={(e) => setCode(e.target.value)}
-                            required={!isLogin}
-                            maxLength={6}
-                            className="flex-1 h-10 px-4 rounded-xl bg-black/[0.03] border border-transparent focus:bg-white focus:border-black/10 focus:ring-0 text-[14px] transition-all placeholder:text-black/20"
-                        />
-                        <button
-                            type="button"
-                            onClick={handleSendCode}
-                            disabled={cooldown > 0 || loading}
-                            className="h-10 px-4 rounded-xl bg-black/5 text-[12px] font-semibold text-black/60 hover:bg-black/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-w-[100px]"
-                        >
-                            {cooldown > 0 ? `${cooldown}s` : "获取验证码"}
-                        </button>
+            <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-4">
+                    <div className="space-y-1.5">
+                        <label className="text-[13px] font-semibold text-black/50 ml-1">邮箱地址</label>
+                        <div className="recessed-input rounded-xl px-4 py-3.5 flex items-center">
+                            <span className="material-symbols-outlined text-[18px] text-black/20 mr-3">mail</span>
+                            <input 
+                                className="w-full bg-transparent border-none p-0 text-[15px] focus:ring-0 placeholder:text-black/20 font-medium" 
+                                placeholder="example@email.com" 
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                            />
+                        </div>
                     </div>
-                )}
 
-                <div>
-                    <input
-                        type="password"
-                        placeholder="密码"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        minLength={6}
-                        className="w-full h-10 px-4 rounded-xl bg-black/[0.03] border border-transparent focus:bg-white focus:border-black/10 focus:ring-0 text-[14px] transition-all placeholder:text-black/20"
-                    />
+                    {!isLogin && (
+                        <div className="space-y-1.5">
+                            <label className="text-[13px] font-semibold text-black/50 ml-1">验证码</label>
+                            <div className="flex gap-2">
+                                <div className="recessed-input rounded-xl px-4 py-3.5 flex items-center flex-1">
+                                    <span className="material-symbols-outlined text-[18px] text-black/20 mr-3">verified_user</span>
+                                    <input 
+                                        className="w-full bg-transparent border-none p-0 text-[15px] focus:ring-0 placeholder:text-black/20 font-medium" 
+                                        placeholder="6位验证码" 
+                                        type="text"
+                                        maxLength={6}
+                                        value={code}
+                                        onChange={(e) => setCode(e.target.value)}
+                                        required={!isLogin}
+                                    />
+                                </div>
+                                <button 
+                                    type="button"
+                                    onClick={handleSendCode}
+                                    disabled={cooldown > 0 || loading}
+                                    className="outline-action-btn h-[52px] px-4 rounded-xl text-[13px] font-semibold text-black/60 whitespace-nowrap disabled:opacity-50"
+                                >
+                                    {cooldown > 0 ? `${cooldown}s` : "获取验证码"}
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="space-y-1.5">
+                        <div className="flex justify-between items-center ml-1">
+                            <label className="text-[13px] font-semibold text-black/50">
+                                {isLogin ? "密码" : "设置密码"}
+                            </label>
+                            {isLogin && (
+                                <a className="text-[12px] font-medium text-black/30 hover:text-black/60 transition-colors" href="#">忘记密码？</a>
+                            )}
+                        </div>
+                        <div className="recessed-input rounded-xl px-4 py-3.5 flex items-center">
+                            <span className="material-symbols-outlined text-[18px] text-black/20 mr-3">lock</span>
+                            <input 
+                                className="w-full bg-transparent border-none p-0 text-[15px] focus:ring-0 placeholder:text-black/20 font-medium" 
+                                placeholder={isLogin ? "••••••••" : "至少6位字符"}
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                                minLength={6}
+                            />
+                        </div>
+                    </div>
                 </div>
 
                 {error && (
@@ -216,20 +218,39 @@ export default function LoginPage() {
                     </div>
                 )}
 
-                <button
+                <button 
+                    className="tactile-button w-full h-12 rounded-full text-white text-[15px] font-semibold tracking-wide mt-4 disabled:opacity-70" 
                     type="submit"
                     disabled={loading}
-                    className="w-full h-11 bg-black text-white rounded-xl text-[14px] font-semibold shadow-lg shadow-black/20 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-70 disabled:pointer-events-none mt-2"
                 >
-                    {loading ? "处理中..." : (isLogin ? "登 录" : "创建账号")}
+                    {loading ? "处理中..." : (isLogin ? "登 录" : "立即注册")}
                 </button>
             </form>
+
+            <div className="mt-10 text-center">
+                <p className="text-[14px] text-black/40 font-medium">
+                    {isLogin ? "还没有账号？" : "已有账号？"} 
+                    <button 
+                        onClick={() => setIsLogin(!isLogin)}
+                        className="text-black/80 hover:underline font-semibold ml-1 transition-colors"
+                    >
+                        {isLogin ? "立即注册" : "立即登录"}
+                    </button>
+                </p>
+            </div>
         </div>
-        
-        <div className="text-center mt-8">
-            <p className="text-[12px] text-black/20 font-medium">
-                © 2026 Wechat2doc. All rights reserved.
-            </p>
+
+        <div className="mt-12 flex flex-col items-center gap-6">
+            <div className="flex gap-8 text-[13px] font-medium text-black/30">
+                <a class="hover:text-black/60 transition-colors" href="#">隐私条款</a>
+                <a class="hover:text-black/60 transition-colors" href="#">使用协议</a>
+                <a class="hover:text-black/60 transition-colors" href="#">联系我们</a>
+            </div>
+            <div className="flex items-center gap-2 text-black/20">
+                <span className="text-[11px] font-bold tracking-[0.2em] uppercase">Wechat2doc</span>
+                <span className="w-1 h-1 rounded-full bg-black/10"></span>
+                <span className="text-[12px] font-medium italic">For Minimalists.</span>
+            </div>
         </div>
       </div>
     </div>

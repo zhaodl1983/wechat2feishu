@@ -1,60 +1,62 @@
-import { Header } from '../components/Header';
-import { Footer } from '../components/Footer';
-import { getSession } from '@/lib/session';
-import { prisma } from '@/lib/db';
+import { Header } from "../components/Header";
+import { Footer } from "../components/Footer";
 
-export default async function Changelog() {
-  // Fetch user for Header
-  const session = await getSession();
-  let user = null;
-  if (session) {
-    user = await prisma.user.findUnique({
-      where: { id: session.userId },
-      select: { name: true, avatarUrl: true, id: true }
-    });
+const versions = [
+  {
+    version: "V0.7",
+    status: "planning",
+    title: "社区与多媒体增强",
+    desc: "上线透明数据看板、个人足迹分析，并实现 GIF 与视频的完美内嵌支持。",
+    date: "规划中"
+  },
+  {
+    version: "V0.6",
+    status: "progress",
+    title: "SaaS 基础建设",
+    desc: "引入邮箱/密码认证体系，实现 MongoDB 内容存储与本地图片优化，建立自动化备份机制。",
+    date: "进行中"
+  },
+  {
+    version: "V0.5",
+    status: "done",
+    title: "架构升级",
+    desc: "数据库全面迁移至 MongoDB，优化数据模型以支持更高并发与灵活扩展。",
+    date: "已上线"
+  },
+  {
+    version: "V0.4",
+    status: "done",
+    title: "SaaS 服务化",
+    desc: "初步实现用户登录态管理与历史记录过滤，支持基于用户身份的云端同步。",
+    date: "已上线"
+  },
+  {
+    version: "V0.3",
+    status: "done",
+    title: "Web 界面化",
+    desc: "构建了 Apple 极简风格的 Web 仪表盘，支持可视化操作与转存历史管理。",
+    date: "已上线"
+  },
+  {
+    version: "V0.2",
+    status: "done",
+    title: "飞书深度集成",
+    desc: "打通了飞书 API 集成，实现了图片自动上传与云文档的一键生成。",
+    date: "已上线"
+  },
+  {
+    version: "V0.1",
+    status: "done",
+    title: "核心归档器",
+    desc: "实现了核心抓取引擎与 HTML 转 Markdown 的本地归档逻辑。",
+    date: "已上线"
   }
+];
 
-  const versions = [
-    {
-      version: "V0.5",
-      status: "planning",
-      title: "社区与探索",
-      desc: "上线透明数据看板、社区榜单系统与多用户探索模式。",
-      date: "规划中"
-    },
-    {
-      version: "V0.4",
-      status: "progress",
-      title: "SaaS 服务化",
-      desc: "完善 SaaS 闭环，打磨内容还原质量。",
-      date: "进行中"
-    },
-    {
-      version: "V0.3",
-      status: "done",
-      title: "Web 界面化",
-      desc: "构建了 Apple 极简风格的 Web 仪表盘，支持个性化欢迎语、可视化操作与转存历史管理。",
-      date: "已上线"
-    },
-    {
-      version: "V0.2",
-      status: "done",
-      title: "飞书深度集成",
-      desc: "打通了飞书 API 集成，实现了图片自动上传与云文档的一键生成。",
-      date: "已上线"
-    },
-    {
-      version: "V0.1",
-      status: "done",
-      title: "核心归档器",
-      desc: "实现了核心抓取引擎与 HTML 转 Markdown 的本地归档逻辑。",
-      date: "已上线"
-    }
-  ];
-
+export default function Changelog() {
   return (
     <main className="min-h-screen bg-[#FDFDFD] flex flex-col font-sans">
-      <Header user={user} />
+      <Header />
       
       <div className="flex-grow pt-32 pb-20 px-6">
         <div className="max-w-[800px] mx-auto">

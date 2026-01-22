@@ -25,7 +25,6 @@
                     },
                     borderRadius: {
                         'apple': '12px',
-                        'apple-lg': '24px',
                     }
                 }
             }
@@ -44,6 +43,12 @@
             background-image: var(--mesh-bg);
             -webkit-font-smoothing: antialiased;
             letter-spacing: -0.015em;
+        }
+        .headline-gradient {
+            background: linear-gradient(180deg, #1d1d1f 0%, #434343 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.03em;
         }
         .recessed-input {
             background: rgba(255, 255, 255, 0.4);
@@ -74,13 +79,18 @@
             backdrop-filter: blur(20px);
             border-right: 0.5px solid rgba(0, 0, 0, 0.08);
         }
-        .modal-backdrop {
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(8px);
+        .view-toggle-btn {
+            @apply flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-200;
+        }
+        .view-toggle-btn.active {
+            @apply bg-white shadow-sm border border-black/[0.05] text-black;
+        }
+        .view-toggle-btn:not(.active) {
+            @apply text-black/30 hover:text-black/50;
         }
     </style>
 </head>
-<body class="text-[#1d1d1f] selection:bg-black/5 overflow-hidden h-screen flex relative">
+<body class="text-[#1d1d1f] selection:bg-black/5 overflow-hidden h-screen flex">
 <aside class="w-64 glass-sidebar hidden lg:flex flex-col z-20">
 <div class="h-16 flex items-center px-6 mb-4">
 <div class="flex items-center gap-3">
@@ -130,13 +140,6 @@
 </div>
 </div>
 <div class="hidden lg:flex items-center gap-2">
-<div class="flex items-center gap-3 mr-4">
-<div class="w-8 h-8 bg-black rounded-[7px] flex items-center justify-center shrink-0">
-<span class="material-symbols-outlined text-white text-[18px]">bolt</span>
-</div>
-<span class="font-semibold text-[19px] tracking-tight">Wechat2doc</span>
-</div>
-<div class="w-[0.5px] h-4 bg-black/10 mx-2"></div>
 <span class="text-[14px] font-medium text-black/40">知识库</span>
 <span class="material-symbols-outlined text-[16px] text-black/20">chevron_right</span>
 <span class="text-[14px] font-semibold">所有文档</span>
@@ -161,10 +164,24 @@
 <h2 class="text-3xl font-bold tracking-tight mb-2">我的知识库</h2>
 <p class="text-black/40 font-medium">共 124 篇文档，其中 12 篇为今日转存</p>
 </div>
+<div class="flex items-center gap-4">
+<div class="flex items-center bg-black/[0.03] p-0.5 rounded-lg border border-black/[0.02]">
+<button class="view-toggle-btn active" title="网格视图">
+<span class="material-symbols-outlined text-[18px]">grid_view</span>
+</button>
+<button class="view-toggle-btn" title="列表视图">
+<span class="material-symbols-outlined text-[18px]">view_headline</span>
+</button>
+</div>
+<div class="h-10 px-4 rounded-xl bg-black/[0.03] border border-black/[0.04] flex items-center gap-2 cursor-pointer hover:bg-black/[0.05] transition-colors">
+<span class="text-[13px] font-medium text-black/60">按时间排序</span>
+<span class="material-symbols-outlined text-[16px] text-black/30">expand_more</span>
+</div>
 <button class="tactile-button h-10 px-6 rounded-xl text-white text-[14px] font-semibold flex items-center gap-2">
 <span class="material-symbols-outlined text-[18px]">add</span>
-                        新转存
-                    </button>
+                            新转存
+                        </button>
+</div>
 </div>
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 <div class="group bg-white rounded-2xl border border-black/[0.04] p-5 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] hover:-translate-y-0.5 transition-all cursor-pointer">
@@ -232,49 +249,6 @@
 <a class="hover:text-black/50 transition-colors uppercase tracking-wider" href="#">Terms</a>
 </div>
 </footer>
-</div>
-<div class="fixed inset-0 z-[100] flex items-center justify-center p-4 modal-backdrop">
-<div class="bg-white w-full max-w-[640px] rounded-[24px] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.15)] overflow-hidden">
-<div class="flex items-center justify-between px-8 pt-8 pb-4">
-<h3 class="text-[22px] font-bold tracking-tight">新转存</h3>
-<button class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-black/5 transition-colors text-black/40 hover:text-black">
-<span class="material-symbols-outlined text-[20px]">close</span>
-</button>
-</div>
-<div class="px-8 pb-10">
-<p class="text-[15px] text-black/45 font-medium mb-8 leading-relaxed">
-                    粘贴微信公众号文章链接，瞬间归档至你的个人知识库。
-                </p>
-<div class="flex flex-col gap-4">
-<div class="relative group">
-<div class="absolute left-5 top-1/2 -translate-y-1/2 flex items-center pointer-events-none">
-<span class="material-symbols-outlined text-[20px] text-black/25 group-focus-within:text-black/60 transition-colors">link</span>
-</div>
-<input class="w-full h-16 pl-14 pr-32 rounded-2xl recessed-input border-none focus:ring-1 focus:ring-black/5 text-[15px] font-medium placeholder:text-black/20 transition-all" placeholder="在此粘贴微信文章链接..." type="text"/>
-<div class="absolute right-2 top-1/2 -translate-y-1/2">
-<button class="tactile-button h-12 px-6 rounded-xl text-white text-[14px] font-semibold">
-                                一键转存
-                            </button>
-</div>
-</div>
-<div class="flex items-center justify-center gap-6 mt-4">
-<div class="flex items-center gap-1.5 opacity-40">
-<span class="material-symbols-outlined text-[16px]">auto_awesome</span>
-<span class="text-[12px] font-medium">智能提取</span>
-</div>
-<div class="flex items-center gap-1.5 opacity-40">
-<span class="material-symbols-outlined text-[16px]">high_quality</span>
-<span class="text-[12px] font-medium">像素级还原</span>
-</div>
-<div class="flex items-center gap-1.5 opacity-40">
-<span class="material-symbols-outlined text-[16px]">verified_user</span>
-<span class="text-[12px] font-medium">隐私保护</span>
-</div>
-</div>
-</div>
-</div>
-<div class="h-1.5 w-full bg-gradient-to-r from-transparent via-black/[0.02] to-transparent"></div>
-</div>
 </div>
 
 </body></html>

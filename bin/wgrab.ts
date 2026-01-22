@@ -35,17 +35,18 @@ program
       // 4. Initial Conversion
       const initialMarkdown = convertToMarkdown(contentHtml, { ...metadata, url });
 
-      // 5. Asset Localization
-      console.log(`${chalk.blue('🖼️')} Downloading images and localizing links...`);
-      const finalMarkdown = await localizeAssets(initialMarkdown, articleDir);
-
+            // 5. Asset Localization
+            console.log(`${chalk.blue('🖼️')} Downloading images and localizing links...`);
+            // Use 'cli' as userId and a hash of the title or just 'cli-article' for the articleId
+            const finalMarkdown = await localizeAssets(initialMarkdown, 'cli-user', 'manual-grab');
+            
       // 6. Final Save
       const filePath = await saveMarkdown(finalMarkdown, articleDir);
       
       console.log(`\n${chalk.green('✅')} ${chalk.bold('Success!')}`);
       console.log(`${chalk.green('📄')} Article saved to: ${chalk.underline(filePath)}\n`);
 
-    } catch (error) {
+    } catch (error: any) {
       console.error(`\n${chalk.red('❌')} ${chalk.bold('Error:')} ${error.message}\n`);
       process.exit(1);
     }

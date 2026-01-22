@@ -1,0 +1,151 @@
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>注册 - Wechat2doc</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#000000",
+                        "apple-gray": "#F5F5F7",
+                    },
+                    spacing: {
+                        'golden-sm': '1.618rem',
+                        'golden-md': '2.618rem',
+                        'golden-lg': '4.236rem',
+                        'golden-xl': '6.854rem',
+                    },
+                    borderRadius: {
+                        'apple': '12px',
+                        'apple-lg': '24px',
+                    }
+                }
+            }
+        };
+    </script>
+<style type="text/tailwindcss">
+        :root {
+            --mesh-bg: radial-gradient(at 0% 0%, hsla(0,0%,100%,1) 0, transparent 50%), 
+                       radial-gradient(at 50% 0%, hsla(210,20%,98%,1) 0, transparent 50%), 
+                       radial-gradient(at 100% 0%, hsla(0,0%,100%,1) 0, transparent 50%),
+                       radial-gradient(at 50% 50%, hsla(210,10%,96%,1) 0, transparent 100%);
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", "PingFang SC", sans-serif;
+            background-color: #FAFAFA;
+            background-image: var(--mesh-bg);
+            -webkit-font-smoothing: antialiased;
+            letter-spacing: -0.015em;
+        }
+        .recessed-input {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px);
+            box-shadow: 
+                inset 0 1px 2px 0 rgba(0, 0, 0, 0.02),
+                0 0 0 1px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .recessed-input:focus-within {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 
+                0 0 0 3px rgba(0, 0, 0, 0.03),
+                0 0 0 1px rgba(0, 0, 0, 0.1);
+        }
+        .tactile-button {
+            background: linear-gradient(180deg, #2c2c2e 0%, #000000 100%);
+            box-shadow: 
+                0 8px 16px -4px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .tactile-button:active {
+            transform: scale(0.985);
+            opacity: 0.9;
+        }
+        .glass-box {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(40px) saturate(180%);
+            box-shadow: 
+                0 20px 40px -10px rgba(0, 0, 0, 0.05),
+                0 0 0 1px rgba(0, 0, 0, 0.03);
+        }
+        .outline-action-btn {
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+        .outline-action-btn:hover {
+            background: rgba(0, 0, 0, 0.03);
+            border-color: rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-6">
+<div class="w-full max-w-[440px]">
+<div class="glass-box rounded-[32px] p-10 md:p-12">
+<div class="flex flex-col items-center mb-10">
+<div class="w-12 h-12 bg-black rounded-[11px] flex items-center justify-center mb-6 shadow-xl">
+<span class="material-symbols-outlined text-white text-[28px]">bolt</span>
+</div>
+<h1 class="text-[28px] font-bold tracking-tight text-[#1d1d1f]">创建您的账号</h1>
+<p class="text-[15px] text-black/40 mt-2 font-medium text-center">请使用您的邮箱完成注册</p>
+</div>
+<form class="space-y-6">
+<div class="space-y-4">
+<div class="space-y-1.5">
+<label class="text-[13px] font-semibold text-black/50 ml-1">邮箱地址</label>
+<div class="recessed-input rounded-xl px-4 py-3.5 flex items-center">
+<span class="material-symbols-outlined text-[18px] text-black/20 mr-3">mail</span>
+<input class="w-full bg-transparent border-none p-0 text-[15px] focus:ring-0 placeholder:text-black/20 font-medium" placeholder="example@email.com" type="email"/>
+</div>
+</div>
+<div class="space-y-1.5">
+<label class="text-[13px] font-semibold text-black/50 ml-1">验证码</label>
+<div class="flex gap-2">
+<div class="recessed-input rounded-xl px-4 py-3.5 flex items-center flex-1">
+<span class="material-symbols-outlined text-[18px] text-black/20 mr-3">verified_user</span>
+<input class="w-full bg-transparent border-none p-0 text-[15px] focus:ring-0 placeholder:text-black/20 font-medium" placeholder="6位验证码" type="text"/>
+</div>
+<button class="outline-action-btn h-[52px] px-4 rounded-xl text-[13px] font-semibold text-black/60 whitespace-nowrap" type="button">
+                                获取验证码
+                            </button>
+</div>
+</div>
+<div class="space-y-1.5">
+<label class="text-[13px] font-semibold text-black/50 ml-1">设置密码</label>
+<div class="recessed-input rounded-xl px-4 py-3.5 flex items-center">
+<span class="material-symbols-outlined text-[18px] text-black/20 mr-3">lock</span>
+<input class="w-full bg-transparent border-none p-0 text-[15px] focus:ring-0 placeholder:text-black/20 font-medium" placeholder="至少8位字符" type="password"/>
+</div>
+</div>
+</div>
+<button class="tactile-button w-full h-12 rounded-full text-white text-[15px] font-semibold tracking-wide mt-4" type="submit">
+                    立即注册
+                </button>
+</form>
+<div class="mt-10 text-center">
+<p class="text-[14px] text-black/40 font-medium">
+                    已有账号？ 
+                    <a class="text-black/80 hover:underline font-semibold ml-1" href="#">立即登录</a>
+</p>
+</div>
+</div>
+<div class="mt-12 flex flex-col items-center gap-6">
+<div class="flex gap-8 text-[13px] font-medium text-black/30">
+<a class="hover:text-black/60 transition-colors" href="#">隐私条款</a>
+<a class="hover:text-black/60 transition-colors" href="#">使用协议</a>
+<a class="hover:text-black/60 transition-colors" href="#">联系我们</a>
+</div>
+<div class="flex items-center gap-2 text-black/20">
+<span class="text-[11px] font-bold tracking-[0.2em] uppercase">Wechat2doc</span>
+<span class="w-1 h-1 rounded-full bg-black/10"></span>
+<span class="text-[12px] font-medium italic">For Minimalists.</span>
+</div>
+</div>
+</div>
+
+</body></html>

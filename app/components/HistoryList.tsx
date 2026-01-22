@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -11,14 +12,16 @@ interface Article {
   feishuUrl?: string;
   createdAt?: string;
   count?: number; // For trending
+  accountName?: string;
 }
 
 interface HistoryListProps {
     refreshTrigger: number;
     isLoggedIn?: boolean;
+    layout?: 'list' | 'grid';
 }
 
-export function HistoryList({ refreshTrigger, isLoggedIn }: HistoryListProps) {
+export function HistoryList({ refreshTrigger, isLoggedIn, layout = 'list' }: HistoryListProps) {
   const [articles, setArticles] = useState<Article[]>([]);
   // If not logged in, force trending mode. If logged in, default to 'personal'.
   const [viewMode, setViewMode] = useState<'personal' | 'trending'>(isLoggedIn ? 'personal' : 'trending');
@@ -30,14 +33,22 @@ export function HistoryList({ refreshTrigger, isLoggedIn }: HistoryListProps) {
   }, [isLoggedIn]);
 
   useEffect(() => {
-    const url = viewMode === 'trending' ? '/api/history?mode=trending' : '/api/history';
+    // If layout is grid, we assume it's personal dashboard, so fetch personal history
+    // If layout is list, use the viewMode toggle (Trending vs Personal) logic?
+    // Actually, Dashboard will always be Personal.
+    
+    let url = '/api/history';
+    if (layout === 'list' && viewMode === 'trending') {
+        url = '/api/history?mode=trending';
+    }
+    
     fetch(url)
       .then((res) => res.json())
       .then((data) => {
           if (data.data) setArticles(data.data);
       })
       .catch(console.error);
-  }, [refreshTrigger, isLoggedIn, viewMode]);
+  }, [refreshTrigger, isLoggedIn, viewMode, layout]);
 
   const handleDelete = async (id: string) => {
       if (!confirm('确定删除这条记录吗？')) return;
@@ -63,7 +74,7 @@ export function HistoryList({ refreshTrigger, isLoggedIn }: HistoryListProps) {
   };
 
   // Empty State
-  if (articles.length === 0 && viewMode === 'personal') {
+  if (articles.length === 0 && viewMode === 'personal' && layout !== 'grid') { // Grid handles empty state in parent or just shows empty grid
       return (
         <section className="max-w-[1024px] mx-auto px-golden-sm pb-golden-xl">
             <div className="bg-white/40 backdrop-blur-md rounded-[24px] border border-black/[0.04] overflow-hidden min-h-[400px] flex flex-col items-center justify-center py-20 px-8 text-center shadow-sm">
@@ -77,58 +88,105 @@ export function HistoryList({ refreshTrigger, isLoggedIn }: HistoryListProps) {
                 <p className="text-[14px] text-black/30 max-w-[280px] leading-relaxed mx-auto">
                     粘贴微信文章链接，开启你的第一个高保真知识库归档。
                 </p>
-                <button className="mt-8 px-6 py-2 rounded-full border border-black/10 text-[13px] font-medium text-black/60 hover:bg-black hover:text-white transition-all">
-                    了解如何使用
-                </button>
             </div>
         </section>
       );
   }
 
+  // Grid Layout (Dashboard)
+  if (layout === 'grid') {
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {articles.map((article) => (
+                <div 
+                    key={article.id}
+                    className="group bg-white rounded-2xl border border-black/[0.04] p-5 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] hover:-translate-y-0.5 transition-all cursor-pointer relative"
+                >
+                    <div className="flex justify-between items-start mb-4">
+                        <div className="w-10 h-10 rounded-[10px] bg-vibrant-amber/10 flex items-center justify-center">
+                            <span className="material-symbols-outlined text-vibrant-amber text-[22px]">article</span>
+                        </div>
+                        <span className="text-[11px] font-bold text-black/30 bg-black/[0.03] px-2 py-1 rounded-md uppercase">微信文章</span>
+                    </div>
+                    
+                    <a 
+                        href={article.feishuUrl || '#'} 
+                        target="_blank" 
+                        rel="noreferrer"
+                        className="block"
+                    >
+                        <h3 className="text-[16px] font-bold leading-snug mb-3 group-hover:text-black transition-colors line-clamp-2 min-h-[44px]">
+                            {article.title}
+                        </h3>
+                        <p className="text-[13px] text-black/45 line-clamp-2 mb-4 leading-relaxed">
+                            {article.accountName ? `公众号：${article.accountName}` : '微信公众号文章归档...'}
+                        </p>
+                    </a>
+
+                    <div className="flex items-center justify-between pt-4 border-t border-black/[0.03]">
+                        <span className="text-[11px] font-medium text-black/30 italic">
+                            {formatTime(article.createdAt)}
+                        </span>
+                        
+                        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                             {/* Download Button */}
+                             {article.status === 'completed' && (
+                                <button 
+                                    className="action-icon w-8 h-8 rounded-full hover:bg-black/5" 
+                                    title="下载 Markdown"
+                                    onClick={async (e) => {
+                                        e.stopPropagation();
+                                        try {
+                                            const res = await fetch(`/api/articles/${article.id}/content`);
+                                            const data = await res.json();
+                                            if (data.content) {
+                                                const blob = new Blob([data.content], { type: 'text/markdown' });
+                                                const url = window.URL.createObjectURL(blob);
+                                                const a = document.createElement('a');
+                                                a.href = url;
+                                                a.download = `${data.title || 'article'}.md`;
+                                                a.click();
+                                                window.URL.revokeObjectURL(url);
+                                            }
+                                        } catch (e) {
+                                            console.error('Download failed', e);
+                                        }
+                                    }}
+                                >
+                                    <span className="material-symbols-outlined text-[18px]">download</span>
+                                </button>
+                            )}
+                            <button 
+                                className="action-icon delete w-8 h-8 rounded-full hover:bg-red-50" 
+                                title="删除"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDelete(article.id);
+                                }}
+                            >
+                                <span className="material-symbols-outlined text-[18px]">delete</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            ))}
+        </div>
+      );
+  }
+
+  // List Layout (Public)
   return (
     <section className="max-w-[980px] mx-auto px-golden-sm pb-golden-xl">
       {/* Header / Tabs */}
       <div className="flex items-center justify-between mb-8 px-2">
-        <div className="flex items-center gap-6">
-            {isLoggedIn ? (
-                <>
-                    <button 
-                        onClick={() => setViewMode('personal')}
-                        className={`flex items-center gap-2 transition-all ${viewMode === 'personal' ? 'opacity-100' : 'opacity-40 hover:opacity-70'}`}
-                    >
-                        <h3 className="text-[14px] font-semibold text-black/80 tracking-[0.1em] uppercase">我的转存</h3>
-                        {viewMode === 'personal' && <span className="px-2 py-0.5 rounded-full bg-black/5 text-[11px] font-bold text-black/50">{articles.length}</span>}
-                    </button>
-                    
-                    <div className="w-[1px] h-4 bg-black/10"></div>
-
-                    <button 
-                        onClick={() => setViewMode('trending')}
-                        className={`flex items-center gap-2 transition-all ${viewMode === 'trending' ? 'opacity-100' : 'opacity-40 hover:opacity-70'}`}
-                    >
-                        <span className="material-symbols-outlined text-[18px] text-vibrant-amber">trending_up</span>
-                        <h3 className="text-[14px] font-semibold text-black/80 tracking-[0.1em] uppercase">热门榜单</h3>
-                    </button>
-                </>
-            ) : (
-                <div className="flex items-center gap-2">
-                    <span className="material-symbols-outlined text-[18px] text-vibrant-amber">trending_up</span>
-                    <h3 className="text-[14px] font-semibold text-black/30 tracking-[0.1em] uppercase">热门转存</h3>
-                </div>
-            )}
+        <div className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-[18px] text-vibrant-amber">trending_up</span>
+            <h3 className="text-[14px] font-semibold text-black/30 tracking-[0.1em] uppercase">热门转存</h3>
         </div>
-        
-        {viewMode === 'personal' ? (
-            <button className="text-[13px] font-medium text-black/30 hover:text-vibrant-red transition-colors flex items-center gap-1.5 px-2">
-                <span className="material-symbols-outlined text-[16px]">delete_sweep</span>
-                清除记录
-            </button>
-        ) : (
-            <span className="text-[12px] font-medium text-black/25 flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-vibrant-green animate-pulse"></span>
-                实时更新
-            </span>
-        )}
+        <span className="text-[12px] font-medium text-black/25 flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-vibrant-green animate-pulse"></span>
+            实时更新
+        </span>
       </div>
       
       {/* List */}
@@ -137,11 +195,8 @@ export function HistoryList({ refreshTrigger, isLoggedIn }: HistoryListProps) {
           <thead>
             <tr className="text-[12px] font-bold text-black/30 uppercase tracking-wider">
               <th className="px-8 py-5">文章标题</th>
-              <th className={`px-8 py-5 hidden md:table-cell ${viewMode === 'trending' ? 'text-right' : ''}`}>
+              <th className="px-8 py-5 text-right hidden md:table-cell">
                   {viewMode === 'trending' ? '转存次数' : '转存时间'}
-              </th>
-              <th className={`px-8 py-5 ${viewMode === 'personal' ? 'text-right pr-12' : 'text-center'}`}>
-                  {viewMode === 'personal' ? '状态与操作' : '来源'}
               </th>
             </tr>
           </thead>
@@ -169,13 +224,10 @@ export function HistoryList({ refreshTrigger, isLoggedIn }: HistoryListProps) {
                                 >
                                     {article.title || '正在处理...'}
                                 </a>
-                                <span className="md:hidden text-[13px] text-black/40">
-                                    {viewMode === 'trending' ? `${article.count} 次转存` : formatTime(article.createdAt)}
-                                </span>
                             </div>
                         </div>
                     </td>
-                    <td className={`px-8 py-6 hidden md:table-cell ${viewMode === 'trending' ? 'text-right' : ''}`}>
+                    <td className="px-8 py-6 text-right hidden md:table-cell">
                         {viewMode === 'trending' ? (
                             <span className="text-[14px] text-black/40 font-semibold tabular-nums">{article.count?.toLocaleString()}</span>
                         ) : (
@@ -184,64 +236,9 @@ export function HistoryList({ refreshTrigger, isLoggedIn }: HistoryListProps) {
                             </span>
                         )}
                     </td>
-                    <td className={`px-8 py-6 ${viewMode === 'personal' ? 'text-right pr-12' : 'text-center'}`}>
-                        {viewMode === 'personal' ? (
-                            <div className="flex items-center gap-5 justify-end">
-                                <div className="flex items-center gap-4 opacity-0 translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out">
-                                    {article.status === 'completed' && (
-                                        <button 
-                                            className="action-icon" 
-                                            title="下载 Markdown"
-                                            onClick={async () => {
-                                                try {
-                                                    const res = await fetch(`/api/articles/${article.id}/content`);
-                                                    const data = await res.json();
-                                                    if (data.content) {
-                                                        const blob = new Blob([data.content], { type: 'text/markdown' });
-                                                        const url = window.URL.createObjectURL(blob);
-                                                        const a = document.createElement('a');
-                                                        a.href = url;
-                                                        a.download = `${data.title || 'article'}.md`;
-                                                        a.click();
-                                                        window.URL.revokeObjectURL(url);
-                                                    }
-                                                } catch (e) {
-                                                    console.error('Download failed', e);
-                                                }
-                                            }}
-                                        >
-                                            <span className="material-symbols-outlined text-[22px]">download</span>
-                                        </button>
-                                    )}
-                                    {article.feishuUrl && (
-                                        <a className="action-icon" href={article.feishuUrl} target="_blank" rel="noreferrer" title="在飞书中查看">
-                                            <span className="material-symbols-outlined text-[22px]">open_in_new</span>
-                                        </a>
-                                    )}
-                                    <button className="action-icon delete" title="删除记录" onClick={() => handleDelete(article.id)}>
-                                        <span className="material-symbols-outlined text-[22px]">delete</span>
-                                    </button>
-                                </div>
-                                <div className={`w-8 h-8 rounded-full flex items-center justify-center relative overflow-hidden glass-icon-shade shrink-0 group-hover:opacity-30 transition-opacity duration-300`}>
-                                    {article.status === 'completed' ? (
-                                        <span className="material-symbols-outlined text-[20px] text-vibrant-green status-glow-green">check_circle</span>
-                                    ) : article.status === 'error' ? (
-                                        <span className="material-symbols-outlined text-[20px] text-vibrant-red status-glow-red">error</span>
-                                    ) : (
-                                        <span className="material-symbols-outlined text-[20px] text-vibrant-amber status-glow-amber animate-spin-slow">progress_activity</span>
-                                    )}
-                                </div>
-                            </div>
-                        ) : (
-                            // Trending Mode: Source Icon
-                            <div className="flex justify-center opacity-40">
-                                <span className="material-symbols-outlined text-[20px]">public</span>
-                            </div>
-                        )}
-                    </td>
                     </tr>
                     {index < articles.length - 1 && (
-                        <tr><td colSpan={3}><div className="h-[0.5px] bg-black/[0.08] mx-8"></div></td></tr>
+                        <tr><td colSpan={2}><div className="h-[0.5px] bg-black/[0.08] mx-8"></div></td></tr>
                     )}
                 </React.Fragment>
             ))}
