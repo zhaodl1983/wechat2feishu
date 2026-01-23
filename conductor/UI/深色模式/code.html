@@ -1,0 +1,283 @@
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Wechat2doc - 知识库管理 (添加模式切换)</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#FFFFFF",
+                        "apple-dark-bg": "#121212",
+                        "apple-card": "#2C2C2E",
+                        "vibrant-green": "#30D158",
+                        "vibrant-amber": "#FFD60A",
+                        "vibrant-red": "#FF453A",
+                        "vibrant-blue": "#0A84FF",
+                    },
+                    spacing: {
+                        'golden-sm': '1.618rem',
+                        'golden-md': '2.618rem',
+                        'golden-lg': '4.236rem',
+                        'golden-xl': '6.854rem',
+                    },
+                    borderRadius: {
+                        'apple': '12px',
+                    }
+                }
+            }
+        };
+    </script>
+<style type="text/tailwindcss">
+        :root {
+            --mesh-bg: radial-gradient(at 0% 0%, hsla(240,10%,15%,1) 0, transparent 50%), 
+                       radial-gradient(at 50% 0%, hsla(240,5%,10%,1) 0, transparent 50%), 
+                       radial-gradient(at 100% 0%, hsla(240,10%,15%,1) 0, transparent 50%),
+                       radial-gradient(at 50% 50%, hsla(240,5%,8%,1) 0, transparent 100%);
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", "PingFang SC", sans-serif;
+            background-color: #121212;
+            background-image: var(--mesh-bg);
+            -webkit-font-smoothing: antialiased;
+            letter-spacing: -0.015em;
+            color: #FFFFFF;
+        }
+        .headline-gradient {
+            background: linear-gradient(180deg, #FFFFFF 0%, #A1A1A6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.03em;
+        }
+        .recessed-input {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            box-shadow: 
+                inset 0 1px 2px 0 rgba(0, 0, 0, 0.2),
+                0 0 0 1px rgba(255, 255, 255, 0.08);
+        }
+        .tactile-button {
+            background: linear-gradient(180deg, #FFFFFF 0%, #E5E5E5 100%);
+            box-shadow: 
+                0 8px 16px -4px rgba(255, 255, 255, 0.1),
+                0 4px 66px -2px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.4);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .tactile-button:active {
+            transform: translateY(1px);
+            box-shadow: 0 4px 8px -2px rgba(255, 255, 255, 0.05);
+        }
+        .glass-nav {
+            background: rgba(28, 28, 30, 0.8);
+            backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-sidebar {
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(30px);
+            border-right: 0.5px solid rgba(255, 255, 255, 0.08);
+        }
+        .view-toggle-btn {
+            @apply flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-200;
+        }
+        .view-toggle-btn.active {
+            @apply bg-[#3A3A3C] shadow-sm text-white;
+        }
+        .view-toggle-btn:not(.active) {
+            @apply text-white/30 hover:text-white/60;
+        }
+        .card-shadow {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .card-shadow:hover {
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+        .theme-toggle-segmented {
+            @apply flex items-center bg-white/5 p-0.5 rounded-full border border-white/10;
+        }
+        .theme-btn {
+            @apply flex items-center justify-center w-7 h-7 rounded-full transition-all duration-300;
+        }
+        .theme-btn.active {
+            @apply bg-white/10 text-white shadow-[0_2px_8px_rgba(0,0,0,0.3)];
+        }
+        .theme-btn:not(.active) {
+            @apply text-white/20 hover:text-white/40;
+        }
+    </style>
+</head>
+<body class="selection:bg-white/10 overflow-hidden h-screen flex">
+<aside class="w-64 glass-sidebar hidden lg:flex flex-col z-20">
+<div class="h-16 flex items-center px-6 mb-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-white rounded-[7px] flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-black text-[18px]">bolt</span>
+</div>
+<span class="font-semibold text-[19px] tracking-tight text-white">Wechat2doc</span>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 bg-white/10 rounded-xl text-[14px] font-semibold text-white" href="#">
+<span class="material-symbols-outlined text-[20px]">grid_view</span>
+            我的知识库
+        </a>
+<a class="flex items-center gap-3 px-3 py-2.5 hover:bg-white/5 rounded-xl text-[14px] font-medium text-white/60 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">history</span>
+            转存历史
+        </a>
+<a class="flex items-center gap-3 px-3 py-2.5 hover:bg-white/5 rounded-xl text-[14px] font-medium text-white/60 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+            偏好设置
+        </a>
+</nav>
+<div class="p-4 mt-auto">
+<div class="bg-white/5 rounded-2xl p-4">
+<div class="flex items-center justify-between mb-2">
+<span class="text-[12px] font-semibold text-white/40 uppercase tracking-wider">存储空间</span>
+<span class="text-[12px] font-bold text-vibrant-blue">45%</span>
+</div>
+<div class="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+<div class="h-full bg-vibrant-blue w-[45%] shadow-[0_0_8px_rgba(10,132,255,0.4)]"></div>
+</div>
+<p class="mt-3 text-[11px] text-white/40 leading-relaxed">
+                已存 2.3 GB / 共 5 GB
+            </p>
+</div>
+</div>
+</aside>
+<div class="flex-1 flex flex-col min-w-0">
+<header class="h-16 glass-nav px-6 flex items-center justify-between z-10">
+<div class="flex items-center gap-4 lg:hidden">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-white rounded-[7px] flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-black text-[18px]">bolt</span>
+</div>
+<span class="font-semibold text-[19px] tracking-tight text-white">Wechat2doc</span>
+</div>
+</div>
+<div class="hidden lg:flex items-center gap-2">
+<span class="text-[14px] font-medium text-white/40">知识库</span>
+<span class="material-symbols-outlined text-[16px] text-white/20">chevron_right</span>
+<span class="text-[14px] font-semibold text-white/90">所有文档</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-white/30">search</span>
+<input class="bg-white/5 border border-white/5 rounded-full py-1.5 pl-10 pr-4 text-[13px] w-64 focus:ring-1 focus:ring-white/20 focus:bg-white/10 transition-all text-white placeholder-white/20" placeholder="搜索文档..." type="text"/>
+</div>
+<div class="theme-toggle-segmented">
+<button class="theme-btn" title="浅色模式">
+<span class="material-symbols-outlined text-[18px]">light_mode</span>
+</button>
+<button class="theme-btn active" title="深色模式">
+<span class="material-symbols-outlined text-[18px]">dark_mode</span>
+</button>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-white/5 border border-white/10 overflow-hidden">
+<img alt="User" class="w-full h-full object-cover opacity-90" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3cWj2L6RnK1bCqka_d2NqWZ9QhsoH4lPHQsXt3PvGknvMIEEYY-l3HFgvN6sro_pauUUIuHzceX-GhcgRxxds1nXEBX_Jvyh12tD4xKIyPz2kwc-osCN7kgl6ehqKhQs9y0vdY0cjKcfnllGKRGgLq4W1x2QNepRWgZ9aYcyuykw2mXatL3G-F5mgwxpg0VRktaPjaLKdk3BH8krF0-bXZ56g33GMrud4LHtzApLA2j_af6IS0iylsotpg71GmZ6qbR1Gg-Kt9T5C"/>
+</div>
+<span class="text-[13px] font-semibold text-white/90 hidden sm:block">设计研究员</span>
+</div>
+</div>
+</header>
+<main class="flex-1 overflow-y-auto p-golden-sm">
+<div class="max-w-5xl mx-auto">
+<div class="flex items-end justify-between mb-8">
+<div>
+<h2 class="text-3xl font-bold tracking-tight mb-2 text-white">我的知识库</h2>
+<p class="text-white/40 font-medium">共 124 篇文档，其中 12 篇为今日转存</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center bg-white/5 p-0.5 rounded-lg border border-white/10">
+<button class="view-toggle-btn active" title="网格视图">
+<span class="material-symbols-outlined text-[18px]">grid_view</span>
+</button>
+<button class="view-toggle-btn" title="列表视图">
+<span class="material-symbols-outlined text-[18px]">view_headline</span>
+</button>
+</div>
+<div class="h-10 px-4 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2 cursor-pointer hover:bg-white/10 transition-colors">
+<span class="text-[13px] font-medium text-white/60">按时间排序</span>
+<span class="material-symbols-outlined text-[16px] text-white/30">expand_more</span>
+</div>
+<button class="tactile-button h-10 px-6 rounded-xl text-black text-[14px] font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                        新转存
+                    </button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<div class="group bg-apple-card rounded-2xl border border-white/5 p-5 card-shadow hover:-translate-y-0.5 transition-all cursor-pointer">
+<div class="flex justify-between items-start mb-4">
+<div class="w-10 h-10 rounded-[10px] bg-vibrant-amber/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-vibrant-amber text-[22px]">article</span>
+</div>
+<span class="text-[11px] font-bold text-white/30 bg-white/5 px-2 py-1 rounded-md uppercase tracking-wide">微信文章</span>
+</div>
+<h3 class="text-[16px] font-bold leading-snug mb-3 text-white group-hover:text-white transition-colors">乔布斯的极简美学：如何在软件设计中应用？</h3>
+<p class="text-[13px] text-white/45 line-clamp-2 mb-4 leading-relaxed">美学不仅是关于外观，更是关于事物的运作方式。在这篇文章中，我们将探讨...</p>
+<div class="flex items-center justify-between pt-4 border-t border-white/5">
+<span class="text-[11px] font-medium text-white/30 italic">2 小时前</span>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-white/20 hover:text-white/60 transition-colors">share</span>
+<span class="material-symbols-outlined text-[18px] text-white/20 hover:text-white/60 transition-colors">more_horiz</span>
+</div>
+</div>
+</div>
+<div class="group bg-apple-card rounded-2xl border border-white/5 p-5 card-shadow hover:-translate-y-0.5 transition-all cursor-pointer">
+<div class="flex justify-between items-start mb-4">
+<div class="w-10 h-10 rounded-[10px] bg-vibrant-green/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-vibrant-green text-[22px]">insights</span>
+</div>
+<span class="text-[11px] font-bold text-white/30 bg-white/5 px-2 py-1 rounded-md uppercase tracking-wide">趋势报告</span>
+</div>
+<h3 class="text-[16px] font-bold leading-snug mb-3 text-white group-hover:text-white transition-colors">2024年全球设计趋势报告：触感与深度的回归</h3>
+<p class="text-[13px] text-white/45 line-clamp-2 mb-4 leading-relaxed">随着数字化进程的加速，用户开始渴望在界面中寻找真实的物理反馈与光影层次...</p>
+<div class="flex items-center justify-between pt-4 border-t border-white/5">
+<span class="text-[11px] font-medium text-white/30 italic">5 小时前</span>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-white/20 hover:text-white/60 transition-colors">share</span>
+<span class="material-symbols-outlined text-[18px] text-white/20 hover:text-white/60 transition-colors">more_horiz</span>
+</div>
+</div>
+</div>
+<div class="group bg-apple-card rounded-2xl border border-white/5 p-5 card-shadow hover:-translate-y-0.5 transition-all cursor-pointer">
+<div class="flex justify-between items-start mb-4">
+<div class="w-10 h-10 rounded-[10px] bg-white/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-white/40 text-[22px]">format_paint</span>
+</div>
+<span class="text-[11px] font-bold text-white/30 bg-white/5 px-2 py-1 rounded-md uppercase tracking-wide">技巧指南</span>
+</div>
+<h3 class="text-[16px] font-bold leading-snug mb-3 text-white group-hover:text-white transition-colors">高级排版技巧指南：从基础到像素级打磨</h3>
+<p class="text-[13px] text-white/45 line-clamp-2 mb-4 leading-relaxed">排版是设计的灵魂。掌握字间距、行高以及视觉层级的微妙平衡，将极大地提升...</p>
+<div class="flex items-center justify-between pt-4 border-t border-white/5">
+<span class="text-[11px] font-medium text-white/30 italic">昨日</span>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-white/20 hover:text-white/60 transition-colors">share</span>
+<span class="material-symbols-outlined text-[18px] text-white/20 hover:text-white/60 transition-colors">more_horiz</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<footer class="h-10 border-t border-white/5 px-6 flex items-center justify-between bg-black/20">
+<div class="flex items-center gap-3 text-white/20">
+<span class="text-[10px] font-bold tracking-[0.2em] uppercase">Wechat2doc</span>
+<span class="w-1 h-1 rounded-full bg-white/10"></span>
+<span class="text-[10px] font-medium">© 2024 All rights reserved.</span>
+</div>
+<div class="flex items-center gap-4 text-[10px] font-bold text-white/25">
+<a class="hover:text-white/50 transition-colors uppercase tracking-wider" href="#">Help</a>
+<a class="hover:text-white/50 transition-colors uppercase tracking-wider" href="#">Terms</a>
+</div>
+</footer>
+</div>
+
+</body></html>

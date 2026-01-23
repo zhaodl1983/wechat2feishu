@@ -17,7 +17,7 @@ model User {
   phoneNumber           String?
   wechatUnionId         String?
   wechatOpenId          String?
-  feishuUserId          String?   @unique
+  feishuUserId          String?
   name                  String?
   avatarUrl             String?
   encryptedAccessToken  String?

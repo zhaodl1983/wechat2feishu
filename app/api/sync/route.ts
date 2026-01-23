@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { conductorProcess } from '@/lib/conductor';
+import { processArticle } from '@/lib/conductor';
 import { auth } from '@/auth';
 
 export async function POST(request: Request) {
@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     }
 
     // Pass userId if logged in
-    const result = await conductorProcess(url, session?.user?.id);
+    const result = await processArticle(url, session?.user?.id);
 
     return NextResponse.json(result);
   } catch (error: any) {

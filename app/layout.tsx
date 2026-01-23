@@ -19,6 +19,7 @@ export default function RootLayout({
   return (
     <html lang="zh-CN">
       <head>
+        <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&icon_names=bolt,article,history,settings,grid_view,chevron_right,search,add,share,more_horiz" />
       </head>
       <body className={inter.className}>

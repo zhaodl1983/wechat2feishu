@@ -51,21 +51,6 @@ export function convertToMarkdown(html: string, metadata: any): string {
   const turndownService = getTurndownService();
   const markdownContent = turndownService.turndown(html);
 
-  // Clean title for frontmatter
-  const safeTitle = (metadata.title || '').replace(/"/g, '\\"');
-
-  const frontmatter = [
-    '---',
-    `title: "${safeTitle}"`, 
-    `author: "${metadata.author || ''}"`, 
-    `account: "${metadata.accountName || ''}"`, 
-    `date: "${metadata.publishDate || ''}"`, 
-    `url: "${metadata.url || ''}"`, 
-    `thumbnail: "${metadata.coverImage || ''}"`, 
-    '---',
-    '',
-    ''
-  ].join('\n');
-
-  return frontmatter + markdownContent;
+  // Return only the markdown content, as metadata is stored in DB/State
+  return markdownContent;
 }

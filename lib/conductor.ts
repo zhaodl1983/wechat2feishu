@@ -9,19 +9,26 @@ import { getValidUserAccessToken } from './user-token';
 import path from 'path';
 import fs from 'fs';
 
-export async function conductorProcess(url: string, userId?: string) {
-  // 1. Create or Update DB Record
+
+
+/**
+ * PHASE 1: Server-First Processing
+ * Scrapes, downloads assets locally (CAS), saves to DB/Filesystem.
+ * Does NOT sync to Feishu automatically anymore.
+ */
+export async function processArticle(url: string, userId?: string) {
+  // 1. Create or Update DB Record (Pending)
   let article = await prisma.article.upsert({
     where: { originalUrl: url },
     update: {
-        status: 'pending',
-        userId: userId || null, 
-        updatedAt: new Date(),
+      status: 'crawling', // New status for clarity
+      userId: userId || null,
+      updatedAt: new Date(),
     },
     create: {
       title: 'Processing...',
       originalUrl: url,
-      status: 'pending',
+      status: 'crawling',
       userId: userId || null,
     },
   });
@@ -33,9 +40,10 @@ export async function conductorProcess(url: string, userId?: string) {
     const metadata = extractMetadata(html);
     const contentHtml = extractContent(html);
 
+    // Update Metadata
     article = await prisma.article.update({
       where: { id: article.id },
-      data: { 
+      data: {
         title: metadata.title,
         author: metadata.author,
         accountName: metadata.accountName,
@@ -45,157 +53,31 @@ export async function conductorProcess(url: string, userId?: string) {
 
     const articleDir = await getUniqueArticleDir(metadata.title, 'output');
     const initialMarkdown = convertToMarkdown(contentHtml, { ...metadata, url });
-    
-    // Check if we should use Image Proxy (Production Mode)
-    // Relaxed check: Just verify if BASE_URL is present
-    const useProxy = !!process.env.NEXT_PUBLIC_BASE_URL;
-    console.log(`[Sync] Proxy Check: BASE_URL=${process.env.NEXT_PUBLIC_BASE_URL}, useProxy=${useProxy}`);
-    
-    let finalMarkdown = initialMarkdown;
-    let filePath = '';
 
-    if (useProxy) {
-        console.log(`[Sync] Production mode detected. Using Image Proxy, skipping local asset download.`);
-        // Just save the markdown with original links for now
-        filePath = await saveMarkdown(initialMarkdown, articleDir);
-    } else {
-        // userId might be undefined for anonymous users, use 'anonymous' as directory
-        finalMarkdown = await localizeAssets(initialMarkdown, userId || 'anonymous', article.id);
-        filePath = await saveMarkdown(finalMarkdown, articleDir);
-    }
+    // --- STEP B: LOCALIZE ASSETS (Server-First) ---
+    // Always download images to local server using CAS
+    // This ensures we own the data.
+    console.log(`[Localize] Downloading assets to server...`);
 
+    // localizeAssets now uses downloadImageCAS internally from our previous refactor
+    // userId is needed for the function signature but effectively ignored by CAS logic if we changed it,
+    // lets double check assets.ts. Actually we updated downloadImageOptimized to call downloadImageCAS. 
+    // localizeAssets calls downloadImageOptimized. So we are good.
+    const finalMarkdown = await localizeAssets(initialMarkdown, userId || 'anonymous', article.id);
+    const filePath = await saveMarkdown(finalMarkdown, articleDir);
+
+    // --- STEP C: SAVE SUCCCESS ---
     article = await prisma.article.update({
       where: { id: article.id },
-      data: { 
+      data: {
         localPath: filePath,
-        content: finalMarkdown,
+        content: finalMarkdown, // Save full markdown to DB for search/reader
+        status: 'stored',       // New status: Ready on server
       },
     });
 
-    // --- STEP B: SYNC TO FEISHU ---
-    const client = new FeishuClient();
-    
-    // Determine Token
-    let token: string;
-    if (userId) {
-        token = await getValidUserAccessToken(userId);
-        console.log(`[Sync] Using User Access Token (ID: ${userId})`);
-    } else {
-        token = await client.getTenantAccessToken();
-        console.log(`[Sync] Using Tenant Token (Anonymous mode)`);
-    }
-    
-    // 1. Get Root Folder
-    const rootToken = await client.getRootFolderToken(token);
-    console.log(`[Sync] Root Folder Token: ${rootToken}`);
-    
-    // 1.1 Ensure Assets Folder (Only needed if NOT using proxy)
-    let assetsFolderToken = '';
-    if (!useProxy) {
-        assetsFolderToken = await client.ensureAssetsFolder(rootToken, token);
-        console.log(`[Sync] Assets Folder Token: ${assetsFolderToken}`);
-    }
-
-    // 2. Upload Images & Replace Links
-    let content = fs.readFileSync(filePath, 'utf-8');
-    const imageRegex = /!\[(.*?)\]\((.*?)\)/g;
-    let match;
-    const replacements: {original: string, newUrl: string}[] = [];
-    
-    while ((match = imageRegex.exec(content)) !== null) {
-        const [fullMatch, alt, imgPath] = match;
-        
-        // Case A: Remote URL (Proxy Mode)
-        if (imgPath.startsWith('http')) {
-             if (useProxy) {
-                 // Smart Extension: Detect format from wx_fmt to support GIFs
-                 let extension = 'jpg';
-                 try {
-                    const urlObj = new URL(imgPath);
-                    const fmt = urlObj.searchParams.get('wx_fmt');
-                    if (fmt === 'gif') extension = 'gif';
-                    else if (fmt === 'png') extension = 'png';
-                    
-                    // CRITICAL: Remove 'tp' parameter (e.g., tp=webp) to force WeChat to return original format
-                    urlObj.searchParams.delete('tp');
-                    const cleanedUrl = urlObj.toString();
-
-                    // Use pseudo-static URL to trick Feishu importer
-                    // Format: /api/image-proxy/<ENCODED_URL>/image.<ext>
-                    const proxyUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/image-proxy/${encodeURIComponent(cleanedUrl)}/image.${extension}`;
-                    replacements.push({ original: imgPath, newUrl: proxyUrl });
-                 } catch (e) {
-                    // Ignore URL parsing errors, fallback to original imgPath with jpg extension
-                    const proxyUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/image-proxy/${encodeURIComponent(imgPath)}/image.jpg`;
-                    replacements.push({ original: imgPath, newUrl: proxyUrl });
-                 }
-             }
-             continue;
-        }
-        
-        // Case B: Local File (Upload Mode)
-        if (!useProxy) {
-            const absImgPath = path.resolve(articleDir, imgPath);
-            if (fs.existsSync(absImgPath)) {
-                 try {
-                     const fileToken = await client.uploadFile(absImgPath, assetsFolderToken, 'explorer', token);
-                     replacements.push({ original: imgPath, newUrl: fileToken }); 
-                 } catch (e: any) {
-                     console.error(`[Sync] Failed to upload image ${imgPath}: ${e.message}`);
-                 }
-            }
-        }
-    }
-    
-    for (const r of replacements) {
-        content = content.replace(r.original, r.newUrl);
-    }
-
-    // 2.5 Clean Redundant Frontmatter for Feishu
-    // Remove the --- ... --- block at the start of the file
-    content = content.replace(/^---\n([\s\S]*?)\n---\n/, '');
-    
-    // 3. Upload MD with Correct Title
-    // Sanitize title for filename
-    const safeTitle = metadata.title.replace(/[\\/:*?"<>|]/g, '_').substring(0, 100);
-    const tempMdPath = path.join(articleDir, `${safeTitle}.md`);
-    fs.writeFileSync(tempMdPath, content);
-    
-    console.log(`[Sync] Uploading processed Markdown: ${safeTitle}.md`);
-    const mdToken = await client.uploadFile(tempMdPath, rootToken, 'explorer', token);
-    
-    // 4. Create Import Task
-    console.log(`[Sync] Creating import task...`);
-    const ticket = await client.createImportTask(mdToken, 'md', rootToken, token);
-    
-    // 5. Poll for result
-    let feishuUrl = '';
-    for (let i = 0; i < 30; i++) {
-        await new Promise(r => setTimeout(r, 2000));
-        const status = await client.getImportResult(ticket, token);
-        console.log(`[Sync] Polling status: ${status.job_status}`);
-        if (status.job_status === 0) {
-            feishuUrl = status.url;
-            break;
-        } else if (status.job_status > 2) {
-             throw new Error(`Feishu Import Failed: Status ${status.job_status} - ${status.job_error_msg}`);
-        }
-    }
-
-    if (fs.existsSync(tempMdPath)) fs.unlinkSync(tempMdPath);
-    if (!feishuUrl) throw new Error('Feishu Import Timed Out');
-
-    // 6. Update DB Success
-    await prisma.article.update({
-      where: { id: article.id },
-      data: { 
-        status: 'completed',
-        feishuUrl: feishuUrl,
-      },
-    });
-
-    console.log(`[Sync] Success! URL: ${feishuUrl}`);
-    return { success: true, articleId: article.id, feishuUrl };
+    console.log(`[Process] Article stored locally: ${article.id}`);
+    return { success: true, articleId: article.id, status: 'stored' };
 
   } catch (error: any) {
     console.error('[Conductor] Process Error:', error);
@@ -205,4 +87,124 @@ export async function conductorProcess(url: string, userId?: string) {
     });
     throw error;
   }
+}
+
+/**
+ * PHASE 2: Optional Sync
+ * Takes a locally stored article and pushes it to Feishu.
+ */
+export async function syncArticleToFeishu(articleId: string) {
+  const article = await prisma.article.findUnique({ where: { id: articleId } });
+  if (!article || !article.localPath || !article.content) {
+    throw new Error('Article not found or not locally stored');
+  }
+
+  // Update status to syncing
+  await prisma.article.update({ where: { id: articleId }, data: { status: 'syncing' } });
+
+  try {
+    const client = new FeishuClient();
+    const userId = article.userId;
+
+    // Determine Token (Logic preserved)
+    let token: string = '';
+    if (userId) {
+      try {
+        token = await getValidUserAccessToken(userId);
+      } catch (error) {
+        console.log(`[Sync] User ${userId} fallback to Tenant Token.`);
+      }
+    }
+    if (!token) token = await client.getTenantAccessToken();
+
+    // 1. Get Root Folder
+    const rootToken = await client.getRootFolderToken(token);
+
+    // 2. Upload Images (We need to upload local CAS images to Feishu)
+    // Parse the markdown stored in DB/File
+    let content = article.content;
+    const imageRegex = /!\[(.*?)\]\((.*?)\)/g;
+    let match;
+    const replacements: { original: string, newUrl: string }[] = [];
+
+    // Ensure Assets Folder in Feishu
+    const assetsFolderToken = await client.ensureAssetsFolder(rootToken, token);
+
+    while ((match = imageRegex.exec(content)) !== null) {
+      const [fullMatch, alt, imgPath] = match;
+
+      // If it's a local path (starts with /uploads), we need to resolve it
+      if (imgPath.startsWith('/uploads')) {
+        const absImgPath = path.join(process.cwd(), 'public', imgPath);
+        if (fs.existsSync(absImgPath)) {
+          try {
+            const fileToken = await client.uploadFile(absImgPath, assetsFolderToken, 'explorer', token);
+            replacements.push({ original: imgPath, newUrl: fileToken });
+          } catch (e: any) {
+            console.error(`[Sync] Upload failed: ${imgPath}`, e.message);
+          }
+        }
+      } else if (imgPath.startsWith('http')) {
+        // Should not happen if fully localized, but keep just in case
+      }
+    }
+
+    for (const r of replacements) {
+      content = content.replace(r.original, r.newUrl);
+    }
+
+    // 3. Upload MD
+    content = content.replace(/^---\n([\s\S]*?)\n---\n/, ''); // Clean frontmatter
+    const safeTitle = article.title.replace(/[\\/:*?"<>|]/g, '_').substring(0, 100);
+    // We need a temp file for upload
+    const tempMdPath = path.join(path.dirname(article.localPath), `${safeTitle}_feishu.md`);
+    fs.writeFileSync(tempMdPath, content);
+
+    const mdToken = await client.uploadFile(tempMdPath, rootToken, 'explorer', token);
+    const ticket = await client.createImportTask(mdToken, 'md', rootToken, token);
+
+    // 4. Poll
+    let feishuUrl = '';
+    for (let i = 0; i < 30; i++) {
+      await new Promise(r => setTimeout(r, 2000));
+      const status = await client.getImportResult(ticket, token);
+      if (status.job_status === 0) {
+        feishuUrl = status.url;
+        break;
+      } else if (status.job_status > 2) {
+        throw new Error(`Feishu Import Failed: ${status.job_error_msg}`);
+      }
+    }
+
+    if (fs.existsSync(tempMdPath)) fs.unlinkSync(tempMdPath);
+
+    // 5. Success
+    await prisma.article.update({
+      where: { id: articleId },
+      data: {
+        status: 'synced', // New status
+        feishuUrl: feishuUrl
+      }
+    });
+
+    return { success: true, feishuUrl };
+
+  } catch (error: any) {
+    // Revert status to stored if sync fails
+    await prisma.article.update({
+      where: { id: articleId },
+      data: { status: 'stored' } // Back to stored, not error
+    });
+    throw error;
+  }
+}
+
+// Backward compatibility wrapper (deprecated but keeps existing unrelated routes working if any)
+export async function conductorProcess(url: string, userId?: string) {
+  const result = await processArticle(url, userId);
+  // Auto-trigger sync for backward compatibility test?
+  // For now, let's Auto-sync to minimize disruption for the USER testing
+  // But in the final vision, this line will be removed.
+  console.log('[Conductor] Auto-triggering sync for migration compatibility...');
+  return await syncArticleToFeishu(result.articleId);
 }
