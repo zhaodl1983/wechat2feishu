@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 };
 
 import { AuthProvider } from "./components/AuthProvider";
+import { ThemeProvider } from "./components/ThemeProvider";
 
 export default function RootLayout({
   children,
@@ -24,7 +25,9 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <AuthProvider>
-          {children}
+          <ThemeProvider>
+            {children}
+          </ThemeProvider>
         </AuthProvider>
       </body>
     </html>

@@ -77,15 +77,15 @@ export function HistoryList({ refreshTrigger, isLoggedIn, layout = 'list' }: His
     if (articles.length === 0 && viewMode === 'personal' && layout !== 'grid') { // Grid handles empty state in parent or just shows empty grid
         return (
             <section className="max-w-[1024px] mx-auto px-golden-sm pb-golden-xl">
-                <div className="bg-white/40 backdrop-blur-md rounded-[24px] border border-black/[0.04] overflow-hidden min-h-[400px] flex flex-col items-center justify-center py-20 px-8 text-center shadow-sm">
-                    <div className="w-24 h-24 mb-6 rounded-[28px] bg-black/[0.02] border border-black/[0.04] flex items-center justify-center relative">
-                        <span className="material-symbols-outlined text-[48px] text-black/[0.08]">history</span>
-                        <div className="absolute -right-2 -bottom-2 w-10 h-10 rounded-full bg-white shadow-sm border border-black/[0.05] flex items-center justify-center">
-                            <span className="material-symbols-outlined text-[20px] text-black/20">search</span>
+                <div className="bg-white/40 dark:bg-white/5 backdrop-blur-md rounded-[24px] border border-black/[0.04] dark:border-white/5 overflow-hidden min-h-[400px] flex flex-col items-center justify-center py-20 px-8 text-center shadow-sm transition-colors">
+                    <div className="w-24 h-24 mb-6 rounded-[28px] bg-black/[0.02] dark:bg-white/5 border border-black/[0.04] dark:border-white/5 flex items-center justify-center relative">
+                        <span className="material-symbols-outlined text-[48px] text-black/[0.08] dark:text-white/10">history</span>
+                        <div className="absolute -right-2 -bottom-2 w-10 h-10 rounded-full bg-white dark:bg-[#2C2C2E] shadow-sm border border-black/[0.05] dark:border-white/10 flex items-center justify-center">
+                            <span className="material-symbols-outlined text-[20px] text-black/20 dark:text-white/20">search</span>
                         </div>
                     </div>
-                    <h4 className="text-[19px] font-semibold text-black/60 mb-2">暂无转存记录</h4>
-                    <p className="text-[14px] text-black/30 max-w-[280px] leading-relaxed mx-auto">
+                    <h4 className="text-[19px] font-semibold text-black/60 dark:text-white/60 mb-2">暂无转存记录</h4>
+                    <p className="text-[14px] text-black/30 dark:text-white/30 max-w-[280px] leading-relaxed mx-auto">
                         粘贴微信文章链接，开启你的第一个高保真知识库归档。
                     </p>
                 </div>
@@ -100,13 +100,13 @@ export function HistoryList({ refreshTrigger, isLoggedIn, layout = 'list' }: His
                 {articles.map((article) => (
                     <div
                         key={article.id}
-                        className="group bg-white rounded-2xl border border-black/[0.04] p-5 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] hover:-translate-y-0.5 transition-all cursor-pointer relative"
+                        className="group bg-white dark:bg-apple-card rounded-2xl border border-black/[0.04] dark:border-white/5 p-5 shadow-[0_2px_8px_rgba(0,0,0,0.02)] dark:shadow-[0_4px_12px_rgba(0,0,0,0.2)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] dark:hover:shadow-[0_12px_24px_rgba(0,0,0,0.4)] hover:-translate-y-0.5 transition-all cursor-pointer relative"
                     >
                         <div className="flex justify-between items-start mb-4">
                             <div className="w-10 h-10 rounded-[10px] bg-vibrant-amber/10 flex items-center justify-center">
                                 <span className="material-symbols-outlined text-vibrant-amber text-[22px]">article</span>
                             </div>
-                            <span className="text-[11px] font-bold text-black/30 bg-black/[0.03] px-2 py-1 rounded-md uppercase">微信文章</span>
+                            <span className="text-[11px] font-bold text-black/30 dark:text-white/30 bg-black/[0.03] dark:bg-white/5 px-2 py-1 rounded-md uppercase">微信文章</span>
                         </div>
 
                         <a
@@ -114,16 +114,16 @@ export function HistoryList({ refreshTrigger, isLoggedIn, layout = 'list' }: His
                             target="_self"
                             className="block"
                         >
-                            <h3 className="text-[16px] font-bold leading-snug mb-3 group-hover:text-black transition-colors line-clamp-2 min-h-[44px]">
+                            <h3 className="text-[16px] font-bold leading-snug mb-3 text-[#1d1d1f] dark:text-white group-hover:text-black dark:group-hover:text-white transition-colors line-clamp-2 min-h-[44px]">
                                 {article.title}
                             </h3>
-                            <p className="text-[13px] text-black/45 line-clamp-2 mb-4 leading-relaxed">
+                            <p className="text-[13px] text-black/45 dark:text-white/45 line-clamp-2 mb-4 leading-relaxed">
                                 {article.accountName ? `公众号：${article.accountName}` : '微信公众号文章归档...'}
                             </p>
                         </a>
 
-                        <div className="flex items-center justify-between pt-4 border-t border-black/[0.03]">
-                            <span className="text-[11px] font-medium text-black/30 italic">
+                        <div className="flex items-center justify-between pt-4 border-t border-black/[0.03] dark:border-white/5">
+                            <span className="text-[11px] font-medium text-black/30 dark:text-white/30 italic">
                                 {formatTime(article.createdAt)}
                             </span>
 
@@ -131,7 +131,7 @@ export function HistoryList({ refreshTrigger, isLoggedIn, layout = 'list' }: His
                                 {/* Download Button */}
                                 {article.status === 'completed' && (
                                     <button
-                                        className="action-icon w-8 h-8 rounded-full hover:bg-black/5"
+                                        className="action-icon w-8 h-8 rounded-full hover:bg-black/5 dark:hover:bg-white/10 dark:text-white/50 dark:hover:text-white"
                                         title="下载 Markdown"
                                         onClick={async (e) => {
                                             e.stopPropagation();
@@ -156,7 +156,7 @@ export function HistoryList({ refreshTrigger, isLoggedIn, layout = 'list' }: His
                                     </button>
                                 )}
                                 <button
-                                    className="action-icon delete w-8 h-8 rounded-full hover:bg-red-50"
+                                    className="action-icon delete w-8 h-8 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20 dark:text-white/50"
                                     title="删除"
                                     onClick={(e) => {
                                         e.stopPropagation();
@@ -169,6 +169,76 @@ export function HistoryList({ refreshTrigger, isLoggedIn, layout = 'list' }: His
                         </div>
                     </div>
                 ))}
+            </div>
+        );
+    }
+
+    // Personal List Layout
+    if (layout === 'list' && viewMode === 'personal') {
+        return (
+            <div className="bg-white dark:bg-apple-card rounded-3xl border border-black/[0.04] dark:border-white/5 shadow-[0_4px_20px_rgba(0,0,0,0.02)] dark:shadow-[0_4px_12px_rgba(0,0,0,0.2)] overflow-hidden transition-colors">
+                <table className="w-full text-left">
+                    <thead>
+                        <tr className="border-b border-black/[0.03] dark:border-white/5">
+                            <th className="pl-8 pr-2 py-5 w-12">
+                                <input type="checkbox" className="appearance-none w-5 h-5 border border-black/10 dark:border-white/10 rounded-md checked:bg-black dark:checked:bg-white dark:checked:border-white checked:border-black transition-all cursor-pointer relative checked:after:content-['check'] checked:after:font-['Material_Symbols_Outlined'] checked:after:absolute checked:after:inset-0 checked:after:flex checked:after:items-center checked:after:justify-center checked:after:text-white dark:checked:after:text-black checked:after:text-[14px] checked:after:font-bold" />
+                            </th>
+                            <th className="px-6 py-5 text-[12px] font-bold text-black/30 dark:text-white/30 uppercase tracking-wider whitespace-nowrap">文章标题</th>
+                            <th className="px-6 py-5 text-[12px] font-bold text-black/30 dark:text-white/30 uppercase tracking-wider whitespace-nowrap">来源</th>
+                            <th className="px-6 py-5 text-[12px] font-bold text-black/30 dark:text-white/30 uppercase tracking-wider whitespace-nowrap">转存日期</th>
+                            <th className="px-8 py-5 text-[12px] font-bold text-black/30 dark:text-white/30 uppercase tracking-wider text-right whitespace-nowrap">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-black/[0.02] dark:divide-white/5">
+                        {articles.map((article) => (
+                            <tr key={article.id} className="group hover:bg-black/[0.01] dark:hover:bg-white/5 transition-colors">
+                                <td className="pl-8 pr-2 py-6">
+                                    <input type="checkbox" className="appearance-none w-5 h-5 border border-black/10 dark:border-white/10 rounded-md checked:bg-black dark:checked:bg-white dark:checked:border-white checked:border-black transition-all cursor-pointer relative checked:after:content-['check'] checked:after:font-['Material_Symbols_Outlined'] checked:after:absolute checked:after:inset-0 checked:after:flex checked:after:items-center checked:after:justify-center checked:after:text-white dark:checked:after:text-black checked:after:text-[14px] checked:after:font-bold" />
+                                </td>
+                                <td className="px-6 py-6 w-full">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-10 h-10 rounded-xl bg-vibrant-amber/10 flex items-center justify-center shrink-0">
+                                            <span className="material-symbols-outlined text-vibrant-amber text-[20px]">article</span>
+                                        </div>
+                                        <a href={`/articles/${article.id}`} className="text-[15px] font-bold text-[#1d1d1f] dark:text-white/90 line-clamp-1 hover:text-black dark:hover:text-white transition-colors block">
+                                            {article.title}
+                                        </a>
+                                    </div>
+                                </td>
+                                <td className="px-6 py-6 whitespace-nowrap">
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-5 h-5 bg-[#07C160] rounded-sm flex items-center justify-center shrink-0">
+                                            <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M20.1 14.1c-.2-.1-.8-.4-.9-.5-.1-.1-.2-.1-.3 0-.1.1-.5.6-.6.7-.1.1-.2.1-.4 0-.3-.1-1.1-.4-2.1-1.3-.8-.7-1.3-1.5-1.5-1.8-.1-.2 0-.3.1-.4.1-.1.2-.2.3-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.3 0-.4-.1-.1-.3-.7-.4-.9-.1-.3-.2-.3-.3-.3h-.3c-.1 0-.3.1-.5.3-.2.2-.7.7-.7 1.7 0 1 .7 2 1 2.2.1.1 2.8 4.3 6.8 6 1 .4 1.7.6 2.3.8 1 .3 1.9.3 2.6.2.8-.1 2.4-.9 2.7-1.7.3-.8.3-1.5.2-1.7-.1-.2-.3-.3-.5-.4zM12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0z"></path></svg>
+                                        </div>
+                                        <span className="text-[13px] font-medium text-black/60 dark:text-white/60 truncate max-w-[120px]">{article.accountName || '未知公众号'}</span>
+                                    </div>
+                                </td>
+                                <td className="px-6 py-6 text-[13px] text-black/40 dark:text-white/40 font-medium whitespace-nowrap">
+                                    {formatTime(article.createdAt)}
+                                </td>
+                                <td className="px-8 py-6">
+                                    <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <a href={article.originalUrl} target="_blank" className="p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white transition-all" title="查看原文">
+                                            <span className="material-symbols-outlined text-[20px]">link</span>
+                                        </a>
+                                        {article.feishuUrl && (
+                                            <a href={article.feishuUrl} target="_blank" className="p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white transition-all" title="飞书预览">
+                                                <span className="material-symbols-outlined text-[20px]">visibility</span>
+                                            </a>
+                                        )}
+                                        <button
+                                            onClick={() => handleDelete(article.id)}
+                                            className="p-2 hover:bg-vibrant-red/10 rounded-lg text-black/40 dark:text-white/40 hover:text-vibrant-red transition-all"
+                                            title="删除"
+                                        >
+                                            <span className="material-symbols-outlined text-[20px]">delete</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </div>
         );
     }

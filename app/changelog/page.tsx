@@ -12,8 +12,8 @@ const versions = [
   {
     version: "V0.6",
     status: "progress",
-    title: "SaaS 基础建设",
-    desc: "引入邮箱/密码认证体系，实现 MongoDB 内容存储与本地图片优化，建立自动化备份机制。",
+    title: "体验升级与配额管理",
+    desc: "上线全站深色模式 (Dark Mode)，优化视觉体验；引入用户存储配额管理系统 (20篇/人)，实现精细化资源控制。",
     date: "进行中"
   },
   {
@@ -57,7 +57,7 @@ export default function Changelog() {
   return (
     <main className="min-h-screen bg-[#FDFDFD] flex flex-col font-sans">
       <Header />
-      
+
       <div className="flex-grow pt-32 pb-20 px-6">
         <div className="max-w-[800px] mx-auto">
           <div className="text-center mb-16">
@@ -75,9 +75,9 @@ export default function Changelog() {
                 {/* Timeline Dot */}
                 <div className={`
                   mt-1.5 w-[14px] h-[14px] rounded-full border-[3px] bg-white z-10 shrink-0 ml-[20px] transition-colors duration-300
-                  ${v.status === 'planning' ? 'border-gray-300' : 
-                    v.status === 'progress' ? 'border-blue-500 shadow-[0_0_0_4px_rgba(59,130,246,0.1)]' : 
-                    'border-[#1d1d1f]'}
+                  ${v.status === 'planning' ? 'border-gray-300' :
+                    v.status === 'progress' ? 'border-blue-500 shadow-[0_0_0_4px_rgba(59,130,246,0.1)]' :
+                      'border-[#1d1d1f]'}
                 `}></div>
 
                 {/* Content */}
@@ -88,18 +88,18 @@ export default function Changelog() {
                     </span>
                     <span className={`
                       px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wide
-                      ${v.status === 'planning' ? 'bg-gray-100 text-gray-500' : 
-                        v.status === 'progress' ? 'bg-blue-50 text-blue-600' : 
-                        'bg-black/5 text-black/60'}
+                      ${v.status === 'planning' ? 'bg-gray-100 text-gray-500' :
+                        v.status === 'progress' ? 'bg-blue-50 text-blue-600' :
+                          'bg-black/5 text-black/60'}
                     `}>
                       {v.date}
                     </span>
                   </div>
-                  
+
                   <h3 className="text-[17px] font-semibold text-[#1d1d1f] mb-1">
                     {v.title}
                   </h3>
-                  
+
                   <p className="text-[15px] leading-relaxed text-black/60">
                     {v.desc}
                   </p>

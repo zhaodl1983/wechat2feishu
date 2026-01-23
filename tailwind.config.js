@@ -5,11 +5,14 @@ export default {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  darkMode: "class",
   theme: {
     extend: {
       colors: {
         primary: "#000000",
         "apple-gray": "#F5F5F7",
+        "apple-card": "#2C2C2E",       // New from design
+        "apple-dark-bg": "#121212",    // New from design
         "vibrant-green": "#28CD41",
         "vibrant-amber": "#FFB800",
         "vibrant-red": "#FF3B30",
