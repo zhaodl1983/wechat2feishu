@@ -49,7 +49,7 @@ model Article {
   author        String?
   accountName   String?
   publishDate   DateTime?
-  originalUrl   String   @unique
+  originalUrl   String
   localPath     String?
   thumbnailPath String?
   feishuUrl     String?
@@ -60,4 +60,6 @@ model Article {
   
   userId        String?  @db.ObjectId
   user          User?    @relation(fields: [userId], references: [id])
+
+  @@unique([userId, originalUrl])
 }

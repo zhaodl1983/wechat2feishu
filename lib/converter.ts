@@ -18,7 +18,33 @@ export function getTurndownService(): TurndownService {
     replacement: (_content, node) => {
       const img = node as HTMLImageElement;
       const src = img.getAttribute('src') || '';
-      const alt = img.getAttribute('alt') || 'image';
+      let alt = img.getAttribute('alt') || 'image';
+
+      // Detect WeChat Emojis via multiple URL patterns
+      const emojiPatterns = [
+        'wx_fed/wechat_emotion',  // 微信表情包 (官方)
+        '/emoji/',                // 通用 emoji 路径
+        '/we-emoji/',             // 新版微信表情
+        '/emotion/',              // emotion 目录
+        'res.wx.qq.com.*expression',  // 表情资源
+        'mpres/htmledition/images/icon/emotion',  // 旧版表情
+      ];
+
+      const isEmoji = emojiPatterns.some(pattern =>
+        pattern.includes('*')
+          ? new RegExp(pattern).test(src)
+          : src.includes(pattern)
+      );
+
+      // Also check for small image dimensions (typical for inline emojis)
+      const dataW = img.getAttribute('data-w');
+      const dataRatio = img.getAttribute('data-ratio');
+      const isSmallEmojiSize = dataW && parseInt(dataW) <= 120;
+
+      if (isEmoji || isSmallEmojiSize) {
+        alt = `wx_emoji_${alt}`;
+      }
+
       return `![${alt}](${src})`;
     }
   });

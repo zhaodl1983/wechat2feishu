@@ -15,21 +15,99 @@ import os from 'os';
  * No longer saves to 'output/' folder.
  */
 export async function processArticle(url: string, userId?: string) {
-  // 1. Create or Update DB Record (Pending)
-  let article = await prisma.article.upsert({
-    where: { originalUrl: url },
-    update: {
-      status: 'crawling',
-      userId: userId || null,
-      updatedAt: new Date(),
-    },
-    create: {
-      title: 'Processing...',
+  // --- STEP 0: SMART CACHE CHECK ---
+  // Check if ANY user has already stored this article successfully.
+  const existingArticle = await prisma.article.findFirst({
+    where: {
       originalUrl: url,
-      status: 'crawling',
-      userId: userId || null,
+      status: 'stored',
+      content: { not: null } // Ensure content exists
     },
+    orderBy: { updatedAt: 'desc' } // Use the most recent one
   });
+
+  if (existingArticle) {
+    console.log(`[SmartCache] Hit! Found existing article: ${existingArticle.id}`);
+    
+    // Check if CURRENT user already has this article
+    if (userId) {
+      const userArticle = await prisma.article.findFirst({
+        where: {
+          originalUrl: url,
+          userId: userId
+        }
+      });
+
+      if (userArticle) {
+        console.log(`[SmartCache] User ${userId} already owns this article. Updating timestamp.`);
+        await prisma.article.update({
+          where: { id: userArticle.id },
+          data: { updatedAt: new Date() } // Touch it to bring to top
+        });
+        return { success: true, articleId: userArticle.id, status: 'stored' };
+      }
+
+      // Clone for new user (Soft Clone)
+      console.log(`[SmartCache] Cloning article for user ${userId}...`);
+      const newArticle = await prisma.article.create({
+        data: {
+          title: existingArticle.title,
+          author: existingArticle.author,
+          accountName: existingArticle.accountName,
+          publishDate: existingArticle.publishDate,
+          originalUrl: url,
+          localPath: existingArticle.localPath, // Likely null now, but safe to copy
+          thumbnailPath: existingArticle.thumbnailPath,
+          content: existingArticle.content,
+          status: 'stored',
+          userId: userId
+        }
+      });
+      return { success: true, articleId: newArticle.id, status: 'stored' };
+    }
+  }
+
+  // --- STEP 1: FALLBACK TO FULL SCRAPE (Cache Miss) ---
+  // 1. Create or Update DB Record (Pending)
+  // Note: Since we removed @unique from originalUrl, upsert by originalUrl is tricky if duplicates exist.
+  // But we handle per-user uniqueness now. 
+  // For anonymous or first-time crawl, we might create a new record or update an existing pending one?
+  // Let's stick to: Find existing for THIS user or create new.
+  
+  let article;
+  
+  if (userId) {
+     const userArticle = await prisma.article.findFirst({
+        where: { originalUrl: url, userId: userId }
+     });
+     
+     if (userArticle) {
+        article = await prisma.article.update({
+           where: { id: userArticle.id },
+           data: { status: 'crawling', updatedAt: new Date() }
+        });
+     } else {
+        article = await prisma.article.create({
+           data: {
+              title: 'Processing...',
+              originalUrl: url,
+              status: 'crawling',
+              userId: userId
+           }
+        });
+     }
+  } else {
+     // Anonymous: Just create a new temporary record (or could update a shared anonymous one?)
+     // For V0.6, let's just create new to be safe, cron job can clean up.
+     article = await prisma.article.create({
+        data: {
+           title: 'Processing...',
+           originalUrl: url,
+           status: 'crawling',
+           userId: null
+        }
+     });
+  }
 
   try {
     // --- STEP A: SCRAPE ---

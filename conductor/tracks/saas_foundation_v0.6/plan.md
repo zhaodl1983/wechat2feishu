@@ -32,6 +32,13 @@
 - [x] **Task 5.1**: 隐藏飞书同步功能相关的 UI 提示信息（详情页按钮与历史列表预览链接）。
 - [x] **Task 5.2**: 修复深色模式下视图切换按钮（网格/列表）不可见的问题。
 - [x] **Task 5.3**: 修复首页及公共页面（未登录状态）在切换深色模式后样式不匹配的问题，实现全栈深色模式同步。
+- [x] **Task 5.4**: 修复深色模式下“新转存”弹窗背景、输入框及按钮的样式适配问题。
+- [x] **Task 5.5**: 优化 Emoji 表情渲染逻辑，通过扩展 URL 特征检测和自定义 Markdown 组件（p/img），彻底解决微信表情显示巨大的问题。
+
+### Phase 6: Storage Strategy Optimization (Smart Cache)
+- [x] **Task 6.1**: Update `prisma/schema.prisma` to remove `@unique` from `originalUrl` and add `@@unique([userId, originalUrl])`.
+- [x] **Task 6.2**: Refactor `lib/conductor.ts` to implement smart cache logic (check existing stored article -> soft clone -> skip scrape).
+- [x] **Task 6.3**: Verify data integrity and execute DB migration.
 
 ## Notes
 - See `spec.md` for API details and database schema definitions.

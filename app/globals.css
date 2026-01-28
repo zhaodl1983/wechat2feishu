@@ -297,3 +297,24 @@ body {
   color: white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
+
+/* Inline emoji images in prose content */
+.prose img[data-emoji="true"],
+article img[data-emoji="true"] {
+  display: inline !important;
+  width: 1.2em !important;
+  height: 1.2em !important;
+  margin: 0 0.1em !important;
+  padding: 0 !important;
+  vertical-align: middle !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Remove paragraph margins when it only contains emoji */
+.prose p:has(> img[data-emoji="true"]:only-child) {
+  display: inline;
+  margin: 0;
+  padding: 0;
+}

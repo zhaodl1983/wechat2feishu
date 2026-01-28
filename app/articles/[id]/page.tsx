@@ -69,13 +69,62 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
                     <ReactMarkdown
                         remarkPlugins={[remarkGfm]}
                         components={{
+                            // Custom paragraph handler to support inline emoji images
+                            p: ({ node, children, ...props }) => {
+                                // Check if this paragraph contains only a single emoji image
+                                const childArray = Array.isArray(children) ? children : [children];
+                                const hasOnlyEmoji = childArray.length === 1 &&
+                                    typeof childArray[0] === 'object' &&
+                                    childArray[0] !== null &&
+                                    'props' in childArray[0] &&
+                                    childArray[0].props?.['data-emoji'] === 'true';
+
+                                if (hasOnlyEmoji) {
+                                    // Return just the emoji without wrapping paragraph
+                                    return <>{children}</>;
+                                }
+
+                                return <p {...props}>{children}</p>;
+                            },
                             img: ({ node, ...props }) => {
                                 let src = String(props.src || '');
+                                const alt = String(props.alt || '');
+
+                                // Extended emoji detection with multiple URL patterns
+                                const emojiPatterns = [
+                                    'wx_fed/wechat_emotion',  // 微信表情包 (官方)
+                                    '/emoji/',                // 通用 emoji 路径
+                                    '/we-emoji/',             // 新版微信表情
+                                    '/emotion/',              // emotion 目录
+                                    'expression',             // 表情资源
+                                    'mpres/htmledition/images/icon',  // 旧版表情
+                                ];
+
+                                const isEmoji = emojiPatterns.some(pattern => src.toLowerCase().includes(pattern.toLowerCase())) ||
+                                    alt.includes('wx_emoji_') ||
+                                    alt.toLowerCase().includes('emoji');
+
                                 if (src.includes('mmbiz.qpic.cn') || src.includes('mp.weixin.qq.com')) {
                                     // Use Image Proxy for WeChat images to bypass Referer check
                                     const encodedUrl = encodeURIComponent(src);
                                     src = `/api/image-proxy/${encodedUrl}/image.jpg`;
                                 }
+
+                                if (isEmoji) {
+                                    return (
+                                        // eslint-disable-next-line @next/next/no-img-element
+                                        <img
+                                            {...props}
+                                            src={src}
+                                            data-emoji="true"
+                                            className="inline w-[1.2em] h-[1.2em] mx-[0.1em] align-middle shadow-none rounded-none border-none !my-0 !p-0"
+                                            style={{ display: 'inline', verticalAlign: 'middle', margin: '0 0.1em' }}
+                                            loading="lazy"
+                                            alt={props.alt || 'emoji'}
+                                        />
+                                    );
+                                }
+
                                 return (
                                     // eslint-disable-next-line @next/next/no-img-element
                                     <img

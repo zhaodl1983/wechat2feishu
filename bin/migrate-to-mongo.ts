@@ -51,8 +51,8 @@ async function migrate() {
 
     for (const a of articles as any[]) {
         try {
-            // Check existence by originalUrl
-            const existing = await mongo.article.findUnique({ where: { originalUrl: a.originalUrl } });
+            // Check existence by originalUrl (using findFirst as originalUrl is no longer unique)
+            const existing = await mongo.article.findFirst({ where: { originalUrl: a.originalUrl } });
             if (existing) {
                 console.log(`Article exists: ${a.title}`);
                 continue;
