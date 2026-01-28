@@ -4,6 +4,7 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
+import { usePathname, useRouter } from 'next/navigation';
 
 interface QuotaData {
   current: number;
@@ -18,6 +19,8 @@ interface SidebarProps {
 
 export function Sidebar({ refreshTrigger = 0 }: SidebarProps) {
   const { data: session } = useSession();
+  const pathname = usePathname();
+  const router = useRouter();
   const [quota, setQuota] = useState<QuotaData>({
     current: 0,
     limit: 20,
@@ -46,15 +49,33 @@ export function Sidebar({ refreshTrigger = 0 }: SidebarProps) {
     }
   };
 
+  // Smart Logo click handler: 
+  // - Deep pages (e.g., /articles/123) → navigate back to list (/)
+  // - List page (/) → scroll to top
+  const handleLogoClick = () => {
+    const isDeepPage = pathname !== '/' && pathname.includes('/');
+
+    if (isDeepPage) {
+      router.push('/');
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
     <aside className="w-64 glass-sidebar hidden lg:flex flex-col z-20 h-full fixed left-0 top-0 transition-colors">
       <div className="h-16 flex items-center px-6 mb-4">
-        <Link href="/" className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity">
+        {/* Logo: Smart navigation - deep page → list, list → scroll top */}
+        <button
+          onClick={handleLogoClick}
+          className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
+          title={pathname === '/' ? '回到顶部' : '返回列表'}
+        >
           <div className="w-8 h-8 bg-black dark:bg-white rounded-[7px] flex items-center justify-center shrink-0">
             <span className="material-symbols-outlined text-white dark:text-black text-[18px]">bolt</span>
           </div>
           <span className="font-semibold text-[19px] tracking-tight text-[#1d1d1f] dark:text-white">Wechat2doc</span>
-        </Link>
+        </button>
       </div>
 
       <nav className="flex-1 px-4 space-y-1">

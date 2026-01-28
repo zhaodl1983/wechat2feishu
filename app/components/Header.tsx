@@ -3,7 +3,7 @@
 import { useTheme } from "next-themes";
 import { useState, useEffect } from 'react';
 import { useSession, signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 
 export function Header() {
@@ -12,6 +12,7 @@ export function Header() {
   const [mounted, setMounted] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
 
   // Prevent hydration mismatch
   useEffect(() => {
@@ -28,6 +29,19 @@ export function Header() {
     router.refresh();
   };
 
+  // Smart Logo click handler: 
+  // - Deep pages (e.g., /articles/123) → navigate back to list (/)
+  // - List page (/) → scroll to top
+  const handleLogoClick = () => {
+    const isDeepPage = pathname !== '/' && pathname.includes('/');
+
+    if (isDeepPage) {
+      router.push('/');
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   const user = session?.user;
   const isLoggedIn = status === "authenticated";
 
@@ -35,14 +49,18 @@ export function Header() {
   if (isLoggedIn) {
     return (
       <header className="h-16 glass-nav border-b border-black/[0.03] dark:border-white/[0.08] px-6 flex items-center justify-between z-10 sticky top-0 transition-colors">
-        {/* Mobile Logo */}
+        {/* Mobile Logo - smart navigation */}
         <div className="flex items-center gap-4 lg:hidden">
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => router.push('/')}>
+          <button
+            onClick={handleLogoClick}
+            className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
+            title={pathname === '/' ? '回到顶部' : '返回列表'}
+          >
             <div className="w-8 h-8 bg-black dark:bg-white rounded-[7px] flex items-center justify-center shrink-0">
               <span className="material-symbols-outlined text-white dark:text-black text-[18px]">bolt</span>
             </div>
             <span className="font-semibold text-[19px] tracking-tight text-[#1d1d1f] dark:text-white">Wechat2doc</span>
-          </div>
+          </button>
         </div>
 
         {/* Desktop Breadcrumb */}
@@ -102,11 +120,21 @@ export function Header() {
 
             {showMenu && (
               <>
-                <div className="absolute right-0 top-full mt-2 w-32 bg-white rounded-xl shadow-lg border border-gray-100 py-1 flex flex-col z-[60]">
+                <div className="absolute right-0 top-full mt-2 w-40 bg-white dark:bg-[#2C2C2E] rounded-xl shadow-lg border border-gray-100 dark:border-white/10 py-1 flex flex-col z-[60]">
+                  <Link
+                    href="/home"
+                    className="w-full text-left px-4 py-2.5 text-[13px] text-black/70 dark:text-white/70 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors flex items-center gap-2"
+                    onClick={() => setShowMenu(false)}
+                  >
+                    <span className="material-symbols-outlined text-[16px]">home</span>
+                    查看首页
+                  </Link>
+                  <div className="h-[1px] bg-gray-100 dark:bg-white/10 mx-2 my-1"></div>
                   <button
                     onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-[13px] text-red-500 hover:bg-gray-50 transition-colors"
+                    className="w-full text-left px-4 py-2.5 text-[13px] text-red-500 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors flex items-center gap-2"
                   >
+                    <span className="material-symbols-outlined text-[16px]">logout</span>
                     退出登录
                   </button>
                 </div>
@@ -135,31 +163,42 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-4">
-            {mounted && (
-                <div className="theme-toggle-segmented">
-                <button
-                    onClick={() => setTheme('light')}
-                    className={`theme-btn ${theme === 'light' ? 'active' : ''}`}
-                    title="浅色模式"
-                >
-                    <span className="material-symbols-outlined text-[18px]">light_mode</span>
-                </button>
-                <button
-                    onClick={() => setTheme('dark')}
-                    className={`theme-btn ${theme === 'dark' ? 'active' : ''}`}
-                    title="深色模式"
-                >
-                    <span className="material-symbols-outlined text-[18px]">dark_mode</span>
-                </button>
-                </div>
-            )}
+          {mounted && (
+            <div className="theme-toggle-segmented">
+              <button
+                onClick={() => setTheme('light')}
+                className={`theme-btn ${theme === 'light' ? 'active' : ''}`}
+                title="浅色模式"
+              >
+                <span className="material-symbols-outlined text-[18px]">light_mode</span>
+              </button>
+              <button
+                onClick={() => setTheme('dark')}
+                className={`theme-btn ${theme === 'dark' ? 'active' : ''}`}
+                title="深色模式"
+              >
+                <span className="material-symbols-outlined text-[18px]">dark_mode</span>
+              </button>
+            </div>
+          )}
 
+          {/* Right Action Button - Context-aware */}
+          {isLoggedIn ? (
             <button
-            onClick={handleLogin}
-            className="px-5 py-1.5 rounded-full border border-black/10 dark:border-white/10 text-[13px] font-semibold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all text-[#1d1d1f] dark:text-white bg-white dark:bg-white/5 shadow-sm"
+              onClick={() => router.push('/')}
+              className="px-5 py-1.5 rounded-full text-[13px] font-semibold transition-all flex items-center gap-2 tactile-button text-white"
             >
-            登录 / 注册
+              <span className="material-symbols-outlined text-[16px]">dashboard</span>
+              进入控制台
             </button>
+          ) : (
+            <button
+              onClick={handleLogin}
+              className="px-5 py-1.5 rounded-full border border-black/10 dark:border-white/10 text-[13px] font-semibold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all text-[#1d1d1f] dark:text-white bg-white dark:bg-white/5 shadow-sm"
+            >
+              登录 / 注册
+            </button>
+          )}
         </div>
       </div>
     </header>
