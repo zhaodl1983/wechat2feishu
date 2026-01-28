@@ -221,11 +221,6 @@ export function HistoryList({ refreshTrigger, isLoggedIn, layout = 'list' }: His
                                         <a href={article.originalUrl} target="_blank" className="p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white transition-all" title="查看原文">
                                             <span className="material-symbols-outlined text-[20px]">link</span>
                                         </a>
-                                        {article.feishuUrl && (
-                                            <a href={article.feishuUrl} target="_blank" className="p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white transition-all" title="飞书预览">
-                                                <span className="material-symbols-outlined text-[20px]">visibility</span>
-                                            </a>
-                                        )}
                                         <button
                                             onClick={() => handleDelete(article.id)}
                                             className="p-2 hover:bg-vibrant-red/10 rounded-lg text-black/40 dark:text-white/40 hover:text-vibrant-red transition-all"
@@ -250,19 +245,19 @@ export function HistoryList({ refreshTrigger, isLoggedIn, layout = 'list' }: His
             <div className="flex items-center justify-between mb-8 px-2">
                 <div className="flex items-center gap-2">
                     <span className="material-symbols-outlined text-[18px] text-vibrant-amber">trending_up</span>
-                    <h3 className="text-[14px] font-semibold text-black/30 tracking-[0.1em] uppercase">热门转存</h3>
+                    <h3 className="text-[14px] font-semibold text-black/30 dark:text-white/30 tracking-[0.1em] uppercase">热门转存</h3>
                 </div>
-                <span className="text-[12px] font-medium text-black/25 flex items-center gap-1">
+                <span className="text-[12px] font-medium text-black/25 dark:text-white/25 flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-vibrant-green animate-pulse"></span>
                     实时更新
                 </span>
             </div>
 
             {/* List */}
-            <div className="bg-white/40 backdrop-blur-md rounded-[24px] border border-black/[0.04] overflow-hidden shadow-[0_4px_24px_-4px_rgba(0,0,0,0.02)]">
+            <div className="bg-white/40 dark:bg-white/5 backdrop-blur-md rounded-[24px] border border-black/[0.04] dark:border-white/5 overflow-hidden shadow-[0_4px_24px_-4px_rgba(0,0,0,0.02)] transition-colors">
                 <table className="w-full text-left border-collapse">
                     <thead>
-                        <tr className="text-[12px] font-bold text-black/30 uppercase tracking-wider">
+                        <tr className="text-[12px] font-bold text-black/30 dark:text-white/30 uppercase tracking-wider">
                             <th className="px-8 py-5">文章标题</th>
                             <th className="px-8 py-5 text-right hidden md:table-cell">
                                 {viewMode === 'trending' ? '转存次数' : '转存时间'}
@@ -272,12 +267,12 @@ export function HistoryList({ refreshTrigger, isLoggedIn, layout = 'list' }: His
                     <tbody>
                         {articles.map((article, index) => (
                             <React.Fragment key={article.id}>
-                                <tr className="group hover:bg-black/[0.02] transition-colors">
+                                <tr className="group hover:bg-black/[0.02] dark:hover:bg-white/5 transition-colors">
                                     <td className="px-8 py-6">
                                         <div className="flex items-center gap-4">
                                             {/* Rank Badge for Trending */}
                                             {viewMode === 'trending' && (
-                                                <span className={`text-[13px] font-bold w-4 tabular-nums ${index < 3 ? 'text-black/20' : 'text-black/10 text-[11px]'
+                                                <span className={`text-[13px] font-bold w-4 tabular-nums ${index < 3 ? 'text-black/20 dark:text-white/20' : 'text-black/10 dark:text-white/10 text-[11px]'
                                                     }`}>
                                                     {String(index + 1).padStart(2, '0')}
                                                 </span>
@@ -288,7 +283,7 @@ export function HistoryList({ refreshTrigger, isLoggedIn, layout = 'list' }: His
                                                     href={viewMode === 'personal' ? `/articles/${article.id}` : article.originalUrl}
                                                     target={viewMode === 'personal' ? "_self" : "_blank"}
                                                     rel="noreferrer"
-                                                    className="text-[16px] font-semibold text-black/85 leading-tight hover:text-black transition-colors line-clamp-1 cursor-pointer"
+                                                    className="text-[16px] font-semibold text-black/85 dark:text-white/90 leading-tight hover:text-black dark:hover:text-white transition-colors line-clamp-1 cursor-pointer"
                                                 >
                                                     {article.title || '正在处理...'}
                                                 </a>
@@ -297,16 +292,16 @@ export function HistoryList({ refreshTrigger, isLoggedIn, layout = 'list' }: His
                                     </td>
                                     <td className="px-8 py-6 text-right hidden md:table-cell">
                                         {viewMode === 'trending' ? (
-                                            <span className="text-[14px] text-black/40 font-semibold tabular-nums">{article.count?.toLocaleString()}</span>
+                                            <span className="text-[14px] text-black/40 dark:text-white/40 font-semibold tabular-nums">{article.count?.toLocaleString()}</span>
                                         ) : (
-                                            <span className="text-[14px] text-black/40 font-medium">
+                                            <span className="text-[14px] text-black/40 dark:text-white/40 font-medium">
                                                 {formatTime(article.createdAt)}
                                             </span>
                                         )}
                                     </td>
                                 </tr>
                                 {index < articles.length - 1 && (
-                                    <tr><td colSpan={2}><div className="h-[0.5px] bg-black/[0.08] mx-8"></div></td></tr>
+                                    <tr><td colSpan={2}><div className="h-[0.5px] bg-black/[0.08] dark:bg-white/5 mx-8"></div></td></tr>
                                 )}
                             </React.Fragment>
                         ))}

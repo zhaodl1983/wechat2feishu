@@ -109,10 +109,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden">
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden bg-white dark:bg-[#121212] transition-colors">
        {/* Background Mesh */}
       <div 
-        className="absolute inset-0 z-0 pointer-events-none"
+        className="absolute inset-0 z-0 pointer-events-none opacity-100 dark:opacity-0 transition-opacity"
         style={{
             backgroundImage: `
                radial-gradient(at 0% 0%, hsla(0,0%,100%,1) 0, transparent 50%), 
@@ -124,15 +124,15 @@ export default function LoginPage() {
       />
 
       <div className="w-full max-w-[440px] relative z-10">
-        <div className="glass-box rounded-[32px] p-10 md:p-12">
+        <div className="glass-box dark:bg-white/5 dark:border-white/10 rounded-[32px] p-10 md:p-12">
             <div className="flex flex-col items-center mb-10">
-                <div className="w-12 h-12 bg-black rounded-[11px] flex items-center justify-center mb-6 shadow-xl">
-                    <span className="material-symbols-outlined text-white text-[28px]">bolt</span>
+                <div className="w-12 h-12 bg-black dark:bg-white rounded-[11px] flex items-center justify-center mb-6 shadow-xl">
+                    <span className="material-symbols-outlined text-white dark:text-black text-[28px]">bolt</span>
                 </div>
-                <h1 className="text-[28px] font-bold tracking-tight text-[#1d1d1f]">
+                <h1 className="text-[28px] font-bold tracking-tight text-[#1d1d1f] dark:text-white">
                     {isLogin ? "欢迎回来" : "创建您的账号"}
                 </h1>
-                <p className="text-[15px] text-black/40 mt-2 font-medium text-center">
+                <p className="text-[15px] text-black/40 dark:text-white/40 mt-2 font-medium text-center">
                     {isLogin ? "请登录您的 Wechat2doc 账号" : "请使用您的邮箱完成注册"}
                 </p>
             </div>
@@ -140,11 +140,11 @@ export default function LoginPage() {
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-4">
                     <div className="space-y-1.5">
-                        <label className="text-[13px] font-semibold text-black/50 ml-1">邮箱地址</label>
-                        <div className="recessed-input rounded-xl px-4 py-3.5 flex items-center">
-                            <span className="material-symbols-outlined text-[18px] text-black/20 mr-3">mail</span>
+                        <label className="text-[13px] font-semibold text-black/50 dark:text-white/50 ml-1">邮箱地址</label>
+                        <div className="recessed-input dark:bg-white/5 rounded-xl px-4 py-3.5 flex items-center">
+                            <span className="material-symbols-outlined text-[18px] text-black/20 dark:text-white/20 mr-3">mail</span>
                             <input 
-                                className="w-full bg-transparent border-none p-0 text-[15px] focus:ring-0 placeholder:text-black/20 font-medium" 
+                                className="w-full bg-transparent border-none p-0 text-[15px] focus:ring-0 placeholder:text-black/20 dark:placeholder:text-white/20 font-medium dark:text-white" 
                                 placeholder="example@email.com" 
                                 type="email"
                                 value={email}
@@ -156,12 +156,12 @@ export default function LoginPage() {
 
                     {!isLogin && (
                         <div className="space-y-1.5">
-                            <label className="text-[13px] font-semibold text-black/50 ml-1">验证码</label>
+                            <label className="text-[13px] font-semibold text-black/50 dark:text-white/50 ml-1">验证码</label>
                             <div className="flex gap-2">
-                                <div className="recessed-input rounded-xl px-4 py-3.5 flex items-center flex-1">
-                                    <span className="material-symbols-outlined text-[18px] text-black/20 mr-3">verified_user</span>
+                                <div className="recessed-input dark:bg-white/5 rounded-xl px-4 py-3.5 flex items-center flex-1">
+                                    <span className="material-symbols-outlined text-[18px] text-black/20 dark:text-white/20 mr-3">verified_user</span>
                                     <input 
-                                        className="w-full bg-transparent border-none p-0 text-[15px] focus:ring-0 placeholder:text-black/20 font-medium" 
+                                        className="w-full bg-transparent border-none p-0 text-[15px] focus:ring-0 placeholder:text-black/20 dark:placeholder:text-white/20 font-medium dark:text-white" 
                                         placeholder="6位验证码" 
                                         type="text"
                                         maxLength={6}
@@ -174,7 +174,7 @@ export default function LoginPage() {
                                     type="button"
                                     onClick={handleSendCode}
                                     disabled={cooldown > 0 || loading}
-                                    className="outline-action-btn h-[52px] px-4 rounded-xl text-[13px] font-semibold text-black/60 whitespace-nowrap disabled:opacity-50"
+                                    className="outline-action-btn h-[52px] px-4 rounded-xl text-[13px] font-semibold text-black/60 dark:text-white/60 whitespace-nowrap disabled:opacity-50 dark:border-white/10 dark:hover:bg-white/5"
                                 >
                                     {cooldown > 0 ? `${cooldown}s` : "获取验证码"}
                                 </button>
@@ -184,17 +184,17 @@ export default function LoginPage() {
 
                     <div className="space-y-1.5">
                         <div className="flex justify-between items-center ml-1">
-                            <label className="text-[13px] font-semibold text-black/50">
+                            <label className="text-[13px] font-semibold text-black/50 dark:text-white/50">
                                 {isLogin ? "密码" : "设置密码"}
                             </label>
                             {isLogin && (
-                                <a className="text-[12px] font-medium text-black/30 hover:text-black/60 transition-colors" href="#">忘记密码？</a>
+                                <a className="text-[12px] font-medium text-black/30 dark:text-white/30 hover:text-black/60 dark:hover:text-white transition-colors" href="#">忘记密码？</a>
                             )}
                         </div>
-                        <div className="recessed-input rounded-xl px-4 py-3.5 flex items-center">
-                            <span className="material-symbols-outlined text-[18px] text-black/20 mr-3">lock</span>
+                        <div className="recessed-input dark:bg-white/5 rounded-xl px-4 py-3.5 flex items-center">
+                            <span className="material-symbols-outlined text-[18px] text-black/20 dark:text-white/20 mr-3">lock</span>
                             <input 
-                                className="w-full bg-transparent border-none p-0 text-[15px] focus:ring-0 placeholder:text-black/20 font-medium" 
+                                className="w-full bg-transparent border-none p-0 text-[15px] focus:ring-0 placeholder:text-black/20 dark:placeholder:text-white/20 font-medium dark:text-white" 
                                 placeholder={isLogin ? "••••••••" : "至少6位字符"}
                                 type="password"
                                 value={password}
@@ -207,19 +207,19 @@ export default function LoginPage() {
                 </div>
 
                 {error && (
-                    <div className="text-red-500 text-xs font-medium text-center bg-red-50 py-2 rounded-lg">
+                    <div className="text-red-500 text-xs font-medium text-center bg-red-50 dark:bg-red-900/20 py-2 rounded-lg">
                         {error}
                     </div>
                 )}
 
                 {message && (
-                    <div className="text-green-600 text-xs font-medium text-center bg-green-50 py-2 rounded-lg">
+                    <div className="text-green-600 dark:text-green-400 text-xs font-medium text-center bg-green-50 dark:bg-green-900/20 py-2 rounded-lg">
                         {message}
                     </div>
                 )}
 
                 <button 
-                    className="tactile-button w-full h-12 rounded-full text-white text-[15px] font-semibold tracking-wide mt-4 disabled:opacity-70" 
+                    className="tactile-button w-full h-12 rounded-full text-white dark:text-black dark:bg-white dark:hover:bg-white/90 text-[15px] font-semibold tracking-wide mt-4 disabled:opacity-70" 
                     type="submit"
                     disabled={loading}
                 >
@@ -228,11 +228,11 @@ export default function LoginPage() {
             </form>
 
             <div className="mt-10 text-center">
-                <p className="text-[14px] text-black/40 font-medium">
+                <p className="text-[14px] text-black/40 dark:text-white/40 font-medium">
                     {isLogin ? "还没有账号？" : "已有账号？"} 
                     <button 
                         onClick={() => setIsLogin(!isLogin)}
-                        className="text-black/80 hover:underline font-semibold ml-1 transition-colors"
+                        className="text-black/80 dark:text-white/80 hover:underline font-semibold ml-1 transition-colors"
                     >
                         {isLogin ? "立即注册" : "立即登录"}
                     </button>
@@ -241,14 +241,14 @@ export default function LoginPage() {
         </div>
 
         <div className="mt-12 flex flex-col items-center gap-6">
-            <div className="flex gap-8 text-[13px] font-medium text-black/30">
-                <a className="hover:text-black/60 transition-colors" href="#">隐私条款</a>
-                <a className="hover:text-black/60 transition-colors" href="#">使用协议</a>
-                <a className="hover:text-black/60 transition-colors" href="#">联系我们</a>
+            <div className="flex gap-8 text-[13px] font-medium text-black/30 dark:text-white/30">
+                <a className="hover:text-black/60 dark:hover:text-white transition-colors" href="#">隐私条款</a>
+                <a className="hover:text-black/60 dark:hover:text-white transition-colors" href="#">使用协议</a>
+                <a className="hover:text-black/60 dark:hover:text-white transition-colors" href="#">联系我们</a>
             </div>
-            <div className="flex items-center gap-2 text-black/20">
+            <div className="flex items-center gap-2 text-black/20 dark:text-white/20">
                 <span className="text-[11px] font-bold tracking-[0.2em] uppercase">Wechat2doc</span>
-                <span className="w-1 h-1 rounded-full bg-black/10"></span>
+                <span className="w-1 h-1 rounded-full bg-black/10 dark:bg-white/10"></span>
                 <span className="text-[12px] font-medium italic">For Minimalists.</span>
             </div>
         </div>

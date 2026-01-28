@@ -55,52 +55,52 @@ const versions = [
 
 export default function Changelog() {
   return (
-    <main className="min-h-screen bg-[#FDFDFD] flex flex-col font-sans">
+    <main className="min-h-screen bg-[#FDFDFD] dark:bg-[#121212] flex flex-col font-sans transition-colors">
       <Header />
 
       <div className="flex-grow pt-32 pb-20 px-6">
         <div className="max-w-[800px] mx-auto">
           <div className="text-center mb-16">
-            <h1 className="text-[40px] font-semibold text-[#1d1d1f] tracking-tight mb-4">
+            <h1 className="text-[40px] font-semibold text-[#1d1d1f] dark:text-white tracking-tight mb-4">
               迭代记录
             </h1>
-            <p className="text-[19px] text-black/60 font-medium">
+            <p className="text-[19px] text-black/60 dark:text-white/60 font-medium">
               Wechat2doc 的进化之路。
             </p>
           </div>
 
-          <div className="space-y-12 relative before:absolute before:left-[27px] before:top-2 before:bottom-2 before:w-[2px] before:bg-black/[0.05]">
+          <div className="space-y-12 relative before:absolute before:left-[27px] before:top-2 before:bottom-2 before:w-[2px] before:bg-black/[0.05] dark:before:bg-white/10">
             {versions.map((v, i) => (
               <div key={i} className="relative flex gap-8 group">
                 {/* Timeline Dot */}
                 <div className={`
                   mt-1.5 w-[14px] h-[14px] rounded-full border-[3px] bg-white z-10 shrink-0 ml-[20px] transition-colors duration-300
-                  ${v.status === 'planning' ? 'border-gray-300' :
-                    v.status === 'progress' ? 'border-blue-500 shadow-[0_0_0_4px_rgba(59,130,246,0.1)]' :
-                      'border-[#1d1d1f]'}
+                  ${v.status === 'planning' ? 'border-gray-300 dark:border-white/20 dark:bg-white/10' :
+                    v.status === 'progress' ? 'border-blue-500 shadow-[0_0_0_4px_rgba(59,130,246,0.1)] dark:bg-[#121212]' :
+                      'border-[#1d1d1f] dark:border-white dark:bg-[#121212]'}
                 `}></div>
 
                 {/* Content */}
                 <div className="flex-1 -mt-1">
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="text-[24px] font-semibold text-[#1d1d1f] tracking-tight">
+                    <span className="text-[24px] font-semibold text-[#1d1d1f] dark:text-white tracking-tight">
                       {v.version}
                     </span>
                     <span className={`
                       px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wide
-                      ${v.status === 'planning' ? 'bg-gray-100 text-gray-500' :
-                        v.status === 'progress' ? 'bg-blue-50 text-blue-600' :
-                          'bg-black/5 text-black/60'}
+                      ${v.status === 'planning' ? 'bg-gray-100 text-gray-500 dark:bg-white/5 dark:text-white/40' :
+                        v.status === 'progress' ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' :
+                          'bg-black/5 text-black/60 dark:bg-white/10 dark:text-white/60'}
                     `}>
                       {v.date}
                     </span>
                   </div>
 
-                  <h3 className="text-[17px] font-semibold text-[#1d1d1f] mb-1">
+                  <h3 className="text-[17px] font-semibold text-[#1d1d1f] dark:text-white mb-1">
                     {v.title}
                   </h3>
 
-                  <p className="text-[15px] leading-relaxed text-black/60">
+                  <p className="text-[15px] leading-relaxed text-black/60 dark:text-white/60">
                     {v.desc}
                   </p>
                 </div>

@@ -53,17 +53,17 @@ export function ClientWrapper() {
                                     </p>
                                 </div>
                                 <div className="flex items-center gap-3">
-                                    <div className="flex bg-black/[0.03] p-1 rounded-xl mr-2">
+                                    <div className="flex bg-black/[0.03] dark:bg-white/10 p-1 rounded-xl mr-2">
                                         <button
                                             onClick={() => setViewLayout('grid')}
-                                            className={`p-1.5 rounded-lg transition-colors ${viewLayout === 'grid' ? 'bg-white shadow-sm text-black' : 'text-black/40 hover:text-black'}`}
+                                            className={`p-1.5 rounded-lg transition-colors ${viewLayout === 'grid' ? 'bg-white shadow-sm text-black dark:bg-white/20 dark:text-white' : 'text-black/40 hover:text-black dark:text-white/40 dark:hover:text-white'}`}
                                             title="网格视图"
                                         >
                                             <span className="material-symbols-outlined text-[20px]">grid_view</span>
                                         </button>
                                         <button
                                             onClick={() => setViewLayout('list')}
-                                            className={`p-1.5 rounded-lg transition-colors ${viewLayout === 'list' ? 'bg-white shadow-sm text-black' : 'text-black/40 hover:text-black'}`}
+                                            className={`p-1.5 rounded-lg transition-colors ${viewLayout === 'list' ? 'bg-white shadow-sm text-black dark:bg-white/20 dark:text-white' : 'text-black/40 hover:text-black dark:text-white/40 dark:hover:text-white'}`}
                                             title="列表视图"
                                         >
                                             <span className="material-symbols-outlined text-[20px]">format_list_bulleted</span>
@@ -97,7 +97,7 @@ export function ClientWrapper() {
 
     // --- PUBLIC LAYOUT ---
     return (
-        <div className="min-h-screen bg-[#FDFDFD] flex flex-col font-sans">
+        <div className="min-h-screen bg-[#FDFDFD] dark:bg-[#121212] flex flex-col font-sans transition-colors">
             <Header />
             <main className="flex-grow">
                 <Hero isLoggedIn={false} onSyncSuccess={handleSyncSuccess} />

@@ -28,6 +28,11 @@
 - [x] **Task 4.2**: Configure retention policy (7 days).
 - [x] **Task 4.3**: Document Cron job setup in `DEPLOYMENT.md`.
 
+### Phase 5: Bug Fixes
+- [x] **Task 5.1**: 隐藏飞书同步功能相关的 UI 提示信息（详情页按钮与历史列表预览链接）。
+- [x] **Task 5.2**: 修复深色模式下视图切换按钮（网格/列表）不可见的问题。
+- [x] **Task 5.3**: 修复首页及公共页面（未登录状态）在切换深色模式后样式不匹配的问题，实现全栈深色模式同步。
+
 ## Notes
 - See `spec.md` for API details and database schema definitions.
 - Project successfully transitioned to Wechat2doc.

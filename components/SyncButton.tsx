@@ -11,6 +11,9 @@ interface SyncButtonProps {
 }
 
 export default function SyncButton({ articleId, initialStatus, feishuUrl }: SyncButtonProps) {
+    // Hide Feishu sync feature as it is temporarily archived
+    return null;
+
     const [status, setStatus] = useState(initialStatus); // stored, syncing, synced, error
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
