@@ -39,6 +39,7 @@
 - [x] **Task 6.1**: Update `prisma/schema.prisma` to remove `@unique` from `originalUrl` and add `@@unique([userId, originalUrl])`.
 - [x] **Task 6.2**: Refactor `lib/conductor.ts` to implement smart cache logic (check existing stored article -> soft clone -> skip scrape).
 - [x] **Task 6.3**: Verify data integrity and execute DB migration.
+- [x] **Task 6.4**: Implement GIF support: Detect GIF format in `lib/assets.ts`, preserve animation during storage, and fix Content-Type in Image Proxy.
 
 ## Notes
 - See `spec.md` for API details and database schema definitions.

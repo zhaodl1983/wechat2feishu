@@ -12,7 +12,8 @@ import crypto from 'crypto';
 
 /**
  * Downloads an image from a URL, compresses it, and saves it using CAS (Content-Addressable Storage)
- * Path format: public/uploads/{YYYY}/{MM}/{hash}.webp
+ * Path format: public/uploads/{YYYY}/{MM}/{hash}.{ext}
+ * GIF files are preserved as-is to maintain animation, others are converted to WebP
  * @returns The public URL path to the saved image
  */
 export async function downloadImageCAS(
@@ -22,17 +23,23 @@ export async function downloadImageCAS(
     // 1. Download Buffer
     const response = await axios.get(url, {
       responseType: 'arraybuffer',
-      timeout: 10000,
+      timeout: 15000,
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'Referer': 'https://mp.weixin.qq.com/'
       }
     });
     const buffer = Buffer.from(response.data);
 
-    // 2. Calculate Hash (SHA-256)
+    // 2. Detect if it's a GIF (check magic bytes: GIF87a or GIF89a)
+    const isGif = buffer.length > 6 &&
+      buffer[0] === 0x47 && buffer[1] === 0x49 && buffer[2] === 0x46 && // "GIF"
+      buffer[3] === 0x38 && (buffer[4] === 0x37 || buffer[4] === 0x39) && buffer[5] === 0x61; // "87a" or "89a"
+
+    // 3. Calculate Hash (SHA-256)
     const hash = crypto.createHash('sha256').update(buffer).digest('hex').substring(0, 32);
 
-    // 3. Determine Directory (YYYY/MM)
+    // 4. Determine Directory (YYYY/MM)
     const now = new Date();
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, '0');
@@ -44,11 +51,13 @@ export async function downloadImageCAS(
 
     await fs.mkdir(fullUploadDir, { recursive: true });
 
-    // 4. Check if exists (Deduplication)
-    const filename = `${hash}.webp`;
+    // 5. Determine file extension based on format
+    const ext = isGif ? 'gif' : 'webp';
+    const filename = `${hash}.${ext}`;
     const fullPath = path.join(fullUploadDir, filename);
     const publicUrl = `/${uploadBase}/${year}/${month}/${filename}`;
 
+    // 6. Check if exists (Deduplication)
     try {
       await fs.access(fullPath);
       // Exists! Return immediately
@@ -57,14 +66,21 @@ export async function downloadImageCAS(
       // Doesn't exist, proceed to save
     }
 
-    // 5. Convert & Save
-    await sharp(buffer)
-      .resize(1200, undefined, {
-        withoutEnlargement: true,
-        fit: 'inside'
-      })
-      .webp({ quality: 80, effort: 6 })
-      .toFile(fullPath);
+    // 7. Save the file
+    if (isGif) {
+      // Preserve GIF as-is to maintain animation
+      await fs.writeFile(fullPath, buffer);
+      console.log(`[Asset] Preserved GIF animation: ${filename}`);
+    } else {
+      // Convert other formats to WebP for optimization
+      await sharp(buffer)
+        .resize(1200, undefined, {
+          withoutEnlargement: true,
+          fit: 'inside'
+        })
+        .webp({ quality: 80, effort: 6 })
+        .toFile(fullPath);
+    }
 
     return publicUrl;
 

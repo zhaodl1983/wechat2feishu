@@ -3,7 +3,7 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Wechat2doc - 极致保存体验</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
         tailwind.config = {
@@ -44,6 +44,11 @@
             -webkit-font-smoothing: antialiased;
             letter-spacing: -0.015em;
         }
+        .premium-nums {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-feature-settings: "tnum", "lnum";
+            letter-spacing: 0.04em;
+        }
         .headline-gradient {
             background: linear-gradient(180deg, #1d1d1f 0%, #434343 100%);
             -webkit-background-clip: text;
@@ -73,9 +78,6 @@
         .laser-icon {
             filter: drop-shadow(0 0 0.5px rgba(0,0,0,0.5));
             opacity: 0.6;
-        }
-        .glass-icon-shade {
-            background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%);
         }
         .sub-pixel-divider {
             height: 0.5px;
@@ -113,6 +115,14 @@
             font-feature-settings: "tnum";
             font-variant-numeric: tabular-nums;
         }
+        @keyframes ping-slow {
+            0% { transform: scale(1); opacity: 0.8; }
+            70% { transform: scale(2.5); opacity: 0; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+        .animate-halo {
+            animation: ping-slow 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
     </style>
 </head>
 <body class="text-[#1d1d1f] selection:bg-black/5">
@@ -134,7 +144,7 @@
 </div>
 </header>
 <main class="pt-32">
-<section class="max-w-[1200px] mx-auto px-golden-sm text-center mb-golden-xl">
+<section class="max-w-[1200px] mx-auto px-golden-sm text-center mb-16">
 <h1 class="headline-gradient text-[56px] md:text-[72px] font-bold leading-[1.05] mb-golden-sm mx-auto max-w-[900px]">
             极致打磨，<br/>让微信灵感瞬时归档。
         </h1>
@@ -174,13 +184,47 @@
 </div>
 </div>
 </section>
+<section class="max-w-[980px] mx-auto px-golden-sm mb-golden-xl">
+<div class="flex items-center justify-center gap-3 mb-10">
+<div class="relative flex items-center justify-center w-2 h-2">
+<div class="absolute inset-0 rounded-full bg-vibrant-green animate-halo"></div>
+<div class="relative w-1.5 h-1.5 rounded-full bg-vibrant-green shadow-[0_0_8px_rgba(40,205,65,0.4)]"></div>
+</div>
+<span class="text-[11px] font-bold text-black/30 tracking-[0.15em] uppercase">实时数据</span>
+</div>
+<div class="flex items-center justify-center">
+<div class="flex-1 text-center group">
+<div class="flex items-baseline justify-center gap-1.5 mb-1.5">
+<span class="premium-nums text-[42px] font-bold text-black leading-none">428,192</span>
+<span class="text-[14px] font-semibold text-gray-400 tracking-tight">篇</span>
+</div>
+<div class="text-[13px] font-medium text-black/35 tracking-tight">累计归档文章</div>
+</div>
+<div class="w-[1px] h-10 bg-black/[0.04]"></div>
+<div class="flex-1 text-center group">
+<div class="flex items-baseline justify-center gap-1.5 mb-1.5">
+<span class="premium-nums text-[42px] font-bold text-black leading-none">85.4</span>
+<span class="text-[14px] font-bold text-gray-400 tracking-wider">TB</span>
+</div>
+<div class="text-[13px] font-medium text-black/35 tracking-tight">本地化资产容量</div>
+</div>
+<div class="w-[1px] h-10 bg-black/[0.04]"></div>
+<div class="flex-1 text-center group">
+<div class="flex items-baseline justify-center gap-1.5 mb-1.5">
+<span class="premium-nums text-[42px] font-bold text-black leading-none">12,403</span>
+<span class="text-[14px] font-semibold text-gray-400 tracking-tight">位</span>
+</div>
+<div class="text-[13px] font-medium text-black/35 tracking-tight">内测活跃用户</div>
+</div>
+</div>
+</section>
 <section class="max-w-[980px] mx-auto px-golden-sm pb-golden-xl">
 <div class="flex items-center justify-between mb-8 px-2">
 <div class="flex items-center gap-2">
 <span class="material-symbols-outlined text-[18px] text-vibrant-amber">trending_up</span>
 <h3 class="text-[14px] font-semibold text-black/30 tracking-[0.1em] uppercase">热门转存</h3>
 </div>
-<span class="text-[12px] font-medium text-black/25">实时更新</span>
+<span class="text-[12px] font-medium text-black/25">24小时趋势</span>
 </div>
 <div class="bg-white/40 backdrop-blur-md rounded-[24px] border border-black/[0.04] overflow-hidden shadow-[0_4px_24px_-4px_rgba(0,0,0,0.02)]">
 <table class="w-full text-left border-collapse">

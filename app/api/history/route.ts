@@ -9,27 +9,30 @@ export async function GET(request: Request) {
 
     // Case 1: Trending (Open Access)
     if (mode === 'trending') {
-        const trending = await prisma.article.groupBy({
-            by: ['originalUrl', 'title'],
-            where: { status: 'completed' },
-            _count: { originalUrl: true },
-            orderBy: {
-                _count: { originalUrl: 'desc' }
-            },
-            take: 10
-        });
-        
-        const articles = trending.map((item, index) => ({
-            id: `rank-${index}`,
-            originalUrl: item.originalUrl,
-            title: item.title,
-            count: item._count.originalUrl,
-            publishDate: new Date().toISOString(),
-            status: 'completed',
-            isTrending: true
-        }));
-        
-        return NextResponse.json({ data: articles });
+      // Include all successful statuses: completed, stored, synced
+      const successStatuses = ['completed', 'stored', 'synced'];
+
+      const trending = await prisma.article.groupBy({
+        by: ['originalUrl', 'title'],
+        where: { status: { in: successStatuses } },
+        _count: { originalUrl: true },
+        orderBy: {
+          _count: { originalUrl: 'desc' }
+        },
+        take: 10
+      });
+
+      const articles = trending.map((item, index) => ({
+        id: `rank-${index}`,
+        originalUrl: item.originalUrl,
+        title: item.title,
+        count: item._count.originalUrl,
+        publishDate: new Date().toISOString(),
+        status: 'completed',
+        isTrending: true
+      }));
+
+      return NextResponse.json({ data: articles });
     }
 
     // Case 2: Personal History
@@ -60,20 +63,20 @@ export async function DELETE(request: Request) {
     const id = searchParams.get('id');
 
     if (!id) {
-        return NextResponse.json({ error: 'ID required' }, { status: 400 });
+      return NextResponse.json({ error: 'ID required' }, { status: 400 });
     }
 
     // Verify ownership
     const article = await prisma.article.findUnique({
-        where: { id: id }
+      where: { id: id }
     });
 
     if (!article || article.userId !== session.user.id) {
-        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     await prisma.article.delete({
-        where: { id: id }
+      where: { id: id }
     });
 
     return NextResponse.json({ success: true });

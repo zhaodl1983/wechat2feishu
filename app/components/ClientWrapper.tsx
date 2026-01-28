@@ -9,6 +9,7 @@ import { Hero } from './Hero';
 import { HistoryList } from './HistoryList';
 import { Sidebar } from './Sidebar';
 import { SyncModal } from './SyncModal';
+import { StatsPanel } from './StatsPanel';
 
 export function ClientWrapper() {
     const { data: session, status } = useSession();
@@ -101,6 +102,7 @@ export function ClientWrapper() {
             <Header />
             <main className="flex-grow">
                 <Hero isLoggedIn={false} onSyncSuccess={handleSyncSuccess} />
+                <StatsPanel />
                 <HistoryList refreshTrigger={refreshTrigger} isLoggedIn={false} layout="list" />
             </main>
             <Footer />
