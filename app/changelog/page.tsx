@@ -55,7 +55,7 @@ const versions = [
 
 export default function Changelog() {
   return (
-    <main className="min-h-screen bg-[#FDFDFD] dark:bg-[#121212] flex flex-col font-sans transition-colors">
+    <main className="min-h-screen flex flex-col font-sans transition-colors">
       <Header />
 
       <div className="flex-grow pt-32 pb-20 px-6">

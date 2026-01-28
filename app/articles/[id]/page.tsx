@@ -21,9 +21,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
     const cleanContent = article.content.replace(/^---\n[\s\S]*?\n---\n/, '');
 
     return (
-        <div className="min-h-screen bg-[#FAFAFA] dark:bg-[#121212] text-[#1d1d1f] dark:text-white antialiased pb-20 transition-colors">
+        <div className="min-h-screen text-[#1d1d1f] dark:text-white antialiased pb-20 transition-colors">
             {/* Navbar / Header Placeholder */}
-            <div className="sticky top-0 z-10 bg-[#FAFAFA]/80 dark:bg-[#121212]/80 backdrop-blur-md border-b border-black/5 dark:border-white/5 px-6 py-4 flex items-center justify-between">
+            <div className="sticky top-0 z-10 bg-white/80 dark:bg-[#121212]/80 backdrop-blur-md border-b border-black/5 dark:border-white/5 px-6 py-4 flex items-center justify-between">
                 <a href="/" className="font-bold tracking-wider text-sm p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
                     ← 返回列表
                 </a>

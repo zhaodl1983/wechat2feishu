@@ -22,7 +22,7 @@ export function ClientWrapper() {
 
     if (status === "loading") {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-[#FAFAFA]">
+            <div className="min-h-screen flex items-center justify-center">
                 <span className="material-symbols-outlined text-[32px] text-black/20 animate-spin-slow">progress_activity</span>
             </div>
         );
@@ -33,7 +33,7 @@ export function ClientWrapper() {
     // --- DASHBOARD LAYOUT ---
     if (isLoggedIn) {
         return (
-            <div className="flex h-screen overflow-hidden bg-[#FAFAFA] dark:bg-[#121212] transition-colors">
+            <div className="flex h-screen overflow-hidden transition-colors">
                 {/* Sidebar */}
                 <Sidebar refreshTrigger={refreshTrigger} />
 
@@ -97,7 +97,7 @@ export function ClientWrapper() {
 
     // --- PUBLIC LAYOUT ---
     return (
-        <div className="min-h-screen bg-[#FDFDFD] dark:bg-[#121212] flex flex-col font-sans transition-colors">
+        <div className="min-h-screen flex flex-col font-sans transition-colors">
             <Header />
             <main className="flex-grow">
                 <Hero isLoggedIn={false} onSyncSuccess={handleSyncSuccess} />

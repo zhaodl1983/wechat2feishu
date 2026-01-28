@@ -109,7 +109,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden bg-white dark:bg-[#121212] transition-colors">
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden transition-colors">
        {/* Background Mesh */}
       <div 
         className="absolute inset-0 z-0 pointer-events-none opacity-100 dark:opacity-0 transition-opacity"

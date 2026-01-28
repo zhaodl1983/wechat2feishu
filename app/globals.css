@@ -18,15 +18,14 @@
 
 body {
   background-color: #FAFAFA;
-  background-image: var(--mesh-bg);
-  background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
   letter-spacing: -0.015em;
   color: #1d1d1f;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .dark body {
-  background-color: #121212;
+  background-color: #121212 !important;
   color: rgba(255, 255, 255, 0.9);
 }
 
