@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [V0.6.1] - 2026-01-28
+
+### Added
+- **GIF Support**: Full preservation of GIF animations during article capture and rendering.
+- **Stats Dashboard**: Real-time public dashboard on the home page showing global archival stats.
+
+### Fixed
+- **Emoji Rendering**: Fixed oversized WeChat emojis to ensure they display as inline icons correctly.
+- **Dark Mode Polish**: 
+  - Unified global background color to #121212.
+  - Fixed dark mode styles for the "New Sync" modal and input fields.
+- **UI Cleanup**: Removed deprecated Feishu sync buttons and redundant interface elements.
+
 ## [V0.6.0] - 2026-01-23
 
 ### Added

@@ -5,16 +5,16 @@ const versions = [
   {
     version: "V0.7",
     status: "planning",
-    title: "社区与多媒体增强",
-    desc: "上线透明数据看板、个人足迹分析，并实现 GIF 与视频的完美内嵌支持。",
+    title: "社区化与多媒体深度支持",
+    desc: "规划支持视频转存、个人数据足迹分析及开放 API 接口。",
     date: "规划中"
   },
   {
     version: "V0.6",
-    status: "progress",
-    title: "体验升级与配额管理",
-    desc: "上线全站深色模式 (Dark Mode)，优化视觉体验；引入用户存储配额管理系统 (20篇/人)，实现精细化资源控制。",
-    date: "进行中"
+    status: "done",
+    title: "SaaS 基础建设与体验优化",
+    desc: "上线全站深色模式、GIF 动画转存支持及实时数据看板；引入邮箱注册体系与存储配额管理；修复微信 Emoji 显示及界面一致性问题。",
+    date: "已上线"
   },
   {
     version: "V0.5",
